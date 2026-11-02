@@ -4,7 +4,7 @@
 
 A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
-Istaroth displays HoYoLAB information, including Original Resin, dailes, realm currency and more!
+Istaroth displays HoYoLAB information, including Original Resin, Daily comessions, Realm currency and more!
 
 > **Current release: v1.0.** The installer is unsigned and has not undergone an independent security audit. HoYoLAB integration relies on unofficial endpoints and may change. Istaroth is not affiliated with or endorsed by HoYoverse or Cognosphere.
 
