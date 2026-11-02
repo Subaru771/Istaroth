@@ -25,11 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      # A committed lockfile is still needed before builds become reproducible.
-      # Generate an ephemeral lock for an advisory scan until then.
-      - name: Resolve the dependency graph without running install scripts
-        working-directory: app
-        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      # Read the committed npm lockfile directly; do not resolve moving dependencies.
       - name: Audit production and development dependencies
         working-directory: app
         continue-on-error: true
