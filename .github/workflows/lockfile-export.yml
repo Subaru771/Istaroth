@@ -1,0 +1,24 @@
+name: Temporary npm lockfile export
+on:
+  push:
+    branches: [chore/release-readiness-security-2026-11]
+    paths:
+      - .github/workflows/lockfile-export.yml
+permissions:
+  contents: read
+jobs:
+  export-lockfile:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Resolve Windows dependency lockfile
+        working-directory: app
+        shell: pwsh
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Emit temporary public lockfile for reproducible builds
+        shell: pwsh
+        run: |
+          node -e "const fs=require('fs');const b=fs.readFileSync('app/package-lock.json').toString('base64');for(let i=0;i<b.length;i+=1800)console.log('LOCK_CHUNK_'+i+':'+b.slice(i,i+1800));console.log('LOCK_CHUNKS_DONE:'+b.length)"
