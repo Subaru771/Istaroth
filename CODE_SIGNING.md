@@ -1,6 +1,6 @@
-# Code signing policy — Istaroth
+# Code signing policy — Istaroth v1.0
 
-**Status:** Istaroth 1.0 is currently **unsigned**. This page describes the intended signing process, not an existing certificate or an approved signing service.
+**Status:** Istaroth v1.0 is currently **unsigned**. This page describes the intended signing process, not an existing certificate or an approved signing service.
 
 ## Build and release provenance
 
