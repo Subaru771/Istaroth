@@ -1,24 +1,20 @@
-# Privacy and account security — Istaroth v2.4.8
+# Privacy — Istaroth v1.0
 
-Istaroth is an unofficial, open-source desktop app. **No developer-operated analytics, login, or telemetry server is configured in this release.** The app connects to external services to operate:
+Istaroth is an unofficial Windows desktop companion. **There is no developer-operated account, analytics or telemetry service.** The app communicates directly with services needed for the features below.
 
-| Information | Purpose | Destination / retention |
-|---|---|---|
-| HoYoLAB sign-in cookies | Authenticate game data requests | Stored in a dedicated persistent Electron browser session on your Windows computer; sent to HoYoLAB/HoYoverse endpoints as needed |
-| Genshin UID, region, nickname | Select account and associate readings | Saved locally in app settings and included in requests to HoYoLAB |
-| Resin readings, history, notification settings | Track resin and alert at thresholds | Saved locally on device; not uploaded to a Istaroth server |
-| Custom wallpapers, themes | Personalization | Saved locally on device |
-| Automatic update check (if independently configured) | Check public GitHub release metadata | Contacts GitHub; no trusted repository is preconfigured in this version |
-| Electron runtime download at first install | Install runtime | Downloaded from the official Electron GitHub release and checked against a hardcoded SHA-256 |
+| Data | Why it is used | Where it goes |
+| --- | --- | --- |
+| HoYoLAB cookies | Authenticate read-only account queries | Stored in a dedicated persistent Electron browser session on this PC and sent to supported official HoYoLAB/HoYoverse API hosts |
+| Genshin UID, region and nickname | Select an account | Stored locally and used for API requests |
+| Resin readings, alerts and settings | Display timers and history | Stored locally, not sent to an Istaroth server |
+| Theme preferences and wallpapers | Personalize the widgets | Stored locally on your PC |
+| Release metadata | Check for new versions | The app may contact the public GitHub Releases API for `Subaru771/Istaroth`; checks can be disabled; unsigned EXEs are not executed automatically |
+| Electron runtime archive | Complete first installation | Downloaded from the official Electron GitHub release and verified against a pinned SHA-256 |
 
-**Where files are stored:** Application preferences and history are saved in the Windows Electron user-data folder. HoYoLAB session data is kept in an isolated persistent Chromium partition. Disconnecting the HoYoLAB account clears the dedicated session storage and cache; existing locally saved history may remain until deleted with the app's local data.
+**Local storage:** To keep upgrades compatible, Istaroth uses the legacy `%APPDATA%\Teyvat Pulse` data directory and `persist:teyvatpulse-hoyolab` browser partition. These names are not publicly displayed product versions and must not be renamed without a migration.
 
-**No password collection:** The app opens the official HoYoLAB website for login. It does not provide a custom field asking for your HoYoLAB password. As with any signed-in third-party client, it accesses authenticated cookies to request data. Do not share your cookies or token with anyone.
+**Disconnect:** Disconnecting HoYoLAB clears the dedicated browser session's cookies and cache. App preferences and local history may remain until the user deletes them. Uninstalling may intentionally preserve the user profile for later reinstallations.
 
-**Third-party service warning:** The underlying HoYoLAB endpoints are unofficial and may not be approved for third-party use. HoYoverse warns that third-party applications can present account-security risks; review its terms and guidance before using this app.
+HoYoLAB cookies are sensitive authentication credentials. Never post them, session tokens, or unredacted logs in GitHub issues. See [SECURITY.md](SECURITY.md).
 
-**Uninstall and removal:** Uninstall from Windows Installed Apps, then manually delete Istaroth's local app data if you want to clear remaining settings, screenshots, and session files. Disconnect in the app first when possible.
-
-Privacy notice reflects the current source, not an independent audit. For questions, file a GitHub Issue after the public repository is created, without sharing account tokens, cookies, or identifying data.
-
-**Rebrand compatibility:** On Windows, Istaroth deliberately retains `%APPDATA%\Teyvat Pulse` as its existing local profile folder and reuses the established HoYoLAB session partition. No account data is sent to any migration service.
+This project is not affiliated with, sponsored by, or endorsed by HoYoverse or Cognosphere. Unofficial endpoints may change.
