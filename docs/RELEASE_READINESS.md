@@ -6,7 +6,7 @@
 - [ ] Keep content security policy and HTTPS trusted-domain navigation restrictions.
 - [ ] Run the source, startup, update and trust-boundary tests in GitHub Actions.
 - [ ] Review CodeQL findings and the scheduled npm audit. Resolve security issues before a release.
-- [ ] Generate and commit a reviewed `app/package-lock.json` with the appropriate npm version. Afterward, replace the NSIS CI `npm install` step with `npm ci` to make builds reproducible. Do not manually invent a lockfile.
+- [x] Generate and commit `app/package-lock.json` from a Windows Node 22 runner; use `npm ci` for repeatable NSIS builds. Recheck the lockfile whenever dependencies change.
 
 ## Installer and user validation
 - [ ] Test installation, upgrade from the existing Go installer, start-at-login, minimized-to-tray operation, and uninstall on a clean Windows test machine.
