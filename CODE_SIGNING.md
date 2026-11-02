@@ -1,6 +1,6 @@
-# Code signing policy — Istaroth v1.0
+# Code signing policy — Istaroth v1.0.1
 
-**Status:** Istaroth v1.0 is currently **unsigned**. This page describes the intended signing process, not an existing certificate or an approved signing service.
+**Status:** Istaroth v1.0 and v1.0.1 installers are currently **unsigned**. This page describes the intended signing process, not an existing certificate or an approved signing service.
 
 ## Build and release provenance
 
@@ -12,7 +12,7 @@
 
 ## Windows distribution targets
 
-The new Windows build workflow produces a conventional **offline NSIS installer** plus a **portable ZIP** from locked npm dependencies. Both are unsigned QA candidates until Windows compatibility tests pass. The currently published v1.0 Go installer remains unchanged.
+The new Windows build workflow produces a conventional **offline NSIS installer** plus a **portable ZIP** from locked npm dependencies. Both v1.0.1 distributions are unsigned, and users should verify their release checksums. The previously published v1.0 Go installer remains available unchanged.
 
 A signature on the NSIS installer does **not** sign the embedded portable `Istaroth.exe` inside a ZIP. Signing the portable executable requires a signing step **before** packaging the ZIP, followed by re-hashing the resulting ZIP. See [Windows distribution and migration QA](docs/WINDOWS_DISTRIBUTION.md).
 
