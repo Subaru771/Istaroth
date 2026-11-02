@@ -29,14 +29,8 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $package = Get-Content app/package.json -Raw | ConvertFrom-Json
-          $lock = Get-Content app/package-lock.json -Raw | ConvertFrom-Json
-          if ($package.version -ne '1.0.1' -or $lock.version -ne '1.0.1') {
-            throw 'Unexpected package version, or missing version lock.'
-          }
-          if ($lock.packages.PSObject.Properties[''].Value.version -ne $package.version) {
-            throw 'Package lock root version mismatch'
-          }
+          node -e 'const p=require("./app/package.json");const l=require("./app/package-lock.json");if(p.version!=="1.0.1"||l.version!==p.version||l.packages[""].version!==p.version)process.exit(1); console.log("Verified release version "+p.version)'
+          if ($LASTEXITCODE -ne 0) { throw 'Package and dependency lock versions do not agree' }
           if (-not (Test-Path 'docs/RELEASE_NOTES_v1.0.1.md')) {
             throw 'Release notes missing'
           }
