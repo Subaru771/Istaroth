@@ -20,18 +20,16 @@ Istaroth displays HoYoLAB information, including Original Resin, Daily comession
 - Floating Mini Resin Widget, tray resin indicator and recovery timers
 - Resin alerts, quiet hours, local history and daily overview
 - Account, exploration, combat and TCG information where available
-- Nine regional color themes with illustrations in the Style gallery: **Istaroth, Mondstadt, Liyue, Inazuma, Sumeru, Fontaine, Natlan, Nod-Krai and Snezhnaya**
+- Nine color themes with illustrations in the Style gallery: **Istaroth, Mondstadt, Liyue, Inazuma, Sumeru, Fontaine, Natlan, Nod-Krai and Snezhnaya**
 - Custom wallpapers, typography, accent colors, layouts and saved appearance profiles
 - Windows autostart, always-on-top, close-to-tray and connection recovery
-- Graphical installer with shortcuts and uninstaller, no console window for end users
 
-No manual resin editing or in-app Genshin Impact launching.
 
 ## Download and installation
 
-Download the Windows setup executable from this repository's **Releases** page (once published). A first-time installation uses an internet connection to download the official Electron runtime and validates its SHA-256 before extraction.
+Download the Windows setup executable from this repository's **Releases** page, A first-time installation uses an internet connection to download the official Electron runtime and validates its SHA-256 before extraction.
 
-1. Quit older Istaroth or Teyvat Pulse installations fully, including their system-tray processes.
+1. Fully quit older Istaroth versions if already installed, including their system-tray processes.
 2. Run Setup and choose the installation folder and Windows-startup preference.
 3. Open Istaroth and connect through the official HoYoLAB sign-in page under **Settings → Account**.
 4. Use **Settings → Windows** for window and startup behavior, **Settings → Alerts** for notifications, and **Settings → Style** for regional designs.
@@ -43,10 +41,6 @@ Requires **Windows 10/11 x64**. The unsigned installer may trigger a Microsoft S
 Login takes place in the official HoYoLAB browser page in a separate persistent Electron session. Authentication cookies remain in your local Electron user-data profile and are used for authenticated HoYoLAB requests. No Istaroth developer-operated analytics or account server is configured. Do not share your cookies or tokens.
 
 See [Privacy](PRIVACY.md) and [Security](SECURITY.md). Third-party clients carry account and compatibility risks.
-
-## Upgrading from Teyvat Pulse
-
-Istaroth intentionally retains the legacy local profile folder `%APPDATA%\Teyvat Pulse` to preserve signed-in sessions, wallpapers, resin history and saved settings. This is not evidence that the old app is still installed.
 
 ## Source and building
 
