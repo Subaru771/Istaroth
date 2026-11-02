@@ -9,7 +9,6 @@ const {createStartupService} = require('./windows-startup');
 const {ResinTelemetry} = require('./resin-telemetry');
 const {trayPng} = require('./tray-icon');
 const {UpdateService} = require('./update-service');
-const {spawn} = require('node:child_process');
 
 // Preserve the original Teyvat Pulse userData directory and Chromium partition.
 // Changing this path would sign existing users out and hide their saved resin history.
@@ -325,7 +324,10 @@ if (!gotLock) {
     ipcMain.handle('update:status',()=>updates.status());
     ipcMain.handle('update:settings',(_event,opts)=>updates.settings(opts));
     ipcMain.handle('update:check',(_event,download)=>updates.check(!!download));
-    ipcMain.handle('update:install',()=>{if(!updates.ready||!fs.existsSync(updates.ready))throw Error('No verified update downloaded');const c=spawn(updates.ready,[],{detached:true,stdio:'ignore',windowsHide:true});c.unref();allowQuit=true;app.quit();return true;});
+    // Until updates are Authenticode-signed, the app never launches release executables.
+    // Keep the check/read-only UI, direct users to the canonical public download page.
+    ipcMain.handle('update:install',()=>shell.openExternal('https://github.com/Subaru771/Istaroth/releases'));
+
     ipcMain.handle('chronicle:status',()=>chroniclePublic());
     ipcMain.handle('chronicle:refresh',()=>chronicleRefresh(true).then(()=>chroniclePublic()));
     ipcMain.handle('hoyolab:login', () => openLoginWindow());
