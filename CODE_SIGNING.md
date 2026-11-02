@@ -10,9 +10,15 @@
 - [Privacy policy](PRIVACY.md) and [Security policy](SECURITY.md)
 - Source and CI build instructions are public in this repository.
 
+## Windows distribution targets
+
+The new Windows build workflow produces a conventional **offline NSIS installer** plus a **portable ZIP** from locked npm dependencies. Both are unsigned QA candidates until Windows compatibility tests pass. The currently published v1.0 Go installer remains unchanged.
+
+A signature on the NSIS installer does **not** sign the embedded portable `Istaroth.exe` inside a ZIP. Signing the portable executable requires a signing step **before** packaging the ZIP, followed by re-hashing the resulting ZIP. See [Windows distribution and migration QA](docs/WINDOWS_DISTRIBUTION.md).
+
 ## Applying for free open-source signing
 
-The project intends to apply to [SignPath Foundation](https://signpath.org/apply). **Approval is not guaranteed.** SignPath requires an already released, documented, appropriately licensed and reputable open-source project, verifiable build provenance and manual release approval. Read its [conditions](https://signpath.org/terms.html).
+The project intends to apply to [SignPath Foundation](https://signpath.org/apply). **Approval is not guaranteed.** SignPath requires an already released, documented, appropriately licensed and reputable open-source project, verifiable build provenance and manual release approval. Read its [conditions](https://signpath.org/terms.html) and the [prepared application checklist](docs/SIGNPATH_PREPARATION.md). The foundation also expects a distributed build in the form proposed for signing, verifiable reputation, clear maintainer roles, repository multi-factor authentication and manual approval for each signing request.
 
 If accepted, the project will disclose the exact approved signing workflow, certificate issuer and verification steps here. We will not claim that SignPath signs our releases before its approval.
 

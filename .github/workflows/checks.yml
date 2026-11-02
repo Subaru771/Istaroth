@@ -1,9 +1,13 @@
-name: Source checks and Windows installer
+name: Source checks and offline Windows distribution candidates
+
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   source-checks:
@@ -13,9 +17,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Build embedded app snapshot
+      - name: Verify locked dependencies are present
+        run: |
+          node -e "const p=require('./app/package.json'),l=require('./app/package-lock.json'); if(l.version!==p.version || JSON.stringify(l.packages[''].devDependencies)!==JSON.stringify(p.devDependencies)) process.exit(1)"
+      - name: Build legacy embedded app snapshot for regression coverage
         run: python scripts/build_embedded_app.py
-      - name: Validate embedded app matches tracked source
+      - name: Validate legacy snapshot still matches tracked source
         run: python scripts/verify_embedded_app.py
       - name: Validate JS source
         working-directory: app
@@ -30,73 +37,65 @@ jobs:
         working-directory: app
         run: node test_update_service.js
 
-  build-windows-installer:
+  build-offline-windows-candidates:
     needs: source-checks
     runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.23.2'
-      - name: Build embedded app snapshot
-        shell: pwsh
-        run: python scripts/build_embedded_app.py
-      - name: Compile GUI installer from embedded app snapshot
-        shell: pwsh
-        working-directory: installer
-        run: go build -ldflags='-H=windowsgui' -o Istaroth_Setup_Built_From_Source.exe main.go wizard.go
-      - name: Write SHA256
-        shell: pwsh
-        working-directory: installer
-        run: |
-          $h = (Get-FileHash -Algorithm SHA256 Istaroth_Setup_Built_From_Source.exe).Hash.ToLower()
-          Set-Content -NoNewline -Encoding ascii -Path Istaroth_Setup_Built_From_Source.exe.sha256 -Value $h
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Istaroth-unsigned-windows-build
-          path: |
-            installer/Istaroth_Setup_Built_From_Source.exe
-            installer/Istaroth_Setup_Built_From_Source.exe.sha256
-
-  # This candidate is for QA only. It bundles Electron instead of downloading
-  # the runtime during setup. It must pass real Windows install/uninstall tests
-  # before it can replace the published Go-based Istaroth 1.0 installer.
-  build-standard-nsis-candidate:
-    needs: source-checks
-    runs-on: windows-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Electron and electron-builder
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install exact reviewed Electron dependencies
         working-directory: app
         shell: pwsh
-        run: npm install --no-audit --no-fund
-      - name: Package full-offline Electron + NSIS candidate
+        run: npm ci --no-audit --no-fund
+      - name: Audit known high-severity dependency advisories
+        working-directory: app
+        shell: pwsh
+        run: npm audit --audit-level=high
+      - name: Build complete offline NSIS installer and portable ZIP
         working-directory: app
         shell: pwsh
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-        run: npx electron-builder --win nsis --x64 --publish never
-      - name: Verify build artifacts, generate SHA-256
+        run: npx electron-builder --win nsis zip --x64 --publish never
+      - name: Validate embedded app, ZIP layout and unsigned candidates
         working-directory: app
         shell: pwsh
         run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not (Test-Path 'dist/win-unpacked/Istaroth.exe')) { throw 'The Windows GUI executable is missing' }
+          if (-not (Test-Path 'dist/win-unpacked/resources/app.asar')) { throw 'Electron app archive is missing' }
+          node -e 'const asar=require("@electron/asar");const paths=asar.listPackage("dist/win-unpacked/resources/app.asar").map(p=>p.split(String.fromCharCode(92)).join("/"));for(const file of ["main.js","preload.js","index.html","hoyolab-sync.js"]){if(!paths.some(p=>p===file||p.endsWith("/"+file)))throw new Error("Missing packaged app file: "+file+"; sample paths: "+paths.slice(0,12).join(","))}console.log("Verified",paths.length,"files in app.asar")'
+          if ($LASTEXITCODE -ne 0) { throw 'Packaged source verification failed' }
           $exe = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.exe' | Select-Object -First 1
-          if (-not $exe) { throw 'NSIS installer not produced' }
-          $sig = Get-AuthenticodeSignature -LiteralPath $exe.FullName
-          Write-Host "Candidate signature: $($sig.Status) (unsigned expected)"
-          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $exe.FullName).Hash.ToLowerInvariant()
-          Set-Content -Encoding ascii -Path ($exe.FullName + '.sha256') -Value "$hash  $($exe.Name)"
-          Write-Host "Candidate file: $($exe.Name)"
-          Write-Host "SHA-256: $hash"
+          $zip = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.zip' | Select-Object -First 1
+          if (-not $exe -or -not $zip) { throw 'One or both Windows distribution candidates were not built' }
+          $signature = Get-AuthenticodeSignature -LiteralPath $exe.FullName
+          if ($signature.Status -ne 'NotSigned') { throw "Unexpected installer signing state: $($signature.Status)" }
+          Add-Type -AssemblyName System.IO.Compression
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($zip.FullName)
+          try {
+            $names = @($archive.Entries | ForEach-Object { $_.FullName.Replace([char]92, [char]47) })
+            if (-not ($names | Where-Object { $_ -match '(^|/)Istaroth[.]exe$' })) { throw 'Portable ZIP has no Istaroth.exe' }
+            if (-not ($names | Where-Object { $_ -match '(^|/)resources/app[.]asar$' })) { throw 'Portable ZIP has no app.asar' }
+          } finally { $archive.Dispose() }
+          Move-Item -LiteralPath $exe.FullName -Destination 'dist/Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe'
+          Move-Item -LiteralPath $zip.FullName -Destination 'dist/Istaroth-v1.0-portable-QA-UNSIGNED.zip'
+          foreach ($name in @('Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe','Istaroth-v1.0-portable-QA-UNSIGNED.zip')) {
+            $hash = (Get-FileHash -LiteralPath "dist/$name" -Algorithm SHA256).Hash.ToLowerInvariant()
+            Set-Content -NoNewline -Encoding ascii -Path "dist/$name.sha256" -Value "$hash  $name`n"
+            Write-Host "$name SHA256: $hash"
+          }
       - uses: actions/upload-artifact@v4
         with:
-          name: Istaroth-standard-NSIS-candidate-UNSIGNED-NOT-RELEASE
+          name: Istaroth-v1.0-Offline-NSIS-and-Portable-Windows-QA-UNSIGNED
           path: |
-            app/dist/Istaroth-Setup-*.exe
-            app/dist/Istaroth-Setup-*.exe.sha256
+            app/dist/Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe
+            app/dist/Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe.sha256
+            app/dist/Istaroth-v1.0-portable-QA-UNSIGNED.zip
+            app/dist/Istaroth-v1.0-portable-QA-UNSIGNED.zip.sha256
+          retention-days: 14
           if-no-files-found: error

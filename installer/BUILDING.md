@@ -1,13 +1,15 @@
-# Build the GUI setup from source
+# Legacy Go setup — source reproduction only
 
-The Go installer uses only Go's standard library and embeds `app.zip`. On Windows, with Go installed, run:
+The currently published Istaroth v1.0 installer is the original Go GUI setup. It embeds a source snapshot and downloads the Electron runtime during installation, validating a pinned SHA-256. The source is retained for reproducibility and compatibility investigations.
+
+**For new distributions, use the conventional offline NSIS and portable ZIP pipeline instead:** [Windows distribution guide](../docs/WINDOWS_DISTRIBUTION.md). Those packages include Electron and require no runtime download during installation.
+
+To reproduce the older Go setup on Windows with Go installed:
 
 ```powershell
 python scripts/build_embedded_app.py
 cd installer
-go build -ldflags="-H=windowsgui" -o Istaroth_Setup.exe main.go wizard.go
+go build -ldflags="-H=windowsgui" -o Istaroth_Legacy_Setup.exe main.go wizard.go
 ```
 
-This creates a Windows GUI application; the installer presents a Setup wizard without a console window. To update the embedded app in a new version, recreate `app.zip` from the app source while preserving the paths, and update the displayed version, packaged hash, and release notes. The first installation downloads the Electron runtime from the official GitHub release and validates it against the pinned SHA-256 in `main.go`.
-
-The app.zip archive is generated from tracked app sources and is not committed to GitHub.
+The generated `installer/app.zip` is built from tracked source and is not committed. Reproducing the Go installer does **not** recreate the signed identity of any release (the original v1.0 installer is unsigned). Do not upload a newly compiled binary as the published v1.0 EXE without re-testing and publishing a matching new checksum. Do not remove or rename the legacy `Teyvat Pulse` profile: it preserves users' saved preferences and HoYoLAB browser session.
