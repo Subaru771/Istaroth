@@ -1,8 +1,8 @@
 {
   "name": "istaroth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
-  "description": "Istaroth v1.0 — open-source Windows Genshin Impact desktop companion",
+  "description": "Istaroth v1.0.1 — offline Windows Genshin Impact desktop companion",
   "main": "main.js",
   "author": "Istaroth open-source contributors",
   "license": "MIT",
