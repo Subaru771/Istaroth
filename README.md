@@ -10,13 +10,9 @@ A free, open-source, unofficial **Genshin Impact** companion for Windows. Check 
 
 ## See Istaroth
 
-**Choose from nine region-inspired designs**
+**Choose from nine designs**
 
-![Nine Istaroth regional themes](docs/images/style-gallery.png)
-
-**The compact Mini Widget (offline preview with a sample test wallpaper)**
-
-![Istaroth actual Mini Widget in offline preview mode with a colorful sample wallpaper, not connected to HoYoLAB](docs/images/mini-widget-offline.webp)
+![Nine themes](docs/images/style-gallery.png)
 
 **Customize Mini and Main wallpaper independently**
 
