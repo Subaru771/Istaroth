@@ -30,6 +30,8 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 ## Install
 
+**Currently published v1.0:** The download below is the original unsigned Windows installer. It downloads the Electron runtime during first installation. A standard **offline NSIS installer and extracted portable ZIP** are being prepared and tested, but are **not yet published release downloads**. See [Windows distributions and migration tests](docs/WINDOWS_DISTRIBUTION.md).
+
 1. Download [`Istaroth_Setup_v1.0.exe`](https://github.com/Subaru771/Istaroth/releases/download/1.0/Istaroth_Setup_v1.0.exe) for **Windows 10/11 x64**.
 2. Quit any existing Istaroth tray instance and run Setup. On first installation it downloads the official Electron runtime and checks its pinned SHA-256.
 3. Open **Settings → Account** and sign in on the official HoYoLAB page.
@@ -50,18 +52,19 @@ Run in Windows Command Prompt next to the downloaded EXE:
 certutil -hashfile Istaroth_Setup_v1.0.exe SHA256
 ```
 
-Compare the result with the hash above or [the checksum attached to the GitHub release](https://github.com/Subaru771/Istaroth/releases/download/1.0/Istaroth_Setup_v1.0.exe.sha256). A matching hash confirms identical bytes, **not** publisher identity or malware safety. See [code signing](CODE_SIGNING.md).
+Compare the result with the hash above or [the checksum attached to the GitHub release](https://github.com/Subaru771/Istaroth/releases/download/1.0/Istaroth_Setup_v1.0.exe.sha256). A matching hash confirms identical bytes, **not** publisher identity or malware safety. See the [Code signing policy](CODE_SIGNING.md).
 
 ## Source and contributions
 
 - **Electron app:** `app/`
-- **Graphical Windows installer:** `installer/`
+- **Offline NSIS installer and portable ZIP:** built from `app/` with electron-builder ([QA and compatibility](docs/WINDOWS_DISTRIBUTION.md))
+- **Legacy Go installer source:** `installer/` (for published v1.0 compatibility)
 - **Build scripts:** `scripts/`
 - **Automated checks:** [GitHub Actions](../../actions)
 - **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md)
 - **Changes:** [CHANGELOG.md](CHANGELOG.md)
 
-To run from source, install Node.js and run `npm install` then `npm start` from `app/`. To build the installer, see [installer/BUILDING.md](installer/BUILDING.md).
+To run from source, install Node.js and run `npm ci` then `npm start` from `app/`. To build the standalone Windows candidates, run `npm run build:win` on Windows x64 after `npm ci`. See [distribution instructions](docs/WINDOWS_DISTRIBUTION.md).
 
 Istaroth stores sign-in state and settings locally, preserving the legacy `Teyvat Pulse` profile for existing installations. Read [PRIVACY.md](PRIVACY.md) before connecting an account.
 
