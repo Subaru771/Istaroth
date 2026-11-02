@@ -1,17 +1,13 @@
 # Changelog
 
-## v1.0 — First public release
+## v1.0 — Initial public release
 
-**Istaroth — Your Companion Throughout Time!**
+- Original Resin monitoring and recovery estimates via HoYoLAB.
+- Main and compact Mini widgets, system tray, startup support and reminders.
+- Nine themes, appearance presets and independent wallpaper controls.
+- Local resin history, alerts, quiet hours and available HoYoLAB information panels.
+- Windows graphical installer and first-run Electron runtime verification.
 
-- Original Resin tracking and recovery estimates with HoYoLAB sync.
-- Main Widget and separate Mini Resin Widget, tray controls, and startup support.
-- Independent wallpapers for Main background, Resin Card, and Mini, with live previews.
-- Nine illustrated theme presets, custom styling and saved appearance profiles.
-- Resin history, alerts and daily overview with additional HoYoLAB panels where available.
-- Theme-matched **Done** button in Settings.
-- Windows graphical installer with no CMD window.
+The **v1.0 installer is unsigned** and integration uses unofficial HoYoLAB endpoints. The installer and its published checksum are described in the [README](README.md).
 
-This is the first public release. Earlier internal iteration numbers are recorded in [Development History](docs/DEVELOPMENT_HISTORY.md).
-
-**Security:** This installer is unsigned and has not been independently audited. HoYoLAB features use unofficial interfaces and may change.
+Older internal development identifiers were not public release versions.
