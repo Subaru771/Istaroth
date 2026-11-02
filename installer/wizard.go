@@ -1,6 +1,6 @@
 //go:build windows
 
-// Istaroth v2.4.7 Premium Setup. All UI is drawn with native Win32 GDI:
+// Istaroth v1.0 Windows Setup. All UI is drawn with native Win32 GDI:
 // no WebView, runtime dependencies, console or external fonts.
 package main
 
