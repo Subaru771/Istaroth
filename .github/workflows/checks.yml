@@ -29,6 +29,9 @@ jobs:
       - name: Read-only updater security tests
         working-directory: app
         run: node test_update_service.js
+      - name: Renderer trust and cookie security regression tests
+        working-directory: app
+        run: npm run test:security
 
   build-windows-installer:
     needs: source-checks
