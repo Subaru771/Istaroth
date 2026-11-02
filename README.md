@@ -20,7 +20,6 @@ A free, open-source, unofficial **Genshin Impact** companion for Windows. Check 
 
 ![Main wallpaper settings screen](docs/images/wallpaper_main.png)
 
-The Mini Widget screenshot demonstrates offline rendering with no account connected. It does **not** represent a live Resin sync.
 
 ## What you get
 
