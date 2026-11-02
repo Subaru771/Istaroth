@@ -1,9 +1,11 @@
-# Security policy
+# Security — Istaroth v1.0
 
-This is a independent fan project that uses unofficial HoYoLAB endpoints. It has not received a third-party security audit. **Do not post HoYoLAB cookies, session tokens, passwords, or email codes in GitHub Issues.**
+Istaroth is an independent fan project using unofficial HoYoLAB endpoints. It **has not undergone an independent security audit**.
 
-For reproducible investigation, share the version, Windows version, and redacted error or diagnostic text. For a potentially exploitable security issue, prefer GitHub's private vulnerability reporting (enable it in the repository's Settings → Security) rather than a public Issue. This repository cannot currently promise a response SLA.
+**Never put HoYoLAB cookies, session tokens, passwords, or verification codes in public issues or logs.** For a security vulnerability, use GitHub's private security reporting where available.
 
-The setup downloads the Electron runtime from a pinned GitHub URL and checks its SHA-256. Public installer downloads will have matching SHA-256 files. Checksums only verify the bytes; they do not replace code signing, antivirus scans, or code review.
+Istaroth uses a dedicated Electron browser session for HoYoLAB sign-in. Its main process can access selected cookies to authenticate API requests; this is sensitive even when login occurs on the official page. The installer downloads an Electron runtime from a pinned GitHub URL and verifies its SHA-256.
 
-Microsoft SmartScreen may warn about an unsigned/unrecognized binary. **Do not bypass a separate Microsoft Defender malware detection.** Report the threat name and affected filename for investigation.
+The [v1.0 release hash](checksums/Istaroth_Setup_v1.0.exe.sha256) verifies the bytes of the exact public installer. A SHA-256 checksum does **not** authenticate the publisher, prevent a malicious replacement of both files, or replace code signing and malware scanning.
+
+The v1.0 installer is **unsigned**. A SmartScreen reputation warning is different from a Defender malware detection. Do not bypass a malware detection without investigating it. Review [CODE_SIGNING.md](CODE_SIGNING.md) and [PRIVACY.md](PRIVACY.md) for more information.
