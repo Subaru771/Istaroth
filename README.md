@@ -76,7 +76,7 @@ Regional banner art uses locally bundled, AI-assisted original illustrations ins
 
 The project code is [MIT licensed](LICENSE). Do not assume that external game assets, user wallpapers, or trademarks are covered by the source-code license.
 
-[Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Code signing policy](CODE_SIGNING.md)
 
 ### Wallpaper Studio
 
