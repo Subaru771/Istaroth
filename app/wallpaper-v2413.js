@@ -1,5 +1,5 @@
 "use strict";
-/* Wallpaper Studio v2.4.13: two independent channels with no shared visual state.
+/* Istaroth v1.0 Wallpaper Studio: two independent channels with no shared visual state.
    The real Main and Mini widget DOMs have independent wallpaper layers.
    Legacy Main settings (state.ui.design) and Mini (state.ui.miniAppearance) are retained. */
 const WallpaperStudio=(()=>{
