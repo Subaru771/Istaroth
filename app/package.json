@@ -11,6 +11,7 @@
     "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check wallpaper-v2413.js && node --check hoyolab-sync.js && node --check chronicle-sync.js && node --check chronicle-ui.js && node --check windows-startup.js && node --check resin-telemetry.js && node --check tray-icon.js && node --check update-service.js",
     "build:win": "electron-builder --win nsis --x64",
     "test:startup": "node test_startup.js",
+    "test:security": "node test_security.js",
     "test:v22": "node check-v22.js"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     },
     "files": [
       "main.js",
+      "trust-policy.js",
       "hoyolab-sync.js",
       "preload.js",
       "index.html",

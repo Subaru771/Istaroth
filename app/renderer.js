@@ -137,9 +137,15 @@ function renderResin(){if(!state)return;
   $('miniLamp').className=fresh?'live':connected?'offline':'';
   $('miniSyncLabel').textContent=fresh?'LIVE':connected?'OFFLINE':stored?'SAVED':'NOT CONNECTED';
   $('miniRefreshButton').disabled=syncBusy||!!syncInfo?.busy;
+  const lastObserved=stored&&Number.isFinite(Number(state.resin.syncedAt))?
+    ` · Last confirmed ${new Date(state.resin.syncedAt).toLocaleString()} · estimate only`:'';
+  const problem=String(syncInfo?.error||'');
+  const failureHint=/session expired|sign in again|No HoYoLAB session/i.test(problem)?'Session expired — reconnect HoYoLAB':
+    /API|endpoint|unreadable|rejected this request|valid resin value|HTTP 404|HTTP 410/i.test(problem)?'HoYoLAB API may have changed — check for an Istaroth update':
+    'HoYoLAB sync unavailable';
   $('liveInfo').textContent=fresh?`HoYoLAB · ${syncInfo.role?.nickname||'Traveler'} · Updated ${dateTime(syncInfo.notes.fetchedAt)}`:
-    connected?(syncInfo?.error?`Sync issue: ${syncInfo.error}`:'Awaiting HoYoLAB update · timer is an estimate'):
-    stored?'Last HoYoLAB reading · offline estimate':'Sign in to HoYoLAB to display your resin';
+    connected?(problem?`${failureHint}: ${problem}${lastObserved}`:`Awaiting HoYoLAB update${lastObserved}`):
+    stored?`Last HoYoLAB reading${lastObserved}`:'Sign in to HoYoLAB to display your resin';
   renderMiniDaily();
   WallpaperStudio.updateReadings();
   // Smart alerts are sent from the background process even while the window is hidden.

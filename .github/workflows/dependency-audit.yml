@@ -1,0 +1,32 @@
+name: Advisory dependency security audit
+on:
+  push:
+    paths:
+      - app/package.json
+      - app/package-lock.json
+      - .github/workflows/dependency-audit.yml
+  pull_request:
+    paths:
+      - app/package.json
+      - app/package-lock.json
+      - .github/workflows/dependency-audit.yml
+  schedule:
+    - cron: '43 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  npm-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # Read the committed npm lockfile directly; do not resolve moving dependencies.
+      - name: Audit production and development dependencies
+        working-directory: app
+        continue-on-error: true
+        run: npm audit --audit-level=high
