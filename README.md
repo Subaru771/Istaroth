@@ -1,81 +1,121 @@
+<div align="center">
+
 # Istaroth
 
 **Your Companion Throughout Time!**
 
-A free, open-source, unofficial **Genshin Impact** companion for Windows. Check Original Resin and recovery time without launching the game, pin a compact Mini Widget, and personalize your desktop with region-inspired themes.
+A free, open-source, unofficial Genshin Impact desktop companion for Windows.
+See your Original Resin, daily commissions, Realm currency and more, right on your desktop.
 
-[**Download Istaroth 1.0 for Windows**](https://github.com/Subaru771/Istaroth/releases/tag/1.0) · [Check installer SHA-256](checksums/Istaroth_Setup_v1.0.exe.sha256) · [Report an issue](https://github.com/Subaru771/Istaroth/issues/new)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Platform: Windows 10/11 x64](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078D4)
+![Version: 1.0](https://img.shields.io/badge/release-v1.0-informational)
 
-> **First public release:** Windows 10/11 (64-bit). The current installer is **unsigned** and has **not undergone an independent security audit**. Installation requires internet access for the pinned Electron runtime. Istaroth is not affiliated with HoYoverse or Cognosphere.
+[Download](../../releases) · [Changelog](CHANGELOG.md) · [Privacy](PRIVACY.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md)
 
-## See Istaroth
+</div>
 
-**Choose from nine designs**
+> [!NOTE]
+> **v1.0 notes:** The installer is unsigned and has not had an independent security audit. HoYoLAB integration relies on unofficial endpoints and may change. Istaroth is not affiliated with or endorsed by HoYoverse or Cognosphere.
 
-![Nine themes](docs/images/style-gallery.png)
+## Preview
 
-**Customize Mini and Main wallpaper independently**
+![Istaroth's nine illustrated regional styles](docs/images/style-gallery.png)
 
-![Actual Mini wallpaper settings screen](docs/images/wallpaper_mini.png)
+![Istaroth Windows and widget settings](docs/images/windows-settings.png)
 
-![Main wallpaper settings screen](docs/images/wallpaper_main.png)
+## Features
 
+**Resin and daily info**
+- Automatically retrieves Original Resin and available HoYoLAB account information
+- Floating Mini Resin Widget, tray resin indicator and recovery timers
+- Resin alerts, quiet hours, local history and a daily overview
+- Account, exploration, combat and TCG information where available
 
-## What you get
+**Appearance**
+- Nine color themes with illustrated regional styles: Istaroth, Mondstadt, Liyue, Inazuma, Sumeru, Fontaine, Natlan, Nod-Krai and Snezhnaya
+- Custom typography, accent colors, layouts and saved appearance profiles
+- **Wallpaper Studio**: separate wallpaper pages for the Main and Mini widgets (see [Wallpapers](#wallpapers))
 
-- **Original Resin:** HoYoLAB-sourced information, recovery estimates, tray indicator, reminders and quiet hours.
-- **Two widget modes:** Full Main Widget and compact floating Mini Widget, with always-on-top and minimize-to-tray behavior.
-- **Three independent wallpapers:** Main background, Resin Card and Mini Widget each have their own image, darkness, blur, zoom and position controls.
-- **Nine themed styles:** Istaroth, Mondstadt, Liyue, Inazuma, Sumeru, Fontaine, Natlan, Nod-Krai and Snezhnaya. Regional illustrations appear in the Style gallery.
-- **Personalization:** Fonts, accent colors, layout controls and saved appearance preferences.
-- **Activity overview:** Local Resin history and additional HoYoLAB panels when available; unsupported or unavailable endpoints may fail.
-- **Windows integration:** Startup preferences and a graphical uninstaller.
+**Windows integration**
+- Autostart, always-on-top and close-to-tray
+- Automatic connection recovery
 
-Istaroth does not launch or modify the game and does not provide manual Resin editing.
+## Installation
 
-## Install
+**Requirements:** Windows 10/11 x64
 
-1. Visit [the official release](https://github.com/Subaru771/Istaroth/releases/tag/1.0) and download **`Istaroth_Setup_v1.0.exe`**.
-2. Optionally verify the file's [SHA-256 checksum](checksums/Istaroth_Setup_v1.0.exe.sha256). A checksum detects changed bytes; it is **not** a code signature.
-3. Quit any existing Istaroth/Teyvat Pulse tray instance, then run the graphical installer. On first installation it downloads **Electron 45.1.0 from its official GitHub release** and checks a pinned SHA-256.
-4. Launch Istaroth and select **Settings → Account → Connect HoYoLAB** to sign in on the **official HoYoLAB page**.
-5. Customize **Settings → Style**, **Main wallpaper**, **Mini wallpaper**, **Alerts** and **Windows**.
+1. Download the Setup executable from the [Releases](../../releases) page. If an older version of Istaroth is installed, fully quit it first, including its system-tray process.
+2. Run Setup and choose the installation folder and your Windows-startup preference. A first-time install needs an internet connection to download the official Electron runtime, which is validated against its SHA-256 before extraction.
+3. Open Istaroth and sign in through the official HoYoLAB page under **Settings → Account**.
 
-**Known installation caveats:** The EXE is currently unsigned and may trigger SmartScreen. An actual antivirus malware warning should be investigated independently rather than bypassed. The installer has not been independently audited. A network connection is needed for first installation.
+> [!WARNING]
+> The unsigned installer may trigger a Microsoft SmartScreen reputation warning. A separate antivirus detection should be investigated, not bypassed.
 
-## HoYoLAB security and privacy
+## Settings overview
 
-- Sign-in opens the official HoYoLAB website in a dedicated, persistent Electron browser session; the app has no separate login/password collection form.
-- The app **does access authentication cookies locally** to make authenticated requests. Its current API client limits those requests to an explicit HoYoLAB/HoYoverse host allowlist.
-- Session data stays in the local Chromium profile; no Istaroth-operated analytics, authentication or telemetry server is configured. Authentication requests **do** go to HoYoLAB/HoYoverse.
-- Only install software you trust with your account session. Don't share session cookies, tokens or screenshots containing them.
-- Sign-out clears the dedicated Electron login partition. Your existing profile folder **`%APPDATA%\Teyvat Pulse`** is intentionally retained for compatibility with earlier versions.
+| Section | What it controls |
+| --- | --- |
+| **Account** | HoYoLAB sign-in |
+| **Windows** | Window and startup behavior |
+| **Alerts** | Notifications and quiet hours |
+| **Style** | Regional designs and appearance profiles |
+| **Main wallpaper** | Wallpaper for the main widget |
+| **Mini wallpaper** | Wallpaper for the Mini Widget |
 
-See [Privacy](PRIVACY.md), [Security](SECURITY.md), [Code signing](CODE_SIGNING.md) and [Security review](docs/SECURITY_REVIEW.md). Unofficial APIs may change; use at your own risk.
+## Wallpapers
 
-## Development and builds
+Main and Mini wallpapers each have their own top-level settings page under **Settings → Main wallpaper** and **Settings → Mini wallpaper**. Each page has separate image storage, position, blur, darkness and zoom controls, a reset option and a live widget preview.
 
-The app is in [`app/`](app/), the currently published **custom Go** setup source in [`installer/`](installer/). There is also an **experimental standard NSIS/electron-builder packaging workflow** for future releases. It is not the published 1.0 installer.
+- The Main page also lets you choose between **Full Widget** and **Resin Card** placement. This choice never affects the Mini Widget.
+- Existing wallpaper files are retained.
 
-```powershell
-cd app
+## Account security and privacy
+
+- Sign-in happens on the official HoYoLAB page, in a separate persistent Electron session.
+- Authentication cookies stay in your local Electron user-data profile and are used for authenticated HoYoLAB requests.
+- No Istaroth developer-operated analytics or account server is configured.
+- Never share your cookies or tokens.
+
+Third-party clients carry account and compatibility risks. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md) for details.
+
+## Building from source
+
+The repository contains the Electron application in `app/` and a custom Go graphical Windows installer in `installer/`.
+
+**Run the app** (requires Node.js), from `app/`:
+
+```bash
 npm install
-npm run check
-npm run test:startup
-npm run test:v22
 npm start
 ```
 
-For the Go installer, first run `python scripts/build_embedded_app.py` from the repository root, then build from `installer/` using `go build -ldflags="-H=windowsgui" -o Istaroth_Setup.exe main.go wizard.go`. See [build documentation](installer/BUILDING.md) and [CI](.github/workflows/checks.yml).
+**Checks and tests**, from `app/`:
 
-The current release's independent checksum is in [`checksums/`](checksums/Istaroth_Setup_v1.0.exe.sha256); it **does not** prove publisher identity. Future installer candidates must be tested on a clean Windows installation before replacing 1.0.
+```bash
+npm run check
+npm run test:startup
+npm run test:v22
+```
 
-## Artwork, community and attribution
+**Build the Windows Setup** (requires Go):
 
-Bundled regional art is AI-assisted original illustration inspired by Genshin Impact settings, **not** official art. All game names and trademarks belong to their owners. Code is [MIT licensed](LICENSE); this license does not grant rights to third-party trademarks, game art or user wallpapers.
+```bash
+# 1. Generate the archive the installer embeds
+python scripts/build_embedded_app.py
 
-- [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Report a bug](https://github.com/Subaru771/Istaroth/issues)
-- [Similar tools and comparison](docs/ALTERNATIVES.md) · [Screenshots, launch and outreach](docs/LAUNCH_KIT.md)
-- [Security & code signing](SECURITY.md) · [Privacy](PRIVACY.md) · [Code signing policy](CODE_SIGNING.md)
+# 2. Build the installer, from installer/
+go build -ldflags="-H=windowsgui" -o Istaroth_Setup.exe main.go wizard.go
+```
 
-*Unofficial fan-made project; no affiliation with, endorsement by, or sponsorship from HoYoVerse, HoYoLAB or Cognosphere.*
+The installer embeds `installer/app.zip`. CI generates the same archive from source and builds a Windows setup artifact. The published installer SHA-256 confirms the download's bytes. It is not a code signature or a guarantee of safety. See [CODE_SIGNING.md](CODE_SIGNING.md).
+
+## Artwork and acknowledgements
+
+Regional banner art uses locally bundled, AI-assisted original illustrations inspired by Genshin Impact settings, not official game screenshots.
+
+Genshin Impact, its names and related intellectual property belong to their respective owners. This is an independent fan project and is not officially endorsed.
+
+## License
+
+The project code is [MIT licensed](LICENSE). Do not assume that external game assets, user wallpapers or trademarks are covered by the source-code license.
