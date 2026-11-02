@@ -68,7 +68,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           if (-not (Test-Path 'dist/win-unpacked/Istaroth.exe')) { throw 'The Windows GUI executable is missing' }
           if (-not (Test-Path 'dist/win-unpacked/resources/app.asar')) { throw 'Electron app archive is missing' }
-          node -e 'const asar=require("@electron/asar");const entries=asar.listPackage("dist/win-unpacked/resources/app.asar");for(const file of ["/main.js","/preload.js","/index.html","/hoyolab-sync.js"]){if(!entries.some(p=>p.endsWith(file)))throw new Error("Missing packaged app file: "+file)}'
+          node -e 'const asar=require("@electron/asar");const paths=asar.listPackage("dist/win-unpacked/resources/app.asar").map(p=>p.split(String.fromCharCode(92)).join("/"));for(const file of ["main.js","preload.js","index.html","hoyolab-sync.js"]){if(!paths.some(p=>p===file||p.endsWith("/"+file)))throw new Error("Missing packaged app file: "+file+"; sample paths: "+paths.slice(0,12).join(","))}console.log("Verified",paths.length,"files in app.asar")'
           if ($LASTEXITCODE -ne 0) { throw 'Packaged source verification failed' }
           $exe = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.exe' | Select-Object -First 1
           $zip = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.zip' | Select-Object -First 1
@@ -78,7 +78,7 @@ jobs:
           Add-Type -AssemblyName System.IO.Compression
           $archive = [System.IO.Compression.ZipFile]::OpenRead($zip.FullName)
           try {
-            $names = @($archive.Entries | ForEach-Object { $_.FullName.Replace('\\','/') })
+            $names = @($archive.Entries | ForEach-Object { $_.FullName.Replace([char]92, [char]47) })
             if (-not ($names | Where-Object { $_ -match '(^|/)Istaroth[.]exe$' })) { throw 'Portable ZIP has no Istaroth.exe' }
             if (-not ($names | Where-Object { $_ -match '(^|/)resources/app[.]asar$' })) { throw 'Portable ZIP has no app.asar' }
           } finally { $archive.Dispose() }
