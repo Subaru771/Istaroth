@@ -14,6 +14,12 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 ## Preview
 
+**Istaroth on Windows**
+
+![Istaroth Windows app and settings](docs/images/windows-settings.png)
+
+**Nine appearance themes**
+
 ![Istaroth theme gallery](docs/images/style-gallery.png)
 
 ## Features
