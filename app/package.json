@@ -2,14 +2,14 @@
   "name": "istaroth",
   "version": "1.0.0",
   "private": true,
-  "description": "Istaroth — Your Companion Throughout Time! Illustrated Celestial Atelier and nine regional styles.",
+  "description": "Istaroth v1.0 — open-source Windows Genshin Impact desktop companion",
   "main": "main.js",
   "author": "Istaroth open-source contributors",
   "license": "MIT",
   "scripts": {
     "start": "electron .",
     "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check wallpaper-v2413.js && node --check hoyolab-sync.js && node --check chronicle-sync.js && node --check chronicle-ui.js && node --check windows-startup.js && node --check resin-telemetry.js && node --check tray-icon.js && node --check update-service.js",
-    "build:win": "electron-builder --win nsis --x64",
+    "build:win": "electron-builder --win nsis zip --x64 --publish never",
     "test:startup": "node test_startup.js",
     "test:v22": "node check-v22.js"
   },
@@ -62,7 +62,8 @@
     ],
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "zip"
       ],
       "icon": "assets/icon.ico",
       "artifactName": "Istaroth-Setup-${version}.${ext}"
