@@ -41,9 +41,9 @@ Feedback, issues and suggestions are welcome! I'd especially appreciate help tes
 - [x] Changelog, privacy, security and code-signing policies present
 - [x] Screenshot previews in README
 - [x] Repo checksum published
-- [ ] Real Mini Widget screenshot without personal data
-- [ ] Test standard NSIS candidate on clean Windows
+- [x] Real Mini Widget offline screenshot without personal account data (test wallpaper; no live session)
+- [ ] Test standard NSIS candidate on clean Windows (CI package build succeeded; installation remains untested)
 - [ ] Upload a short video demonstration
-- [ ] Add GitHub topics (repository settings)
+- [x] Add GitHub topics (repository settings)
 - [ ] Post to an appropriate community after checking rules
 - [ ] Collect first reproducible bug reports
