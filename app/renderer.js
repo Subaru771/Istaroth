@@ -1,5 +1,5 @@
 'use strict';
-/* Istaroth 2.1 · UI deliberately isolated from HoYoLAB credential access. */
+/* Istaroth v1.0 · UI deliberately isolated from HoYoLAB credential access. */
 const bridge = window.pulseDesktop || null;
 const $ = id => document.getElementById(id);
 const $all = selector => [...document.querySelectorAll(selector)];
