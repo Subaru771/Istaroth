@@ -72,7 +72,11 @@ function requestJson(endpoint, cookieHeader, headers = {}) {
     }, response => {
       if (response.statusCode !== 200) {
         response.resume();
-        reject(new Error(`HoYoLAB responded with HTTP ${response.statusCode}`));
+        reject(new Error(
+          response.statusCode === 404 || response.statusCode === 410
+            ? `HoYoLAB API endpoint may have changed (HTTP ${response.statusCode}); check for an Istaroth update.`
+            : `HoYoLAB responded with HTTP ${response.statusCode}`
+        ));
         return;
       }
       let buffer = '';
@@ -92,7 +96,9 @@ function requestJson(endpoint, cookieHeader, headers = {}) {
   });
 }
 function checkResponse(result) {
-  if (!result || typeof result !== 'object') throw new Error('Invalid HoYoLAB response');
+  if (!result || typeof result !== 'object' || !Object.hasOwn(result, 'retcode')) {
+    throw new Error('HoYoLAB API returned an incompatible response; check for an Istaroth update.');
+  }
   if (result.retcode !== 0) {
     const code = Number(result.retcode);
     if (code === 10001 || code === -100 || code === -101 || code === -10001) throw new Error('HoYoLAB session expired. Please sign in again.');
