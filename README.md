@@ -14,13 +14,17 @@ A free, open-source, unofficial **Genshin Impact** companion for Windows. Check 
 
 ![Nine Istaroth regional themes](docs/images/style-gallery.png)
 
+**The compact Mini Widget (offline preview with a sample test wallpaper)**
+
+![Istaroth actual Mini Widget in offline preview mode with a colorful sample wallpaper, not connected to HoYoLAB](docs/images/mini-widget-offline.webp)
+
 **Customize Mini and Main wallpaper independently**
 
 ![Actual Mini wallpaper settings screen](docs/images/wallpaper_mini.png)
 
 ![Main wallpaper settings screen](docs/images/wallpaper_main.png)
 
-These images show the customization interface. **A dedicated clean Mini Widget screenshot is still needed**, preferably from a fresh Windows install without personal account data.
+The Mini Widget screenshot demonstrates offline rendering with no account connected. It does **not** represent a live Resin sync.
 
 ## What you get
 
