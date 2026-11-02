@@ -1,0 +1,37 @@
+/* Istaroth v2.4.15 — Wallpaper visibility correction.
+   Main's Wallpaper Studio now controls the real visible darkness in both placement modes.
+   Wallpaper images no longer sit below several fixed opaque masks.
+   No change to Mini's separate wallpaper file, settings or rendered styles. */
+
+/* Card only: allow the photo to remain visible, then apply only the selected darkness.
+   Previous palette rules imposed an 80–87% opaque tint independently of Darkness. */
+html[data-wall-target="card"] .resin-card .card-tint {
+  display:block !important;
+  background:linear-gradient(110deg,rgba(6,14,27,.12),rgba(7,14,27,.06) 55%,rgba(6,14,27,.12)) !important;
+}
+html[data-wall-target="card"] .resin-card .card-tint::before {
+  content:"";opacity:1 !important;
+  background:rgba(5,10,20,calc(var(--dim) * .89)) !important;
+}
+html[data-wall-target="card"] .resin-card .card-wallpaper {opacity:1 !important;}
+
+/* Full widget: the previous ~80% opaque pane concealed the underlying wallpaper
+   even with Darkness set to zero. The controls now expose the selected image. */
+html[data-wall-target="full"] .widget-screen {
+  background:rgba(13,23,40,.07) !important;
+}
+html[data-wall-target="full"] .background-art::before {
+  background:rgba(4,10,19,calc(var(--dim) * .9)) !important;
+}
+html[data-wall-target="full"] .resin-card {
+  background:linear-gradient(130deg,rgba(8,17,33,.20),rgba(8,17,33,.06)) !important;
+}
+html[data-wall-target="full"] .card-tint {
+  display:block !important;
+  background:linear-gradient(110deg,rgba(7,14,27,.17),rgba(7,14,27,.10)) !important;
+}
+html[data-wall-target="full"] .card-tint::before {opacity:0 !important;}
+/* Full mode has ONE shared wallpaper layer; do not paint a second, undimmed copy in the resin card. */
+html[data-wall-target="full"] .resin-card .card-wallpaper {opacity:0 !important;}
+
+/* Preserve the wallpaper isolation contract: none of the above targets Mini. */

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html data-font="serif" data-layout="standard" data-palette="istaroth" data-wall-target="card" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" http-equiv="Content-Security-Policy"/>
+<meta content="light" name="color-scheme"/><title>Istaroth · Your Companion Throughout Time!</title>
+<link href="assets/icon.png" rel="icon"/><link href="styles.css" rel="stylesheet"/><link href="refined.css" rel="stylesheet"/><link href="chronicle.css" rel="stylesheet"/><link href="celestial.css" rel="stylesheet"/><link href="regional-themes.css" rel="stylesheet"/><link href="mini-widget.css" rel="stylesheet"/><link href="v22.css" rel="stylesheet"/><link href="istaroth-theme.css" rel="stylesheet"/><link href="realm-themes.css" rel="stylesheet"/><link href="atelier-v243.css" rel="stylesheet"/><link href="atelier-v244.css" rel="stylesheet"/><link href="atelier-v248.css" rel="stylesheet"/><link href="atelier-v2410.css" rel="stylesheet"/><link href="atelier-v2412.css" rel="stylesheet"/><link href="wallpaper-v2413.css" rel="stylesheet"/><link href="wallpaper-v2414.css" rel="stylesheet"/><link href="wallpaper-v2415.css" rel="stylesheet"/><link href="wallpaper-v2417.css" rel="stylesheet"/><link href="done-theme-v2418.css" rel="stylesheet"/>
+</head>
+<body>
+<svg aria-hidden="true" class="svg-defs" xmlns="http://www.w3.org/2000/svg">
+<symbol id="ic-min" viewbox="0 0 24 24"><path d="M5 12h14"></path></symbol>
+<symbol id="ic-close" viewbox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></symbol>
+<symbol id="ic-settings" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M10.5 2.5h3l.6 2 2 .85 1.85-1 2.1 2.1-1 1.85.85 2 2 .6v3l-2 .6-.85 2 1 1.85-2.1 2.1-1.85-1-2 .85-.6 2h-3l-.6-2-2-.85-1.85 1-2.1-2.1 1-1.85-.85-2-2-.6v-3l2-.6.85-2-1-1.85 2.1-2.1 1.85 1 2-.85z"></path></symbol>
+<symbol id="ic-pin" viewbox="0 0 24 24"><path d="m15 4 5 5-2 1-2 5-3 1-2-2-6 7 3-9-2-2 1-3 5-2z"></path></symbol>
+<symbol id="ic-arrow" viewbox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"></path></symbol>
+<symbol id="ic-back" viewbox="0 0 24 24"><path d="M19 12H5m6 6-6-6 6-6"></path></symbol>
+<symbol id="ic-refresh" viewbox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"></path><path d="M6.8 8.5A7 7 0 0 1 19.4 11M17.2 15.5A7 7 0 0 1 4.6 13"></path></symbol>
+<symbol id="ic-image" viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="4"></rect><circle cx="8.5" cy="9" r="1.5"></circle><path d="m4 17 5-5 4 3 3-4 5 5"></path></symbol>
+<symbol id="ic-mini" viewbox="0 0 24 24"><rect height="14" rx="3" width="18" x="3" y="5"></rect><path d="M7 10h10M7 14h7"></path></symbol>
+<symbol id="ic-check" viewbox="0 0 24 24"><path d="m4 12 5 5L20 6"></path></symbol>
+<symbol id="ic-info" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5m0-8h.01"></path></symbol>
+</svg>
+<div class="app-frame" id="frame">
+<div aria-hidden="true" class="background-art" id="backgroundArt"></div>
+<header class="chrome drag-region">
+<div class="brand"><div aria-hidden="true" class="brand-mark"><img alt="" src="assets/istaroth-hourglass.svg"/></div><div class="brand-words"><strong>ISTAROTH</strong><small>YOUR COMPANION THROUGHOUT TIME!</small></div></div>
+<div class="window-actions no-drag">
+<button aria-label="Switch to mini resin widget" aria-pressed="false" class="win-btn" id="modeButton" title="Switch to mini resin widget" type="button"><svg><use href="#ic-mini"></use></svg></button>
+<button aria-label="Toggle always on top" aria-pressed="false" class="win-btn" id="pinButton" title="Always on top" type="button"><svg><use href="#ic-pin"></use></svg></button>
+<button aria-label="Open customization" class="win-btn" id="settingsButton" title="Customization" type="button"><svg><use href="#ic-settings"></use></svg></button>
+<button aria-label="Minimize" class="win-btn desktop-only" id="minimizeButton" title="Minimize" type="button"><svg><use href="#ic-min"></use></svg></button>
+<button aria-label="Close widget" class="win-btn close-button desktop-only" id="closeButton" title="Quit" type="button"><svg><use href="#ic-close"></use></svg></button>
+</div>
+</header>
+<main class="widget-screen" id="widgetScreen">
+<nav aria-label="HoYoLAB information" class="dashboard-tabs no-drag" id="dashboardTabs" role="tablist">
+<div aria-hidden="true" class="nav-crest"><span>✦</span><small>JOURNAL</small></div>
+<button aria-selected="true" class="dash-tab active" data-dash="resin" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">✦</span><span class="tab-caption">Resin</span></button>
+<button aria-selected="false" class="dash-tab" data-dash="daily" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">☼</span><span class="tab-caption">Daily</span></button>
+<button aria-selected="false" class="dash-tab" data-dash="account" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">♙</span><span class="tab-caption">Account</span></button>
+<button aria-selected="false" class="dash-tab" data-dash="explore" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">✧</span><span class="tab-caption">Explore</span></button>
+<button aria-selected="false" class="dash-tab" data-dash="combat" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">⚔</span><span class="tab-caption">Combat</span></button>
+<button aria-selected="false" class="dash-tab" data-dash="cards" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">♢</span><span class="tab-caption">TCG</span></button>
+<button aria-selected="false" class="dash-tab" data-dash="history" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">◷</span><span class="tab-caption">History</span></button>
+</nav>
+<div aria-label="Resin tracker" class="dash-pane active" id="pane-resin" role="tabpanel">
+<div class="headline">
+<div class="eyebrow"><span class="hero-spark">✦</span> <span id="realmEyebrow">THE THOUSAND WINDS · CHRONICLE</span> <span class="hero-index">I</span></div>
+<h1 id="mainTitle">The Clock of Resin</h1>
+<p id="subtitleText">Every moment returns to you.</p>
+</div>
+<section aria-label="Current Original Resin" class="resin-card">
+<div aria-hidden="true" class="card-wallpaper"></div>
+<div aria-hidden="true" class="card-tint"></div>
+<div class="resin-card-top">
+<span class="balance-label">ORIGINAL RESIN · TIMEKEEPER</span>
+<button aria-label="Open account synchronization settings" class="sync-state" id="accountButton" type="button"><span class="status-lamp" id="statusLamp"></span><span id="syncLabel">LOCAL TRACKER</span><svg><use href="#ic-arrow"></use></svg></button>
+</div>
+<div class="balance-display">
+<div aria-hidden="true" class="resin-gem"><svg viewbox="0 0 40 42"><path d="M20 2 35 20 20 40 5 20Z"></path><path d="m20 2-7 18 7 20 7-20Z"></path><path d="M5 20h30"></path></svg></div>
+<div class="resin-number" id="resinNumber">—</div>
+<div class="resin-cap">/ <span id="resinCap">200</span></div>
+</div>
+<div class="recovery-progress">
+<div class="progress-heading"><span>THE FLOW OF TIME</span><span id="resinState">WAITING FOR DATA</span></div>
+<div aria-label="Original Resin recovery progress" aria-valuemax="200" aria-valuemin="0" aria-valuenow="0" class="progress-track" id="progressTrack" role="progressbar"><div class="progress-fill" id="resinProgressFill"></div></div>
+<svg aria-hidden="true" class="legacy-progress"><circle cx="120" cy="120" id="progressCircle" r="98"></circle></svg>
+</div>
+</section>
+<div class="recovery-row">
+<div class="recovery-item"><small>FULL IN</small><strong id="fullIn">—</strong><span id="fullHelp">No estimate yet</span></div>
+<div class="recovery-separator"></div>
+<div class="recovery-item"><small>READY AT</small><strong id="fullAt">—</strong><span id="nextResin">Next resin: —</span></div>
+</div>
+<div class="main-actions"><button class="action-main" id="refreshButton" type="button"><svg><use href="#ic-refresh"></use></svg><span id="refreshText">Connect HoYoLAB</span></button></div>
+<p class="app-footnote" id="liveInfo">Connect HoYoLAB to view live resin</p>
+</div>
+<section aria-label="Daily status" class="dash-pane hidden" id="pane-daily" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">THE DAILY LEDGER · II</span><h2>Today's journey</h2></div><button aria-label="Refresh daily notes" class="dash-refresh" data-refresh="notes" type="button">↻</button></div><div class="dash-content" id="dash-daily"></div></section>
+<section aria-label="Account information" class="dash-pane hidden" id="pane-account" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">YOUR ADVENTURE · III</span><h2>Traveler profile</h2></div><button aria-label="Refresh account info" class="dash-refresh" data-refresh="chronicle" type="button">↻</button></div><div class="dash-content" id="dash-account"></div></section>
+<section aria-label="Exploration" class="dash-pane hidden" id="pane-explore" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">THE KNOWN WORLD · IV</span><h2>Exploration</h2></div><button aria-label="Refresh exploration" class="dash-refresh" data-refresh="chronicle" type="button">↻</button></div><div class="dash-content" id="dash-explore"></div></section>
+<section aria-label="Combat records" class="dash-pane hidden" id="pane-combat" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">BATTLE RECORDS · V</span><h2>Challenges</h2></div><button aria-label="Refresh challenges" class="dash-refresh" data-refresh="chronicle" type="button">↻</button></div><div class="dash-content" id="dash-combat"></div></section>
+<section aria-label="Genius Invokation" class="dash-pane hidden" id="pane-cards" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">GENIUS INVOKATION · VI</span><h2>TCG collection</h2></div><button aria-label="Refresh TCG" class="dash-refresh" data-refresh="chronicle" type="button">↻</button></div><div class="dash-content" id="dash-cards"></div></section>
+<section aria-label="Resin readings history" class="dash-pane hidden" id="pane-history" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">THE RESIN LEDGER · VII</span><h2>Resin history</h2></div><button aria-label="Refresh local readings" class="dash-refresh" id="historyRefresh" type="button">↻</button></div><div class="dash-content" id="dash-history"><p class="field-note">Loading local HoYoLAB readings…</p></div></section>
+</main>
+<main aria-label="Mini Original Resin widget" class="mini-screen hidden" id="miniScreen"><div class="mini-wallpaper-layer" aria-hidden="true"></div>
+<div class="mini-inner">
+<div class="mini-kicker"><span aria-hidden="true" class="mini-star" id="miniRealmMark">✦</span> ORIGINAL RESIN <span class="mini-status"><i id="miniLamp"></i><span id="miniSyncLabel">NOT CONNECTED</span></span></div>
+<div aria-label="Mini widget controls" class="mini-float-controls no-drag"><button id="miniOverviewButton" title="Daily overview" type="button">Daily ▾</button><button id="miniFloatPin" title="Toggle always on top" type="button">✧</button><button id="miniHideButton" title="Minimize mini widget" type="button">−</button><button id="miniCloseButton" title="Close Istaroth" type="button">×</button></div>
+<div aria-label="HoYoLAB daily overview" class="mini-overview no-drag hidden" id="miniOverviewPanel" role="region"><strong>Today in Teyvat</strong><span id="overviewTimestamp"></span><div id="miniOverviewContents">Connect your account to see commissions and expeditions.</div></div>
+<div class="mini-balance"><div class="mini-count"><strong id="miniResinNumber">—</strong><span class="mini-cap">/ <span id="miniResinCap">200</span></span></div><span aria-hidden="true" class="mini-diamond">✧</span></div>
+<div aria-label="Original Resin" aria-valuemax="200" aria-valuemin="0" aria-valuenow="0" class="mini-track" id="miniProgressTrack" role="progressbar"><div class="mini-fill" id="miniFill"></div></div>
+<div class="mini-facts"><div><span class="mini-fact-label">FULL IN</span><strong id="miniFullIn">—</strong></div><div><span class="mini-fact-label">READY AT</span><strong id="miniFullAt">—</strong></div></div>
+<div class="mini-footer"><span id="miniNextResin">Connect HoYoLAB to sync</span><button aria-label="Refresh Original Resin from HoYoLAB" class="mini-refresh no-drag" id="miniRefreshButton" title="Refresh from HoYoLAB" type="button"><svg><use href="#ic-refresh"></use></svg></button><button class="mini-open no-drag" id="miniOpenButton" title="Open full journal" type="button">Full journal <svg><use href="#ic-arrow"></use></svg></button></div>
+</div>
+</main>
+<main aria-label="Customization settings" class="settings-screen hidden" id="settingsScreen">
+<div class="settings-heading"><div aria-hidden="true" class="atelier-scene"></div><button class="back-btn" id="backButton" type="button"><svg><use href="#ic-back"></use></svg> Back to widget</button><div><div class="eyebrow">THE ATELIER · CUSTOMIZE YOUR JOURNAL</div><h1>Your journal, your world.</h1><p>Change the atmosphere, preserve the adventure. Your choices are saved locally.</p></div></div>
+<nav aria-label="Settings categories" class="setting-tabs" role="tablist"><button aria-selected="true" class="tab active" data-tab="style" role="tab" type="button">Style</button><button aria-selected="false" class="tab" data-tab="main-wallpaper" role="tab" type="button">Main wallpaper</button><button aria-selected="false" class="tab" data-tab="mini-wallpaper" role="tab" type="button">Mini wallpaper</button><button aria-selected="false" class="tab" data-tab="layout" role="tab" type="button">Layout</button><button aria-selected="false" class="tab" data-tab="account" role="tab" type="button">Account</button><button aria-selected="false" class="tab" data-tab="alerts" role="tab" type="button">Alerts</button><button aria-selected="false" class="tab" data-tab="windows" role="tab" type="button">Windows</button></nav>
+<div class="settings-scroll">
+<section class="settings-page" data-page="style">
+<div class="section-label">01 / THEME PALETTES <span class="section-aside">CHOOSE A REGION’S ATMOSPHERE</span></div><div aria-label="Choose color theme" class="palette-grid" id="paletteGrid">
+<button aria-pressed="false" class="palette-option" data-palette="istaroth" title="Celestial timekeeper" type="button"><i style="--swatch:#cbb083"></i><b aria-hidden="true" class="realm-sigil">✧</b><span>Istaroth<small>Celestial timekeeper</small></span></button>
+<button aria-pressed="false" class="palette-option" data-palette="mondstadt" title="Wind, dandelions &amp; spires" type="button"><i style="--swatch:#7cdec2"></i><b aria-hidden="true" class="realm-sigil">❋</b><span>Mondstadt<small>Wind, dandelions &amp; spires</small></span></button>
+<button aria-pressed="false" class="palette-option" data-palette="liyue" title="Adeptal peaks &amp; lanterns" type="button"><i style="--swatch:#e4b66b"></i><b aria-hidden="true" class="realm-sigil">◆</b><span>Liyue<small>Adeptal peaks &amp; lanterns</small></span></button>
+<button aria-pressed="false" class="palette-option" data-palette="inazuma" title="Sakura, shrine &amp; lightning" type="button"><i style="--swatch:#c8a0fc"></i><b aria-hidden="true" class="realm-sigil">❀</b><span>Inazuma<small>Sakura, shrine &amp; lightning</small></span></button>
+<button aria-pressed="false" class="palette-option" data-palette="sumeru" title="Rainforest, wisdom &amp; desert" type="button"><i style="--swatch:#9cd99f"></i><b aria-hidden="true" class="realm-sigil">♧</b><span>Sumeru<small>Rainforest, wisdom &amp; desert</small></span></button>
+<button aria-pressed="false" class="palette-option" data-palette="fontaine" title="Water, glass &amp; clockwork" type="button"><i style="--swatch:#92d6f8"></i><b aria-hidden="true" class="realm-sigil">◈</b><span>Fontaine<small>Water, glass &amp; clockwork</small></span></button>
+<button aria-pressed="false" class="palette-option" data-palette="natlan" title="Embers, Saurians &amp; obsidian" type="button"><i style="--swatch:#ffac74"></i><b aria-hidden="true" class="realm-sigil">✹</b><span>Natlan<small>Embers, Saurians &amp; obsidian</small></span></button>
+<button aria-pressed="false" class="palette-option" data-palette="nodkrai" title="Moonlight &amp; Kuuvahki" type="button"><i style="--swatch:#b2d9fc"></i><b aria-hidden="true" class="realm-sigil">☾</b><span>Nod-Krai<small>Moonlight &amp; Kuuvahki</small></span></button>
+<button aria-pressed="false" class="palette-option" data-palette="snezhnaya" title="Frost, steel &amp; winter" type="button"><i style="--swatch:#b9d5ec"></i><b aria-hidden="true" class="realm-sigil">❄</b><span>Snezhnaya<small>Frost, steel &amp; winter</small></span></button>
+</div>
+<div class="section-label spaced">02 / TYPE &amp; COLOUR</div>
+<div class="setting-grid"><label class="field">Font family<select id="fontSelect"><option value="serif">Celestial serif</option><option value="clean">Clean sans</option><option value="rounded">Soft rounded</option></select></label><label class="field">Accent colour<input id="accentInput" type="color" value="#72a8a2"/></label></div>
+<div class="slider-control"><div class="slider-title"><label for="fontSizeInput">Font size</label><output id="fontSizeOutput">120%</output></div><input id="fontSizeInput" max="155" min="100" step="5" type="range" value="120"/><p>Bigger text throughout the widget and settings.</p></div>
+<div class="slider-control"><div class="slider-title"><label for="radiusInput">Corner radius</label><output id="radiusOutput">20px</output></div><input id="radiusInput" max="34" min="0" type="range" value="20"/></div>
+<div class="check-row"><span><strong>Fine border</strong><small>Subtle outline around the resin display</small></span><button aria-checked="true" aria-label="Toggle border" class="switch" id="borderInput" role="switch" type="button"></button></div>
+<div class="check-row"><span><strong>Motion</strong><small>Gentle gauge transitions</small></span><button aria-checked="true" aria-label="Toggle motion" class="switch" id="motionInput" role="switch" type="button"></button></div>
+<div class="button-row"><button class="small-quiet" id="accentReset" type="button">Reset accent colour</button><button class="small-quiet" id="restoreStyle" type="button">Restore default style</button></div>
+</section>
+<section class="settings-page hidden wp14-page" data-page="main-wallpaper" aria-label="Main Widget wallpaper settings">
+<div class="wp14-heading"><span class="section-label">MAIN WIDGET · WALLPAPER</span><h2>Main wallpaper</h2><p>Choose an image, adjust its position and preview changes to the Main Widget. These settings never alter Mini.</p></div>
+<div class="wp13-workspace" id="mainWpWorkspace" data-wp13-workspace="main">
+<div class="wp13-controls">
+<div class="wp13-scope-label"><strong>Main Widget wallpaper</strong><span>These controls affect the Main Widget only.</span></div>
+<div class="wp13-thumbnail" id="mainWpThumbnail"><span id="mainWpEmpty">No wallpaper selected</span></div>
+<div class="button-row"><button type="button" class="solid-small" id="mainWpChoose">Choose Main image</button><button type="button" class="small-quiet" id="mainWpClear">Remove image</button></div>
+<input class="visually-hidden" id="mainWpFile" type="file" accept="image/png,image/jpeg,image/webp"/>
+<p class="field-note">PNG, JPG or WebP · up to 8 MB · stored locally. Images are never uploaded.</p>
+<p class="wp17-hint">Main background is the backdrop behind the journal. To customize the resin display itself, use <strong>Resin card wallpaper</strong> below.</p>
+<div class="slider-control"><div class="slider-title"><label for="mainWpDim">Darkness</label><output id="mainWpDimOutput">—</output></div><input id="mainWpDim" data-wp13-slider="dim" type="range" min="0" max="90" value="0"/><p>Main Widget only</p></div>
+<div class="slider-control"><div class="slider-title"><label for="mainWpBlur">Blur</label><output id="mainWpBlurOutput">—</output></div><input id="mainWpBlur" data-wp13-slider="blur" type="range" min="0" max="18" value="0"/><p>Main Widget only</p></div>
+<div class="slider-control"><div class="slider-title"><label for="mainWpZoom">Zoom</label><output id="mainWpZoomOutput">—</output></div><input id="mainWpZoom" data-wp13-slider="zoom" type="range" min="100" max="220" value="100"/><p>Main Widget only</p></div>
+<div class="slider-control"><div class="slider-title"><label for="mainWpX">Horizontal position</label><output id="mainWpXOutput">—</output></div><input id="mainWpX" data-wp13-slider="x" type="range" min="0" max="100" value="0"/><p>Main Widget only</p></div>
+<div class="slider-control"><div class="slider-title"><label for="mainWpY">Vertical position</label><output id="mainWpYOutput">—</output></div><input id="mainWpY" data-wp13-slider="y" type="range" min="0" max="100" value="0"/><p>Main Widget only</p></div>
+<button type="button" class="small-quiet wp13-reset" id="mainWpReset">Reset Main background adjustments</button>
+<div class="wp17-resin-separator" role="separator"></div>
+<div class="wp13-scope-label wp17-section-title"><strong>Resin card wallpaper</strong><span>A separate image behind Original Resin, independently adjustable from the main background and Mini Widget.</span></div>
+<div class="wp13-thumbnail" id="resinWpThumbnail"><span id="resinWpEmpty">No resin card wallpaper selected</span></div>
+<div class="button-row"><button type="button" class="solid-small" id="resinWpChoose">Choose resin card image</button><button type="button" class="small-quiet" id="resinWpClear">Remove image</button></div>
+<input class="visually-hidden" id="resinWpFile" type="file" accept="image/png,image/jpeg,image/webp"/>
+<p class="field-note">Only the resin card uses this picture. Changes appear in the live preview on the right.</p>
+<div class="slider-control"><div class="slider-title"><label for="resinWpDim">Resin card darkness</label><output id="resinWpDimOutput">—</output></div><input id="resinWpDim" type="range" min="0" max="90" value="30"/></div>
+<div class="slider-control"><div class="slider-title"><label for="resinWpBlur">Resin card blur</label><output id="resinWpBlurOutput">—</output></div><input id="resinWpBlur" type="range" min="0" max="18" value="0"/></div>
+<div class="slider-control"><div class="slider-title"><label for="resinWpZoom">Resin card zoom</label><output id="resinWpZoomOutput">—</output></div><input id="resinWpZoom" type="range" min="100" max="220" value="110"/></div>
+<div class="slider-control"><div class="slider-title"><label for="resinWpX">Horizontal position</label><output id="resinWpXOutput">—</output></div><input id="resinWpX" type="range" min="0" max="100" value="50"/></div>
+<div class="slider-control"><div class="slider-title"><label for="resinWpY">Vertical position</label><output id="resinWpYOutput">—</output></div><input id="resinWpY" type="range" min="0" max="100" value="50"/></div>
+<button type="button" class="small-quiet wp13-reset" id="resinWpReset">Reset resin card adjustments</button>
+</div>
+<aside class="wp13-preview-panel"><div class="wp13-preview-heading"><strong>LIVE PREVIEW · MAIN</strong><small>Real widget layout, scaled to fit</small></div>
+<div class="wp13-viewport" id="mainWpViewport"><div class="wp13-stage" id="mainWpStage" aria-hidden="true"></div></div>
+<div class="wp13-preview-foot" id="mainWpMessage">Adjust the wallpaper to see the result here.</div>
+</aside></div>
+</section>
+<section class="settings-page hidden wp14-page" data-page="mini-wallpaper" aria-label="Mini Widget wallpaper settings">
+<div class="wp14-heading"><span class="section-label">MINI WIDGET · WALLPAPER</span><h2>Mini wallpaper</h2><p>A fully independent image, darkness, blur, zoom and position. Nothing on this page changes Main.</p></div>
+<div class="wp13-workspace" id="miniWpWorkspace" data-wp13-workspace="mini">
+<div class="wp13-controls">
+<div class="wp13-scope-label"><strong>Mini Widget wallpaper</strong><span>These controls affect the Mini Widget only.</span></div>
+<div class="wp13-thumbnail" id="miniWpThumbnail"><span id="miniWpEmpty">No wallpaper selected</span></div>
+<div class="button-row"><button type="button" class="solid-small" id="miniWpChoose">Choose Mini image</button><button type="button" class="small-quiet" id="miniWpClear">Remove image</button></div>
+<input class="visually-hidden" id="miniWpFile" type="file" accept="image/png,image/jpeg,image/webp"/>
+<p class="field-note">PNG, JPG or WebP · up to 8 MB · stored locally. Images are never uploaded.</p>
+<div class="slider-control"><div class="slider-title"><label for="miniWpDim">Darkness</label><output id="miniWpDimOutput">—</output></div><input id="miniWpDim" data-wp13-slider="dim" type="range" min="0" max="90" value="0"/><p>Mini Widget only</p></div>
+<div class="slider-control"><div class="slider-title"><label for="miniWpBlur">Blur</label><output id="miniWpBlurOutput">—</output></div><input id="miniWpBlur" data-wp13-slider="blur" type="range" min="0" max="18" value="0"/><p>Mini Widget only</p></div>
+<div class="slider-control"><div class="slider-title"><label for="miniWpZoom">Zoom</label><output id="miniWpZoomOutput">—</output></div><input id="miniWpZoom" data-wp13-slider="zoom" type="range" min="100" max="220" value="100"/><p>Mini Widget only</p></div>
+<div class="slider-control"><div class="slider-title"><label for="miniWpX">Horizontal position</label><output id="miniWpXOutput">—</output></div><input id="miniWpX" data-wp13-slider="x" type="range" min="0" max="100" value="0"/><p>Mini Widget only</p></div>
+<div class="slider-control"><div class="slider-title"><label for="miniWpY">Vertical position</label><output id="miniWpYOutput">—</output></div><input id="miniWpY" data-wp13-slider="y" type="range" min="0" max="100" value="0"/><p>Mini Widget only</p></div>
+<button type="button" class="small-quiet wp13-reset" id="miniWpReset">Reset Mini wallpaper adjustments</button>
+</div>
+<aside class="wp13-preview-panel"><div class="wp13-preview-heading"><strong>LIVE PREVIEW · MINI</strong><small>Real widget layout, scaled to fit</small></div>
+<div class="wp13-viewport" id="miniWpViewport"><div class="wp13-stage" id="miniWpStage" aria-hidden="true"></div></div>
+<div class="wp13-preview-foot" id="miniWpMessage">Only the Mini Widget uses this image. Open Mini mode from the widget header to view it outside Settings.</div>
+</aside></div>
+</section>
+<section class="settings-page hidden" data-page="layout">
+<div class="widget-scope-picker layout-scope-picker" role="group" aria-label="Choose widget layout settings">
+ <button type="button" class="active" data-layout-scope="main" aria-pressed="true">Main widget</button>
+ <button type="button" data-layout-scope="mini" aria-pressed="false">Mini widget</button>
+</div>
+<div class="layout-main-settings" id="layoutMainSettings">
+<p class="wp-scope-description">Settings here affect only the full Main Widget.</p>
+<div class="section-label">01 / WIDGET LAYOUT</div>
+
+<label class="field">Widget title<input id="titleInput" maxlength="34" placeholder="The Clock of Resin" type="text"/></label>
+<div class="setting-grid"><label class="field">Widget size<select id="sizeInput"><option value="standard">Comfortable</option><option value="compact">Compact</option></select></label><label class="field">Gauge style<select id="gaugeInput"><option value="ornate">Fine line</option><option value="simple">Minimal</option><option value="heavy">Bold</option></select></label></div>
+<div class="slider-control"><div class="slider-title"><label for="dialInput">Resin number size</label><output id="dialOutput">240px</output></div><input id="dialInput" max="270" min="205" step="5" type="range" value="240"/></div>
+<div class="check-row"><span><strong>Show subtitle</strong><small>Small description below the title</small></span><button aria-checked="true" aria-label="Toggle subtitle" class="switch" id="subtitleInput" role="switch" type="button"></button></div>
+<div class="check-row"><span><strong>Show full-at times</strong><small>Countdown and expected recovery time</small></span><button aria-checked="true" aria-label="Toggle times" class="switch" id="timesInput" role="switch" type="button"></button></div>
+<div class="section-label spaced">02 / SAVED LOOKS</div><div class="profile-create"><input aria-label="Profile name" id="profileName" maxlength="28" placeholder="Name this design"/><button class="solid-small" id="saveProfileButton" type="button">Save look</button></div><div class="profile-list" id="profilesList"></div>
+<button class="small-quiet" id="restoreAllButton" type="button">Reset main appearance to defaults</button>
+</div>
+<div class="layout-mini-settings hidden" id="layoutMiniSettings">
+  <p class="wp-scope-description">Mini Widget settings are saved separately and do not change the Main Widget layout.</p>
+<div class="check-row mini-mode-setting"><span><strong>Mini Resin Widget</strong><small>A small desktop widget with resin, recovery bar, and countdown only. Return to the full journal any time.</small></span><button aria-checked="false" aria-label="Enable mini resin-only widget" class="switch" id="miniInput" role="switch" type="button"></button></div>
+
+  <div class="section-label spaced">02 / MINI DISPLAY</div>
+  <div class="slider-control">
+    <div class="slider-title"><label for="miniTextSizeInput">Resin number size</label><output id="miniTextSizeOutput">100%</output></div>
+    <input id="miniTextSizeInput" min="80" max="130" step="5" type="range" value="100"/>
+  </div>
+  <div class="check-row"><span><strong>Show ready-at time</strong><small>Display the expected recovery time in Mini mode.</small></span><button class="switch" id="miniReadyInput" role="switch" aria-label="Show ready-at time" aria-checked="true" type="button"></button></div>
+  <div class="check-row"><span><strong>Show next resin timer</strong><small>Keep the small next-resin countdown in Mini mode.</small></span><button class="switch" id="miniNextInput" role="switch" aria-label="Show next resin timer" aria-checked="true" type="button"></button></div>
+  <p class="field-note">Shared color theme and font family remain under Style. Window pinning, tray behavior and startup remain under Windows.</p>
+</div>
+</section>
+<section class="settings-page hidden" data-page="account">
+<div class="section-label">01 / HOYOLAB SYNC</div><div class="connection-state" id="connectedLabel">Not connected · Sign in to view resin</div><p class="account-intro">Sign in on the official HoYoLAB site inside a separate window. Your password is never entered in Istaroth.</p>
+<div class="button-row"><button class="solid-small" id="loginButton" type="button">Open HoYoLAB sign-in</button><button class="small-quiet" id="discoverButton" type="button">Find my accounts</button></div>
+<div class="role-picker hidden" id="rolePicker"><label class="field">Genshin account<select id="roleSelect"></select></label><button class="solid-small" id="selectRoleButton" type="button">Use selected account</button></div>
+<details class="uid-details"><summary>Account not listed? Connect by UID</summary><div class="setting-grid"><label class="field">UID<input id="uidInput" inputmode="numeric" maxlength="12" placeholder="Game UID" type="text"/></label><label class="field">Server<select id="regionInput"><option value="os_asia">Asia</option><option value="os_euro">Europe</option><option value="os_usa">America</option><option value="os_cht">TW / HK / MO</option></select></label></div><button class="small-quiet" id="uidConnectButton" type="button">Connect this UID</button></details>
+<div class="button-row"><button class="small-quiet" id="testLiveSync" type="button">Test live HoYoLAB connection</button></div>
+<p class="field-note" id="liveTestStatus" role="status">Live account access cannot be verified until you sign in and run this test on Windows.</p>
+<div class="section-label spaced">02 / SYNCHRONIZATION</div>
+
+
+
+<div class="check-row"><span><strong>Automatic refresh</strong><small>Sync in the background while the app is running</small></span><button aria-checked="true" aria-label="Toggle auto" class="switch" id="autoInput" role="switch" type="button"></button></div>
+<label class="field">Refresh every<select id="intervalInput"><option value="5">5 minutes</option><option value="10">10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">60 minutes</option></select></label>
+
+
+
+
+
+
+
+<p class="field-note" id="securityNote">Checking encrypted HoYoLAB session storage…</p>
+<button class="danger-button hidden" id="disconnectButton" type="button">Disconnect and clear HoYoLAB session</button>
+<p class="field-note">HoYoLAB Real-Time Notes must be enabled in Battle Chronicle. This is an unofficial read-only integration, and account access can change.</p>
+</section>
+<section class="settings-page hidden" data-page="windows"><div class="section-label">01 / WINDOW BEHAVIOR</div><div class="check-row"><span><strong>Always on top</strong><small>Keep the widget above other windows</small></span><button aria-checked="true" aria-label="Toggle pin" class="switch" id="pinInput" role="switch" type="button"></button></div><div class="check-row"><span><strong>Close to system tray</strong><small>If disabled, X fully quits the app</small></span><button aria-checked="true" aria-label="Toggle tray" class="switch" id="trayInput" role="switch" type="button"></button></div><div class="check-row"><span><strong>Floating borderless mini</strong><small>Smaller frameless desktop mode; drag the mini heading to move. The controls appear at the top right.</small></span><button aria-checked="false" aria-label="Floating borderless mini widget" class="switch" id="floatingMiniInput" role="switch" type="button"></button></div><div class="section-label spaced">02 / WINDOWS STARTUP</div><div class="check-row"><span><strong>Open Istaroth when Windows starts</strong><small>Start the companion automatically after signing in to Windows; never starts Genshin itself.</small></span><button aria-checked="true" aria-label="Launch Istaroth on Windows startup" class="switch" id="startupInput" role="switch" type="button"></button></div><p class="field-note" id="startupNote" role="status">Checking Windows startup registration…</p><div class="button-row"><button class="small-quiet" id="repairStartupButton" type="button">Repair Windows startup</button></div><p class="field-note">These settings control the Istaroth desktop window only; they never launch Genshin Impact.</p></section><section class="settings-page hidden" data-page="alerts"><div class="section-label">01 / RESIN NOTIFICATIONS</div><p class="field-note">Alerts use synchronized HoYoLAB readings. Quiet hours are saved locally.</p><div class="check-row"><span><strong>Notify when resin is full</strong><small>Windows notification when the timer reaches the cap</small></span><button aria-checked="true" aria-label="Toggle notifications" class="switch" id="notificationsInput" role="switch" type="button"></button></div><label class="field">Notify at resin amount<select id="alertThreshold"><option value="80">80 resin</option><option value="120">120 resin</option><option value="160">160 resin</option><option value="180">180 resin</option><option value="200">200 · Full</option></select></label><div class="section-label spaced">02 / QUIET HOURS</div><div class="check-row"><span><strong>Quiet hours</strong><small>Suppress resin alerts overnight.</small></span><button aria-checked="false" aria-label="Enable quiet hours" class="switch" id="quietInput" role="switch" type="button"></button></div><div class="setting-grid"><label class="field">From<input id="quietStart" type="time" value="23:00"/></label><label class="field">To<input id="quietEnd" type="time" value="08:00"/></label></div></section></div>
+<div class="settings-footer"><span id="statusText" role="status">Ready.</span><button class="solid-small" id="doneButton" type="button"><span id="doneLabel">Done</span> <svg><use href="#ic-check"></use></svg></button></div>
+</main>
+<div aria-live="polite" class="toast hidden" id="toast" role="status"></div>
+</div>
+<script defer="" src="wallpaper-v2413.js"></script>
+<script defer="" src="renderer.js"></script>
+<script defer="" src="chronicle-ui.js"></script>
+</body></html>

@@ -1,0 +1,31 @@
+/* v2.4.17: resin card has its own image and adjustments. Main background and Mini are unaffected. */
+html[data-wall-target] .resin-card .card-wallpaper {
+  background-image:var(--resin-wall-image,none) !important;
+  background-position:var(--resin-x,50%) var(--resin-y,50%) !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
+  transform:scale(var(--resin-zoom,1.1)) !important;
+  transform-origin:var(--resin-x,50%) var(--resin-y,50%) !important;
+  filter:blur(var(--resin-blur,0px)) !important;
+  opacity:var(--resin-present,0) !important;
+  z-index:-2;
+}
+/* When the card has an image, the slider directly controls the tint instead of a fixed opaque mask. */
+html .resin-card:has(.card-wallpaper) .card-tint { 
+  background:linear-gradient(110deg,rgba(6,12,24,.10),rgba(6,12,24,.04) 54%,rgba(6,12,24,.1)) !important;
+}
+html .resin-card .card-tint::before {
+  content:'' !important;
+  background:rgba(4,10,19,calc(var(--resin-dim,.3) * var(--resin-present,0))) !important;
+  opacity:1 !important;
+}
+/* Remove residual panel tint only when an independent resin wallpaper is present. */
+html .resin-card { isolation:isolate; }
+html .resin-card .resin-card-top,html .resin-card .balance-display,html .resin-card .recovery-progress{position:relative;z-index:1;}
+/* The preview clone must match the live widget's independent card image. */
+.wp17-resin-separator{margin:26px 0 22px;border:0;border-top:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.wp17-section-title{margin-top:5px}
+.wp17-hint{color:var(--muted);font-size:.70rem;line-height:1.5;margin:8px 0 17px}
+.wp17-hint strong{color:var(--accent-soft)}
+.wp13-controls{max-height:548px}
+@media(max-width:800px){.wp13-controls{max-height:none}}

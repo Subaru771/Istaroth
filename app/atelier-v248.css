@@ -1,0 +1,20 @@
+/* Istaroth 2.4.8 — six-category settings navigation. Visual changes only. */
+.settings-screen .setting-tabs{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;}
+.settings-screen .setting-tabs .tab{padding:0 6px;min-width:0;font-size:.82rem;}
+.settings-screen .settings-page[data-page="alerts"],
+.settings-screen .settings-page[data-page="windows"] {max-width:850px;}
+.settings-screen .settings-page[data-page="alerts"] .field,
+.settings-screen .settings-page[data-page="windows"] .field {color:var(--ink);}
+@media(max-width:850px){
+  .settings-screen .setting-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;}
+  .settings-screen .setting-tabs .tab{min-height:36px;font-size:.78rem;}
+}
+@media(max-width:440px){
+  .settings-screen .setting-tabs .tab{font-size:.70rem;padding:0 3px;}
+}
+
+/* Improve account-screen readability without changing the region theme. */
+.settings-screen .settings-page[data-page="account"] .account-intro,
+.settings-screen .settings-page[data-page="account"] .uid-details summary {
+  color:color-mix(in srgb,var(--ink) 86%,transparent);
+}

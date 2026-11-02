@@ -1,0 +1,82 @@
+/* v1.9: All six regional palettes and custom accent now tint every major
+   surface. Unlike earlier journal CSS, this file has no fixed navy/gold theme.
+   var(--accent) comes from [data-palette] or from the custom color picker. */
+:root{
+  --theme-ink: color-mix(in srgb,var(--accent) 13%,#172533);
+  --theme-ink2: color-mix(in srgb,var(--accent) 34%,#111e32);
+  --theme-deep: color-mix(in srgb,var(--accent) 47%,#07101c);
+  --theme-rail: color-mix(in srgb,var(--accent) 36%,#0a1928);
+  --theme-rail2: color-mix(in srgb,var(--accent) 54%,#06111d);
+  --theme-paper: color-mix(in srgb,var(--accent) 13%,#faf5e9);
+  --theme-paper2: color-mix(in srgb,var(--accent) 19%,#f6eddb);
+  --theme-surface: color-mix(in srgb,var(--accent) 5%,#fffdf5);
+  --theme-edge: color-mix(in srgb,var(--accent) 47%,#c9b798);
+  --theme-accent-dark: color-mix(in srgb,var(--accent) 68%,#1a2b37);
+  --theme-accent-light: color-mix(in srgb,var(--accent) 70%,#fffaf1);
+  --journal-paper:var(--theme-paper);
+  --journal-paper2:var(--theme-paper2);
+  --journal-ink:var(--theme-ink);
+  --journal-gold:var(--theme-accent-dark);
+  --journal-gold2:var(--theme-accent-light);
+  --journal-navy:var(--theme-deep);
+  --journal-navy2:var(--theme-rail);
+}
+.app-frame{background:var(--theme-paper);border-color:var(--theme-edge)}
+.chrome{background:linear-gradient(115deg,var(--theme-rail2),var(--theme-deep) 76%);border-bottom-color:var(--theme-edge)}
+.chrome .brand-mark{border-color:var(--accent-soft);background:color-mix(in srgb,var(--accent) 22%,transparent);color:#fff3e1}
+.chrome .brand-words small{color:color-mix(in srgb,var(--accent-soft) 70%,#f4eedf)}
+.chrome::after{color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.dashboard-tabs{background:linear-gradient(165deg,var(--theme-rail2) 0%,var(--theme-rail) 48%,var(--theme-deep) 100%);border-right-color:var(--theme-edge)}
+.nav-crest{color:var(--accent-soft)}
+.dashboard-tabs .dash-tab{color:color-mix(in srgb,var(--accent-soft) 40%,#d9e5e6)}
+.dashboard-tabs .dash-tab:hover{background:color-mix(in srgb,var(--accent) 22%,transparent);color:#fffdf5}
+.dashboard-tabs .dash-tab.active{border-color:color-mix(in srgb,var(--accent) 66%,#d0c7b3);background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 40%,transparent),color-mix(in srgb,var(--accent) 19%,transparent));color:#fffaf1}
+.dashboard-tabs .dash-tab.active::before{background:var(--accent-soft)}
+.dashboard-tabs .dash-tab.active .tab-symbol{color:var(--accent-soft)}
+.tab-symbol{color:color-mix(in srgb,var(--accent-soft) 62%,#e1d6c2)}
+.widget-screen{background:var(--theme-paper)}
+.widget-screen::before{background:radial-gradient(ellipse at 95% 0%,color-mix(in srgb,var(--accent) 19%,transparent),transparent 72%)}
+html[data-wall-target="full"] .widget-screen{background:color-mix(in srgb,var(--theme-paper) 82%,transparent)}
+.widget-screen .headline h1,.dash-head h2{color:var(--theme-ink)}
+.headline .eyebrow,.dash-eyebrow{color:var(--theme-accent-dark)}
+.resin-card,.widget-screen .resin-card,html[data-wall-target="full"] .resin-card,html[data-wall-target="card"] .resin-card{
+  background:linear-gradient(135deg,var(--theme-rail2),var(--theme-deep) 88%);border-color:var(--accent);
+}
+.resin-card::before{border-color:color-mix(in srgb,var(--accent) 55%,transparent)}
+html[data-border="on"] .resin-card{border-color:var(--accent-soft)}
+.resin-card-top>span,.progress-heading #resinState,.resin-gem{color:var(--accent-soft)}
+.sync-state{border-color:color-mix(in srgb,var(--accent) 54%,#bdc5c6);background:color-mix(in srgb,var(--theme-deep) 78%,transparent)}
+.card-tint,html[data-wall-target="full"] .card-tint{background:linear-gradient(90deg,color-mix(in srgb,var(--theme-deep) 80%,transparent),color-mix(in srgb,var(--theme-rail) 61%,transparent))}
+.progress-fill{background:linear-gradient(90deg,var(--accent),var(--accent-soft))}
+.recovery-item,.metric-tile,.data-section,.dash-hint,.combat-floor{background:var(--theme-surface);border-color:var(--theme-edge)}
+.recovery-item small,.section-label,.data-section-title{color:var(--theme-accent-dark)}
+.recovery-item strong,.metric-value,.data-row-value,.data-section-title{color:var(--theme-ink)}
+.action-main,.solid-small{background:var(--theme-accent-dark);color:#fffaf1;border-color:var(--accent)}
+.action-main:hover,.solid-small:hover{background:var(--theme-rail2);filter:none}
+.action-quiet,.small-quiet{background:var(--theme-surface);border-color:var(--theme-edge);color:var(--theme-ink)}
+.dash-head{border-color:var(--theme-edge)}
+.dash-head::after{color:var(--accent);background:var(--theme-paper)}
+.dash-refresh,.palette-option,.profile-entry,.game-path-info,.game-settings-intro{background:var(--theme-surface);border-color:var(--theme-edge);color:var(--theme-ink)}
+.dash-refresh:hover{background:var(--theme-paper2);color:var(--theme-ink)}
+.metric-tile:nth-child(4n + 1){border-top-color:var(--accent)}
+.account-identity{background:linear-gradient(140deg,var(--theme-rail2),var(--theme-deep));border-color:var(--accent)}
+.area-fill{background:linear-gradient(90deg,var(--accent),var(--accent-soft))}
+.settings-screen{background:var(--theme-paper)}
+.settings-heading{background:linear-gradient(135deg,var(--theme-surface),var(--theme-paper2));border-bottom-color:var(--theme-edge)}
+.settings-heading h1,.field,.slider-title label{color:var(--theme-ink)}
+.settings-heading .eyebrow,.back-btn,.slider-title output{color:var(--theme-accent-dark)}
+.setting-tabs{background:var(--theme-paper2);border-bottom-color:var(--theme-edge)}
+.tab.active{background:var(--theme-rail2);border-color:var(--accent);color:#fffaf1}
+.tab:not(.active):hover{background:var(--theme-accent-light);color:var(--theme-ink)}
+input[type=range]{accent-color:var(--accent)}
+.palette-option[aria-pressed="true"]{background:var(--theme-paper2);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);color:var(--theme-ink)}
+.palette-option:hover{background:var(--theme-paper2)}
+.check-row{border-bottom-color:var(--theme-edge);color:var(--theme-ink)}
+.switch[aria-checked="true"]{background:var(--theme-accent-dark);border-color:var(--accent)}
+.profile-entry button{background:var(--theme-paper2);border-color:var(--theme-edge)}
+.settings-footer{background:var(--theme-paper2);border-color:var(--theme-edge)}
+.game-settings-symbol,.launch-settings-button{background:var(--theme-rail2);color:var(--accent-soft);border-color:var(--accent)}
+.game-path-caption{color:var(--theme-accent-dark)}
+.game-path-info strong,.game-settings-intro h2{color:var(--theme-ink)}
+.toast{background:var(--theme-deep);border-color:var(--accent)}
+:root{color-scheme:light}

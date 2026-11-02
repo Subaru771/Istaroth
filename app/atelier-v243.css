@@ -1,0 +1,183 @@
+/* Istaroth v2.4.3 — The Celestial Atelier. Progressive enhancement of stable app.
+   All original IDs, events, design values and user data remain unchanged. */
+:root{--atelier-gold:#dfbf85;--atelier-lav:#bd9de0;--atelier-line:rgba(227,194,162,.34)}
+.app-frame{border-radius:calc(max(15px,var(--round)) + 2px);overflow:hidden}
+.chrome{height:78px;min-height:78px;padding:0 25px 0 20px;gap:12px;position:relative;
+ background:linear-gradient(105deg,rgba(24,24,55,.98),rgba(35,27,70,.95) 56%,rgba(26,24,57,.98));
+ border-bottom:1px solid rgba(238,205,158,.35);box-shadow:inset 0 -1px 0 rgba(244,226,188,.13)}
+.chrome::after{content:'✦';font:21px Georgia,serif;position:absolute;left:51%;top:24px;color:#d9bf8a;opacity:.7}
+.brand{gap:13px;min-width:0}
+.brand-mark,.brand-mark span{transform:none}
+.brand-mark{width:52px;height:52px;flex:0 0 52px;overflow:hidden;display:grid;place-items:center;
+ border-radius:16px;background:none;border:0;box-shadow:none}
+.brand-mark img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 7px rgba(228,180,117,.23))}
+.brand-words{gap:4px}
+.brand-words strong{font:500 1.17rem/1 Georgia,'Times New Roman',serif;letter-spacing:.175em;color:#fff1d9}
+.brand-words small{display:block;font:600 .49rem/1.2 'Segoe UI',sans-serif;letter-spacing:.19em;color:#e1cba6}
+.window-actions{gap:5px}
+.win-btn{width:36px;height:36px;border-radius:10px;color:#dccfe8}
+.win-btn:hover{background:rgba(188,151,221,.15);border:1px solid rgba(228,196,245,.21)}
+/* The settings window has a deliberate separate composition. */
+.settings-screen{inset:78px 0 0;color:#f3e8dc;background:linear-gradient(160deg,#211e47,#34234e 55%,#25214a)}
+.settings-heading{min-height:173px;flex:0 0 auto;position:relative;overflow:hidden;padding:19px 36px 22px;
+ background:radial-gradient(ellipse at 81% 35%,rgba(151,116,215,.30),transparent 46%),
+ linear-gradient(113deg,rgba(27,27,65,.98),rgba(55,38,91,.95));border-bottom:1px solid rgba(227,190,143,.28)}
+.settings-heading::before{content:'';pointer-events:none;position:absolute;inset:0;
+ background:radial-gradient(circle at 42% 33%,rgba(254,228,163,.75) 1px,transparent 2px),
+ radial-gradient(circle at 68% 58%,rgba(254,228,163,.6) 1px,transparent 2px),
+ radial-gradient(circle at 76% 20%,rgba(254,228,163,.6) 1px,transparent 2px);
+ opacity:.72}
+.settings-heading > *:not(.atelier-scene){position:relative;z-index:2}
+.settings-heading .back-btn{font:500 .78rem 'Segoe UI',sans-serif;min-height:26px;color:#d4bfdc;padding:0 2px}
+.settings-heading .back-btn:hover{color:#fff6d9}
+.settings-heading .eyebrow{font:650 .64rem 'Segoe UI',sans-serif;letter-spacing:.22em;color:#eacb9b;margin:3px 0 0}
+.settings-heading h1{font:400 clamp(2.1rem,3.5vw,2.85rem)/1.07 Georgia,'Times New Roman',serif;
+ letter-spacing:-.035em;color:#fff2dc;margin:8px 0 6px}
+.settings-heading p{font:400 .85rem/1.45 'Segoe UI',sans-serif;color:#d0c0d8;margin:0;max-width:620px}
+.atelier-scene{pointer-events:none;position:absolute;inset:0 0 0 auto;width:44%;z-index:0;
+ background-image:linear-gradient(90deg,#31254c,rgba(48,39,90,.18) 36%),
+ radial-gradient(ellipse at 77% 74%,rgba(174,125,213,.28),transparent 61%),
+ url('assets/regions/nodkrai.svg');background-position:center,right center,right 37%;background-size:cover,cover,cover;opacity:.72}
+.atelier-orbit{position:absolute;right:18%;top:3px;width:192px;height:192px;border:2px solid rgba(249,204,145,.34);
+ border-radius:100%;box-shadow:0 0 0 17px rgba(216,174,232,.045),0 0 0 27px rgba(248,199,133,.06);transform:rotate(-23deg)}
+.atelier-orbit:before{content:'';position:absolute;inset:22px;border:1px dashed rgba(239,203,156,.5);border-radius:100%}
+.atelier-orbit:after{content:'✦';font:42px Georgia,serif;position:absolute;top:-19px;right:25px;color:#f9d18e;text-shadow:0 0 20px #e2b9f4}
+.atelier-glass{position:absolute;right:27%;top:30px;width:82px;height:116px;opacity:.85;
+ background:url('assets/istaroth-hourglass.svg') center/contain no-repeat;filter:drop-shadow(0 0 12px rgba(250,215,180,.7))}
+.setting-tabs{flex:0 0 auto;position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ margin:14px 28px 0;padding:5px;gap:6px;border:1px solid rgba(216,169,218,.38);border-radius:22px;
+ background:linear-gradient(105deg,rgba(27,23,59,.88),rgba(38,27,72,.93));box-shadow:0 5px 18px rgba(8,10,31,.13)}
+.tab{min-height:48px;color:#d8c6de;font:600 .88rem Georgia,'Times New Roman',serif;border:1px solid transparent;
+ border-radius:17px;letter-spacing:.01em;white-space:nowrap}
+.tab:hover{color:#fff3d9;background:rgba(200,163,225,.12)}
+.tab.active{background:linear-gradient(110deg,rgba(151,114,193,.44),rgba(115,88,174,.55));
+ border-color:#f3d4a3;color:#fff2df;box-shadow:inset 0 0 0 1px rgba(255,230,182,.24),0 0 12px rgba(215,162,243,.28)}
+.settings-scroll{background:radial-gradient(ellipse at 81% 2%,rgba(151,111,185,.12),transparent 48%),
+ linear-gradient(158deg,rgba(47,32,79,.95),rgba(30,31,66,.98));padding:22px 35px 28px;
+ scrollbar-color:#d1b28e transparent;min-height:0}
+.settings-scroll::-webkit-scrollbar{width:10px}
+.settings-scroll::-webkit-scrollbar-thumb{background:rgba(218,180,137,.7);border-radius:20px;border:3px solid #322747}
+.settings-page{max-width:1000px;margin:0 auto}
+.section-label{display:flex;align-items:center;gap:20px;font:650 .71rem 'Segoe UI',sans-serif;
+ letter-spacing:.18em;color:#e9d7b8;margin:1px 4px 16px}
+.section-label::after{content:'';height:1px;flex:1;background:linear-gradient(90deg,rgba(236,197,150,.54),transparent)}
+.section-aside{white-space:nowrap;font:.60rem 'Segoe UI',sans-serif;letter-spacing:.18em;color:#c1b1d0;margin-left:auto}
+.palette-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.palette-option{
+ --card-bg:#242347;--card-glow:#dec4aa;--card-scene:url('assets/regions/nodkrai.svg');
+ position:relative;display:flex;align-items:center;gap:12px;height:99px;min-height:99px;overflow:hidden;
+ border-radius:17px;border:1px solid rgba(229,197,220,.45);padding:12px 15px;
+ background:linear-gradient(90deg,var(--card-bg) 0%,var(--card-bg) 25%,rgba(34,34,68,.35) 100%),var(--card-scene);
+ background-repeat:no-repeat;background-size:cover,cover;background-position:center,70% 45%;
+ color:#fff3e5;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
+ font:600 .95rem Georgia,'Times New Roman',serif;transition:filter .15s,border-color .15s,box-shadow .15s}
+.palette-option::after{content:'';position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(90deg,rgba(16,18,45,.38),transparent 85%)}
+.palette-option:hover{filter:brightness(1.12);border-color:#e6c69e;transform:translateY(-1px)}
+.palette-option[aria-pressed="true"]{background-color:transparent;border:2px solid #ffe0a7;
+ box-shadow:0 0 0 1px rgba(255,246,213,.24),0 0 18px rgba(229,175,247,.37),inset 0 0 15px rgba(251,211,151,.1)}
+.palette-option[aria-pressed="true"]::before{content:'✓';position:absolute;right:15px;top:14px;z-index:3;
+ width:26px;height:26px;display:grid;place-items:center;background:#f9dfad;color:#4a325b;border-radius:100%;font:bold .78rem 'Segoe UI',sans-serif}
+.palette-option i{display:none}
+.palette-option .realm-sigil{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;position:relative;z-index:2;
+ border-radius:50%;border:1px solid rgba(255,244,217,.76);background:rgba(40,26,66,.44);
+ font:27px Georgia,'Times New Roman',serif;color:var(--card-glow);text-shadow:0 0 8px var(--card-glow)}
+.palette-option > span{position:relative;z-index:2;min-width:0;font:600 1.13rem/1.17 Georgia,serif;color:#fff5e9;
+ text-shadow:0 2px 9px #15112b}
+.palette-option > span small{display:block;margin-top:5px;font:450 .68rem/1.25 'Segoe UI',sans-serif;
+ color:#f0e5ed;text-shadow:0 1px 8px #15112b}
+.palette-option[data-palette="istaroth"]{--card-bg:#222044;--card-glow:#f0d49d;--card-scene:url('assets/istaroth-atelier-card.svg')}
+.palette-option[data-palette="mondstadt"]{--card-bg:#153b45;--card-glow:#a2edd7;--card-scene:url('assets/regions/mondstadt.svg')}
+.palette-option[data-palette="liyue"]{--card-bg:#493323;--card-glow:#f0cc85;--card-scene:url('assets/regions/liyue.svg')}
+.palette-option[data-palette="inazuma"]{--card-bg:#33244d;--card-glow:#ddb5ff;--card-scene:url('assets/regions/inazuma.svg')}
+.palette-option[data-palette="sumeru"]{--card-bg:#1a4236;--card-glow:#b7eca3;--card-scene:url('assets/regions/sumeru.svg')}
+.palette-option[data-palette="fontaine"]{--card-bg:#1c3d5e;--card-glow:#a9dfff;--card-scene:url('assets/regions/fontaine.svg')}
+.palette-option[data-palette="natlan"]{--card-bg:#4e2729;--card-glow:#f9b688;--card-scene:url('assets/regions/natlan.svg')}
+.palette-option[data-palette="nodkrai"]{--card-bg:#243252;--card-glow:#d1e9fa;--card-scene:url('assets/regions/nodkrai.svg')}
+.palette-option[data-palette="snezhnaya"]{--card-bg:#293b55;--card-glow:#d0ebff;--card-scene:url('assets/regions/snezhnaya.svg')}
+.section-label.spaced{margin-top:34px}
+.settings-page[data-page="style"] .field, .settings-page[data-page="style"] .slider-title,
+.settings-page[data-page="style"] .check-row{color:#ece1e9}
+.settings-page[data-page="style"] .slider-control p{color:#c5b5ce}
+.settings-footer{min-height:74px;flex:0 0 auto;padding:11px 33px;border-top:1px solid rgba(224,183,172,.34);
+ background:linear-gradient(95deg,#241c43,#33224d);color:#d5c6d3}
+.settings-footer #statusText{color:#b9d8be;font-size:.76rem}
+.settings-footer #statusText::before{content:'●';margin-right:9px;color:#76d8a4;font-size:11px}
+.settings-footer .solid-small{min-width:131px;min-height:49px;border:1px solid #f7daae;
+ border-radius:16px;background:linear-gradient(125deg,#8968b4,#5c447f);color:#fff5dc;
+ font:600 1.15rem Georgia,serif;box-shadow:inset 0 0 0 2px rgba(247,222,178,.15),0 2px 14px rgba(211,160,228,.23)}
+.settings-footer .solid-small:hover{filter:brightness(1.13)}
+/* Match the atelier shell to other regions without suppressing their distinctive accent variables. */
+html:not([data-palette="istaroth"]) .settings-heading{background:linear-gradient(100deg,var(--realm-sky),var(--realm-sky2))}
+html:not([data-palette="istaroth"]) .settings-screen{background:linear-gradient(130deg,var(--realm-sky),var(--realm-sky2))}
+html:not([data-palette="istaroth"]) .settings-scroll{background:linear-gradient(150deg,var(--realm-sky2),var(--realm-sky))}
+html:not([data-palette="istaroth"]) .setting-tabs{background:linear-gradient(100deg,var(--realm-rail),var(--realm-sky2));border-color:var(--theme-edge)}
+html:not([data-palette="istaroth"]) .settings-footer{background:linear-gradient(100deg,var(--realm-sky),var(--realm-rail))}
+html:not([data-palette="istaroth"]) .tab.active{background:color-mix(in srgb,var(--accent) 30%,var(--realm-sky));border-color:var(--accent)}
+html:not([data-palette="istaroth"]) .section-label{color:var(--accent-soft)}
+/* Browser preview 800px wide and narrower desktops: never clip text or settings. */
+@media(max-width:850px){
+ .chrome{height:70px;min-height:70px;padding:0 14px}
+ .settings-screen{inset:70px 0 0}
+ .brand-mark{width:43px;height:43px;flex-basis:43px}
+ .brand-words strong{font-size:.95rem}.brand-words small{font-size:.40rem}
+ .settings-heading{min-height:155px;padding:14px 27px}
+ .settings-heading h1{font-size:2.15rem}
+ .atelier-scene{width:36%;opacity:.44}
+ .setting-tabs{margin:10px 21px 0}
+ .settings-scroll{padding:19px 23px}
+ .palette-grid{gap:9px}
+ .palette-option{height:77px;min-height:77px;padding:9px 11px;gap:9px}
+ .palette-option .realm-sigil{width:34px;height:34px;flex-basis:34px;font-size:20px}
+ .palette-option > span{font-size:.95rem}.palette-option > span small{font-size:.60rem}
+ .palette-option::before{display:none}
+ .section-aside{display:none}
+}
+@media(max-width:510px){
+ .brand-words small{display:none}
+ .settings-heading{min-height:143px}.settings-heading h1{font-size:1.7rem}
+ .settings-heading p{font-size:.72rem}
+ .setting-tabs{margin:8px 10px 0;padding:4px;gap:1px;border-radius:14px}.tab{min-height:41px;font-size:.73rem}
+ .settings-scroll{padding:15px 12px}
+ .palette-grid{grid-template-columns:minmax(0,1fr)}
+ .palette-option{min-height:70px;height:70px}
+ .settings-footer{padding:9px 14px;min-height:64px}
+}
+@media(prefers-reduced-motion:reduce){.palette-option{transition:none}.palette-option:hover{transform:none}}
+/* Specificity guard: older theme sheets intentionally style palette backgrounds.
+   Our illustrated cards must be the final authoritative presentation. */
+html .settings-screen .palette-option{
+ background-image:linear-gradient(90deg,var(--card-bg) 0%,color-mix(in srgb,var(--card-bg) 79%,transparent) 32%,rgba(22,20,48,.18) 100%),var(--card-scene)!important;
+ background-color:var(--card-bg)!important;
+ background-repeat:no-repeat!important;
+ background-size:cover,cover!important;
+ background-position:center,65% 50%!important;
+}
+html[data-palette="istaroth"] .settings-screen{
+ background:linear-gradient(160deg,#2b214b,#30234f 56%,#232346);
+}
+html[data-palette="istaroth"] .settings-heading{
+ background:radial-gradient(ellipse at 79% 35%,rgba(165,116,209,.29),transparent 51%),linear-gradient(110deg,#252146,#3a2a60);
+}
+html[data-palette="istaroth"] .setting-tabs{
+ background:linear-gradient(90deg,rgba(28,25,58,.95),rgba(42,30,73,.97));
+}
+html[data-palette="istaroth"] .settings-scroll{
+ background:radial-gradient(ellipse at 82% 7%,rgba(161,116,218,.20),transparent 53%),linear-gradient(155deg,#32264f,#292348);
+}
+html[data-palette="istaroth"] .settings-footer{
+ background:linear-gradient(95deg,#251e42,#33234d);
+}
+html[data-palette="istaroth"] .settings-footer .solid-small{
+ background:linear-gradient(125deg,#9570bb,#644b86)!important;
+ border-color:#f7daae;color:#fff5e0!important;
+}
+html[data-palette="istaroth"] .setting-tabs .tab.active{
+ background:linear-gradient(110deg,rgba(159,120,198,.50),rgba(109,79,161,.65));
+ border:1px solid #f3d4a3;
+ box-shadow:inset 0 0 0 1px rgba(255,230,182,.24),0 0 12px rgba(215,162,243,.28);
+}
+@media(min-width:851px){
+ .palette-option{height:89px;min-height:89px}
+ .palette-grid{gap:10px 14px}
+}

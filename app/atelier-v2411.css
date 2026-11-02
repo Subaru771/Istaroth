@@ -1,0 +1,202 @@
+/* Istaroth 2.4.11 — Live Wallpaper Atelier.
+   Reuses the app's real .chrome, .widget-screen, .resin-card, and .mini-screen DOM;
+   not a mockup, screenshot, or separate static illustration. */
+
+.settings-screen .settings-page[data-page="wallpaper"]{
+  max-width:1100px;
+  width:100%;
+  margin:0 auto;
+}
+.settings-screen .wallpaper-workspace{
+  display:grid;
+  grid-template-columns:minmax(286px, .90fr) minmax(340px, 1.10fr);
+  gap:22px;
+  align-items:start;
+}
+.wallpaper-controls{min-width:0}
+.wallpaper-intro{display:flex;flex-direction:column;gap:5px;margin:2px 4px 20px}
+.wallpaper-intro strong{
+  font:500 clamp(1.24rem,2vw,1.55rem)/1.1 Georgia,'Palatino Linotype',serif;
+  color:var(--ink);
+}
+.wallpaper-intro span{font:400 .78rem/1.4 'Segoe UI',sans-serif;color:var(--muted)}
+.settings-screen .wallpaper-controls .section-label{margin-top:9px;margin-bottom:12px}
+.settings-screen .wallpaper-controls .section-label.spaced{margin-top:25px}
+.settings-screen .wallpaper-controls .wallpaper-preview{
+  min-height:91px;height:98px;
+  border:1px solid color-mix(in srgb,var(--accent) 38%,transparent);
+  border-radius:13px;background-size:cover;background-position:center;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.settings-screen .wallpaper-controls .button-row{flex-wrap:wrap;margin-top:12px}
+.settings-screen .wallpaper-controls .field-note{font-size:.70rem;line-height:1.45}
+.settings-screen .wallpaper-controls .slider-control{margin:15px 0}
+.settings-screen .wallpaper-controls .setting-grid{gap:10px}
+.settings-screen .wallpaper-controls .setting-grid .slider-control{min-width:0}
+
+.wp-preview-panel{
+  position:sticky;top:2px;min-width:0;
+  border:1px solid color-mix(in srgb,var(--accent) 48%,transparent);
+  border-radius:19px;overflow:hidden;
+  background:linear-gradient(170deg,color-mix(in srgb,var(--theme-paper) 94%,transparent),color-mix(in srgb,var(--theme-deep) 87%,transparent));
+  box-shadow:0 13px 36px rgba(4,10,22,.18),inset 0 1px rgba(255,255,255,.07);
+}
+.wp-preview-toolbar{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:12px;padding:13px 15px;
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 27%,transparent);
+}
+.wp-preview-title{display:flex;gap:10px;align-items:center;min-width:0}
+.wp-preview-title>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.wp-preview-title strong{font:600 .88rem Georgia,'Palatino Linotype',serif;color:var(--ink)}
+.wp-preview-title small{font:400 .65rem 'Segoe UI',sans-serif;color:var(--muted)}
+.wp-live-indicator{
+  width:8px;height:8px;border-radius:50%;background:#83e7ad;
+  box-shadow:0 0 0 4px rgba(121,226,169,.13),0 0 12px rgba(121,226,169,.4);
+}
+.wp-view-toggle{
+  display:flex;align-items:center;gap:3px;padding:3px;
+  border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+  border-radius:10px;background:rgba(10,18,35,.34);
+}
+.wp-view-toggle button{
+  min-height:30px;min-width:48px;padding:5px 10px;border-radius:7px;
+  border:1px solid transparent;background:transparent;color:var(--muted);
+  font:600 .72rem 'Segoe UI',sans-serif;
+}
+.wp-view-toggle button.active{
+  color:#fff9e7;border-color:color-mix(in srgb,var(--accent) 60%,transparent);
+  background:color-mix(in srgb,var(--accent) 27%,#223044);
+}
+.wp-view-toggle button:focus-visible{outline:2px solid var(--accent-soft);outline-offset:2px}
+.wp-preview-viewport{
+  position:relative;overflow:hidden;
+  height:550px;min-height:260px;
+  background:radial-gradient(ellipse at 51% 49%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 70%),rgba(5,10,22,.20);
+}
+.wp-preview-stage{
+  position:absolute;top:12px;left:50%;height:770px;width:610px;
+  transform:scale(var(--wp-scale,.70));
+  transform-origin:top left;
+  pointer-events:none;
+  user-select:none;
+  isolation:isolate;
+}
+.wp-preview-stage.is-mini{height:296px;width:360px}
+.wp-preview-stage .wp-render-frame.app-frame{
+  position:relative;width:100%;height:100%;overflow:hidden;
+  border-radius:calc(max(12px,var(--round)) + 1px);
+}
+.wp-preview-stage .background-art{pointer-events:none}
+.wp-preview-stage .widget-screen.hidden,
+.wp-preview-stage .mini-screen.hidden{display:none!important}
+.wp-preview-stage .widget-screen{
+  position:absolute;
+  inset:69px 0 0;
+  width:100%;height:auto;
+}
+/* This cloned resin pane has a data-class rather than a duplicate #pane-resin ID. */
+.wp-preview-stage .widget-screen .wp-resin-pane{
+  grid-row:1;grid-column:2;display:flex;flex-direction:column;gap:0;
+  min-width:0;min-height:0;padding:27px 28px 24px;
+  overflow:hidden;position:relative;z-index:1;
+}
+.wp-preview-stage .wp-resin-pane .headline,
+.wp-preview-stage .wp-resin-pane .resin-card,
+.wp-preview-stage .wp-resin-pane .recovery-row,
+.wp-preview-stage .wp-resin-pane .main-actions,
+.wp-preview-stage .wp-resin-pane .app-footnote {flex-shrink:0;}
+.wp-preview-stage .wp-render-frame .chrome{position:relative}
+.wp-preview-stage .chrome .window-actions{visibility:hidden}
+.wp-preview-stage.is-mini .chrome{height:56px;min-height:56px;padding:0 6px 0 12px}
+.wp-preview-stage.is-mini .brand-mark{width:30px;height:30px}
+.wp-preview-stage.is-mini .brand-words strong{font-size:12px}
+.wp-preview-stage.is-mini .brand-words small{display:none}
+.wp-preview-stage.is-mini .mini-screen{
+  display:flex!important;height:calc(100% - 56px)!important;
+  min-height:0;overflow:hidden;
+}
+.wp-preview-stage.is-mini .mini-screen .mini-inner{
+  padding:11px 17px 8px;gap:3px;
+}
+.wp-preview-stage.is-mini .mini-kicker{font-size:10px;padding-right:0}
+.wp-preview-stage.is-mini .mini-balance{min-height:61px}
+.wp-preview-stage.is-mini .mini-count strong{font-size:54px}
+.wp-preview-stage.is-mini .mini-facts{margin-top:2px;gap:6px}
+.wp-preview-stage.is-mini .mini-facts strong{font-size:18px}
+.wp-preview-stage.is-mini .mini-footer{padding-top:5px}
+.wp-preview-stage.is-mini .mini-float-controls,
+.wp-preview-stage.is-mini .mini-overview{display:none!important}
+.wp-preview-stage .app-frame,.wp-preview-stage .chrome,
+.wp-preview-stage .widget-screen,.wp-preview-stage .mini-screen{
+  --realm-scene:none;
+}
+.wp-preview-stage .wp-resin-pane .resin-card::before{
+  background:none!important;background-image:none!important;
+}
+.wp-preview-info{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  margin:0;padding:10px 14px 0;
+  border-top:1px solid color-mix(in srgb,var(--accent) 24%,transparent);
+  color:var(--muted);font:400 .68rem/1.4 'Segoe UI',sans-serif;
+}
+.wp-preview-info #wpPreviewTarget{
+  flex-shrink:0;font-weight:600;color:var(--accent-soft);
+}
+.wp-preview-caption{
+  margin:0;padding:8px 14px 13px;color:var(--muted);
+  font:400 .66rem/1.45 'Segoe UI',sans-serif;
+}
+@media(max-width:900px){
+  .settings-screen .wallpaper-workspace{grid-template-columns:minmax(250px,.95fr) minmax(290px,1.05fr);gap:13px}
+  .wp-preview-toolbar{padding:10px 11px}
+}
+@media(max-width:680px){
+  .settings-screen .wallpaper-workspace{grid-template-columns:1fr}
+  .wallpaper-controls{order:2}
+  .wp-preview-panel{order:1;position:relative;top:auto}
+  .wp-preview-viewport{max-height:485px}
+  .settings-screen .wallpaper-controls .setting-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){
+  .wp-preview-panel * {transition:none!important;animation:none!important}
+}
+
+/* A deliberately uploaded wallpaper is not regional art. Render it in the real
+   mini widget as well so the Main/Mini previews match the actual application. */
+html[data-wall-target="full"] .mini-screen::before {
+  content:"" !important;
+  display:block !important;
+  position:absolute !important;
+  inset:-12% !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  background-image:linear-gradient(rgba(5,12,24,var(--dim)),rgba(5,12,24,var(--dim))),var(--wall-image) !important;
+  background-size:cover,cover !important;
+  background-position:center,var(--pos-x) var(--pos-y) !important;
+  background-repeat:no-repeat !important;
+  transform:scale(var(--zoom)) !important;
+  transform-origin:var(--pos-x) var(--pos-y) !important;
+  filter:blur(var(--blur)) !important;
+  opacity:1 !important;
+}
+html[data-wall-target="full"] .mini-screen .mini-inner{z-index:1}
+
+/* Desktop: scroll the controls independently while keeping the live result visible. */
+@media(min-width:681px){
+  .settings-screen .settings-scroll:has(.settings-page[data-page="wallpaper"]:not(.hidden)){
+    overflow-y:hidden !important;
+  }
+  .settings-screen .settings-page[data-page="wallpaper"]{
+    height:100%;max-height:100%;min-height:0;
+  }
+  .settings-screen .wallpaper-workspace{height:100%;min-height:0;}
+  .settings-screen .wallpaper-controls{
+    overflow-y:auto;overflow-x:hidden;height:100%;min-height:0;
+    padding-right:9px;scrollbar-width:thin;
+    scrollbar-color:color-mix(in srgb,var(--accent) 57%,transparent) transparent;
+  }
+  .settings-screen .wp-preview-panel{
+    align-self:start;position:relative;top:0;max-height:100%;
+  }
+}

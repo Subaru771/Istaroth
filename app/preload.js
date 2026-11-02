@@ -1,0 +1,51 @@
+'use strict';
+const { contextBridge, ipcRenderer } = require('electron');
+contextBridge.exposeInMainWorld('pulseDesktop', Object.freeze({
+  load: () => ipcRenderer.invoke('state:load'),
+  save: (data) => ipcRenderer.invoke('state:save', data),
+  pin: (value) => ipcRenderer.invoke('window:pin', !!value),
+  closeBehavior: (value) => ipcRenderer.invoke('window:close-behavior', !!value),
+  close: () => ipcRenderer.invoke('window:close'),
+  hide: () => ipcRenderer.invoke('window:hide'),
+  minimize: () => ipcRenderer.invoke('window:minimize'),
+  quit: () => ipcRenderer.invoke('window:quit'),
+  size: (size) => ipcRenderer.invoke('window:size',size),
+  wallpaperSet: (data) => ipcRenderer.invoke('wallpaper:set',data),
+  wallpaperGet: () => ipcRenderer.invoke('wallpaper:get'),
+  wallpaperClear: () => ipcRenderer.invoke('wallpaper:clear'),
+  wallpaperMiniSet: (data) => ipcRenderer.invoke('wallpaper:mini:set',data),
+  wallpaperMiniGet: () => ipcRenderer.invoke('wallpaper:mini:get'),
+  wallpaperMiniClear: () => ipcRenderer.invoke('wallpaper:mini:clear'),
+  wallpaperResinSet: (data) => ipcRenderer.invoke('wallpaper:resin:set',data),
+  wallpaperResinGet: () => ipcRenderer.invoke('wallpaper:resin:get'),
+  wallpaperResinClear: () => ipcRenderer.invoke('wallpaper:resin:clear'),
+  open: (key) => ipcRenderer.invoke('shell:open', key),
+  startupGet: () => ipcRenderer.invoke('startup:get'),
+  startupSet: (enabled) => ipcRenderer.invoke('startup:set', !!enabled),
+  startupRepair: () => ipcRenderer.invoke('startup:repair'),
+  notify: (payload) => ipcRenderer.invoke('notify', payload),
+  securityStatus:()=>ipcRenderer.invoke('security:status'),
+  telemetryHistory:()=>ipcRenderer.invoke('telemetry:history'),
+  telemetryOptions:opts=>ipcRenderer.invoke('telemetry:options',opts),
+  updateStatus:()=>ipcRenderer.invoke('update:status'),
+  updateSettings:opts=>ipcRenderer.invoke('update:settings',opts),
+  updateCheck:download=>ipcRenderer.invoke('update:check',!!download),
+  updateInstall:()=>ipcRenderer.invoke('update:install'),
+  hoyolabStatus: () => ipcRenderer.invoke('hoyolab:status'),
+  hoyolabTest:()=>ipcRenderer.invoke('hoyolab:test'),
+  chronicleStatus: () => ipcRenderer.invoke('chronicle:status'),
+  chronicleRefresh: () => ipcRenderer.invoke('chronicle:refresh'),
+  onChronicleStatus: callback => {const listener=(_event,status)=>callback(status);ipcRenderer.on('chronicle:status',listener);return ()=>ipcRenderer.removeListener('chronicle:status',listener);},
+  hoyolabLogin: () => ipcRenderer.invoke('hoyolab:login'),
+  hoyolabRoles: () => ipcRenderer.invoke('hoyolab:roles'),
+  hoyolabSelect: (uid) => ipcRenderer.invoke('hoyolab:select', String(uid)),
+  hoyolabRefresh: () => ipcRenderer.invoke('hoyolab:refresh'),
+  hoyolabManualRole: (uid, region) => ipcRenderer.invoke('hoyolab:manualRole', uid, region),
+  hoyolabOptions: (options) => ipcRenderer.invoke('hoyolab:options', options),
+  hoyolabDisconnect: () => ipcRenderer.invoke('hoyolab:disconnect'),
+  onHoyolabStatus: (callback) => {
+    const listener = (_event, status) => callback(status);
+    ipcRenderer.on('hoyolab:status', listener);
+    return () => ipcRenderer.removeListener('hoyolab:status', listener);
+  }
+}));

@@ -1,0 +1,91 @@
+/* Istaroth 2.4.18: Theme-aware Settings Done button.
+   Derived from the current palette and optional user accent. No hard-coded
+   Istaroth-purple override on regions other than Istaroth. */
+html .settings-footer #doneButton {
+  --done-base: var(--theme-deep, #1e2742);
+  --done-color: var(--accent, #c6a978);
+  --done-border: var(--accent-soft, #e9d4a7);
+  min-width: 132px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid color-mix(in srgb, var(--done-border) 83%, white) !important;
+  border-radius: 14px;
+  padding: 10px 22px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(125deg,
+    color-mix(in srgb,var(--done-color) 66%,var(--done-base)) 0%,
+    color-mix(in srgb,var(--done-color) 31%,var(--done-base)) 100%) !important;
+  color: #fff8ed !important;
+  font: 600 1.08rem/1.2 Georgia, 'Palatino Linotype', serif;
+  letter-spacing: .012em;
+  text-shadow: 0 1px 5px rgba(4,8,19,.48);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.21),
+    inset 0 -1px 0 rgba(4,10,22,.20),
+    0 5px 18px color-mix(in srgb,var(--done-color) 27%,transparent),
+    0 2px 6px rgba(2,8,18,.24);
+  filter: none !important;
+  transition: background .22s ease, box-shadow .22s ease, transform .17s ease, border-color .22s ease;
+}
+/* Celestial Istaroth keeps the original purple-and-gold identity. */
+html[data-palette="istaroth"] .settings-footer #doneButton {
+  --done-base: #30224c;
+  --done-color: #ab7cde;
+  --done-border: #f7daae;
+  background: linear-gradient(125deg,#a17bd0,#604884) !important;
+  border-color: var(--done-border) !important;
+  color: #fff4de !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    inset 0 0 0 1px rgba(250,224,176,.17),
+    0 5px 19px rgba(195,134,229,.24),
+    0 2px 7px rgba(7,8,24,.27);
+}
+/* A custom accent should also influence the Istaroth button. */
+html[data-palette="istaroth"][style*="--accent:"] .settings-footer #doneButton {
+  --done-color: var(--accent);
+  --done-border: var(--accent-soft);
+  background: linear-gradient(125deg,
+    color-mix(in srgb,var(--accent) 64%,#30224c),
+    color-mix(in srgb,var(--accent) 31%,#30224c)) !important;
+}
+html .settings-footer #doneButton::before {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  inset: 1px 1px 50% 1px;
+  border-radius: 12px 12px 46% 46%;
+  background: linear-gradient(to bottom,rgba(255,255,255,.18),rgba(255,255,255,0));
+  z-index: -1;
+}
+html .settings-footer #doneButton svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  stroke-width: 2.1;
+  filter: drop-shadow(0 1px 2px rgba(4,8,19,.25));
+}
+html .settings-footer #doneButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.30),
+    0 6px 24px color-mix(in srgb,var(--done-color) 45%,transparent),
+    0 3px 8px rgba(4,7,21,.30);
+  border-color: white !important;
+}
+html .settings-footer #doneButton:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 7px rgba(4,7,21,.30),0 2px 6px rgba(4,7,21,.19);
+}
+html .settings-footer #doneButton:focus-visible {
+  outline: 2px solid var(--done-border);
+  outline-offset: 3px;
+}
+@media(prefers-reduced-motion: reduce) {
+  html .settings-footer #doneButton { transition: none; }
+}

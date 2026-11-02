@@ -1,0 +1,51 @@
+name: Source checks and Windows installer
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  source-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate embedded app matches tracked source
+        run: python scripts/verify_embedded_app.py
+      - name: Validate JS source
+        working-directory: app
+        run: npm run check
+      - name: Startup regression tests
+        working-directory: app
+        run: npm run test:startup
+      - name: Resin and notification tests
+        working-directory: app
+        run: npm run test:v22
+
+  build-windows-installer:
+    needs: source-checks
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.2'
+      - name: Compile GUI installer from embedded app snapshot
+        shell: pwsh
+        working-directory: installer
+        run: go build -ldflags='-H=windowsgui' -o Istaroth_Setup_Built_From_Source.exe main.go wizard.go
+      - name: Write SHA256
+        shell: pwsh
+        working-directory: installer
+        run: |
+          $h = (Get-FileHash -Algorithm SHA256 Istaroth_Setup_Built_From_Source.exe).Hash.ToLower()
+          Set-Content -NoNewline -Encoding ascii -Path Istaroth_Setup_Built_From_Source.exe.sha256 -Value $h
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Istaroth-unsigned-windows-build
+          path: |
+            installer/Istaroth_Setup_Built_From_Source.exe
+            installer/Istaroth_Setup_Built_From_Source.exe.sha256

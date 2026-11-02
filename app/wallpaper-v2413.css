@@ -1,0 +1,66 @@
+/* Wallpaper Studio 2.4.13, rebuilt from scratch. Main and Mini wallpaper rendering are isolated. */
+.settings-screen .settings-page[data-page="wallpaper"]{width:100%;max-width:1100px;margin:auto}
+.wp13-title{padding:0 2px 14px}.wp13-title h2{margin:7px 0 4px;color:var(--ink);font:500 1.65rem/1.18 Georgia,serif}
+.wp13-title p{margin:0;color:var(--muted);font:.76rem/1.45 'Segoe UI',sans-serif}
+.wp13-selector{display:flex;gap:9px;margin:8px 0 16px;padding:5px;border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);background:rgba(7,15,30,.2);border-radius:13px}
+.wp13-selector button{flex:1;padding:12px;min-height:46px;border:1px solid transparent;border-radius:10px;color:var(--muted);background:transparent;font:700 .8rem 'Segoe UI',sans-serif}
+.wp13-selector button.active{background:color-mix(in srgb,var(--accent) 24%,#26334b);border-color:var(--accent);color:#fff7e7;box-shadow:inset 0 1px rgba(255,255,255,.09)}
+.wp13-workspace{display:grid;grid-template-columns:minmax(260px,1fr) minmax(345px,1.16fr);gap:17px;align-items:start}
+.wp13-workspace[hidden]{display:none!important}
+.wp13-controls{padding:1px 5px 18px;min-width:0}
+.wp13-scope-label{display:flex;flex-direction:column;gap:4px;margin:0 0 15px}.wp13-scope-label strong{font:600 1.17rem Georgia,serif;color:var(--ink)}
+.wp13-scope-label span{color:var(--muted);font:.73rem/1.45 'Segoe UI',sans-serif}
+.wp13-thumbnail{height:105px;border:1px solid color-mix(in srgb,var(--accent) 38%,transparent);border-radius:13px;background-color:rgba(8,16,30,.34);background-position:center;background-size:cover;display:grid;place-items:center;color:var(--muted);font:.76rem 'Segoe UI',sans-serif}
+.wp13-thumbnail span[hidden]{display:none}.wp13-controls .button-row{margin:12px 0 0;flex-wrap:wrap;gap:7px}.wp13-controls .field-note{font-size:.67rem;line-height:1.5}
+.wp13-controls .field{margin:14px 0}.wp13-controls .slider-control{margin:14px 0}.wp13-controls .slider-control p{margin:4px 0;color:var(--muted);font-size:.64rem}
+.wp13-reset{margin:10px 0}.wp13-preview-panel{background:linear-gradient(150deg,color-mix(in srgb,var(--theme-paper) 95%,transparent),color-mix(in srgb,var(--theme-rail) 89%,transparent));border:1px solid color-mix(in srgb,var(--accent) 47%,transparent);border-radius:17px;overflow:hidden;box-shadow:0 14px 37px rgba(0,0,0,.14);position:sticky;top:0}
+.wp13-preview-heading{padding:14px 15px;border-bottom:1px solid color-mix(in srgb,var(--accent) 26%,transparent);display:flex;justify-content:space-between;align-items:center;gap:7px;flex-wrap:wrap}.wp13-preview-heading strong{color:var(--accent-soft);font:.68rem 'Segoe UI',sans-serif;letter-spacing:.1em}.wp13-preview-heading small{color:var(--muted);font:.63rem 'Segoe UI',sans-serif}
+.wp13-viewport{position:relative;overflow:hidden;min-height:200px;background:radial-gradient(circle at 50% 15%,color-mix(in srgb,var(--accent) 7%,transparent),transparent 70%),rgba(4,11,21,.26)}
+.wp13-stage{position:absolute;top:10px;left:0;transform-origin:top left;pointer-events:none;user-select:none}
+.wp13-frame{width:100%;height:100%;position:relative;overflow:hidden;isolation:isolate}
+.wp13-frame .chrome{position:relative}.wp13-frame .window-actions{visibility:hidden}
+.wp13-frame .background-art{display:block!important;opacity:1!important}
+.wp13-frame .widget-screen{position:absolute;inset:66px 0 0;width:100%;height:auto}
+.wp13-frame .widget-screen .wp-resin-pane{display:flex;flex-direction:column;gap:0;position:relative;z-index:1;min-width:0;padding:24px 26px;overflow:hidden}
+.wp13-frame .mini-screen{height:calc(100% - 56px)!important;display:flex!important}
+.wp13-frame:has(.mini-screen) .chrome{height:56px;min-height:56px;padding:0 6px 0 12px}
+.wp13-frame:has(.mini-screen) .brand-words small{display:none}
+.wp13-frame:has(.mini-screen) .brand-mark{width:30px;height:30px}
+.wp13-frame:has(.mini-screen) .mini-inner{padding:11px 17px 8px;gap:3px}
+.wp13-frame:has(.mini-screen) .mini-count strong{font-size:calc(58px * var(--mini-text-size,1))!important}
+.wp13-frame:has(.mini-screen) .mini-kicker{font-size:10px}
+.wp13-frame:has(.mini-screen) .mini-balance{min-height:61px}
+.wp13-frame:has(.mini-screen) .mini-facts{margin-top:2px;gap:6px}
+.wp13-frame:has(.mini-screen) .mini-facts strong{font-size:18px}
+.wp13-frame:has(.mini-screen) .mini-footer{padding-top:5px}
+.wp13-frame:has(.mini-screen) .mini-float-controls,.wp13-frame:has(.mini-screen) .mini-overview{display:none!important}
+.wp13-preview-foot{border-top:1px solid color-mix(in srgb,var(--accent) 20%,transparent);padding:11px 13px;color:var(--muted);font:.69rem/1.5 'Segoe UI',sans-serif}
+/* --- Absolute wallpaper separation. Main background only lives in main container. --- */
+html[data-screen="mini"] #backgroundArt,
+html[data-screen="settings"] #backgroundArt{display:none!important}
+/* Any legacy wallpaper pseudo-element is always disabled, independently of Main targeting. */
+html #miniScreen::before,
+html .wp13-frame .mini-screen::before{display:none!important;content:none!important;background-image:none!important}
+/* Mini wallpaper appears only on the dedicated descendant, never on the root or a Main layer. */
+html .mini-screen .mini-wallpaper-layer{
+  position:absolute;inset:-12%;z-index:0;pointer-events:none;
+  display:none;background-image:linear-gradient(rgba(6,12,21,var(--wp13-mini-dim,.45)),rgba(6,12,21,var(--wp13-mini-dim,.45))),var(--wp13-mini-image,none);
+  background-position:center,var(--wp13-mini-x,50%) var(--wp13-mini-y,50%);
+  background-size:cover,cover;background-repeat:no-repeat;
+  transform:scale(var(--wp13-mini-zoom,1.1));
+  transform-origin:var(--wp13-mini-x,50%) var(--wp13-mini-y,50%);
+  filter:blur(var(--wp13-mini-blur,0px));
+}
+html .mini-screen[data-wallpaper="yes"] .mini-wallpaper-layer{display:block!important}
+html .mini-screen .mini-inner{position:relative;z-index:1}
+html .wp13-frame .background-art::after{background-image:var(--wall-image)}
+@media(min-width:820px){
+ .settings-screen .settings-scroll:has(.settings-page[data-page="wallpaper"]:not(.hidden)){overflow-y:auto!important}
+ .wp13-controls{max-height:520px;overflow-y:auto;scrollbar-width:thin;padding-right:12px}
+}
+@media(max-width:800px){.wp13-workspace{grid-template-columns:1fr}.wp13-preview-panel{order:0;position:relative}.wp13-controls{order:1}.wp13-viewport{max-height:400px}}
+/* The legacy Full Main target is not allowed to alter Mini's base theme surface. */
+html[data-screen="mini"] #miniScreen,
+html[data-screen="settings"] .wp13-frame .mini-screen {
+  background:radial-gradient(ellipse at 86% 0%,color-mix(in srgb,var(--accent) 14%,transparent),transparent 67%),linear-gradient(136deg,var(--theme-paper),var(--theme-deep)) !important;
+}

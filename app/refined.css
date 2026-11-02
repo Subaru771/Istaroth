@@ -1,0 +1,248 @@
+/* Resin Atelier 1.5 — compact overlay. Only the widget is redesigned;
+   desktop, HoYoLAB and appearance controls remain in the stable app shell. */
+:root {
+  --ink: #f8f4e9;
+  --muted: #c3c7c7;
+  --hair: rgba(244, 234, 205, .18);
+}
+.app-frame {
+  border: 1px solid rgba(255, 246, 217, .21);
+  border-radius: var(--round);
+  background: radial-gradient(ellipse 110% 85% at 93% 10%, rgba(89,118,124,.20), transparent 67%),
+              linear-gradient(155deg, #23323a 0%, #15232d 48%, #0c1821 100%);
+}
+.background-art {
+  background: radial-gradient(circle at 20% 10%, rgba(234,202,143,.085), transparent 33%),
+              linear-gradient(158deg, rgba(39,61,69,.38), rgba(8,17,27,.1) 70%);
+}
+/* One gradual shade across the image, not a second opaque black rectangle. */
+html[data-wall-target="full"] .background-art::before {
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(7,14,22,.24) 0%, rgba(9,17,24,.10) 35%, rgba(5,12,20,.68) 100%),
+              rgba(6,13,21,calc(var(--dim) * .60));
+}
+.chrome {
+  height: 57px;
+  padding: 0 17px 0 23px;
+  background: rgba(13,22,30,.19);
+  border-bottom: 1px solid rgba(255,245,215,.085);
+}
+.brand {gap: 10px;}
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  font-size: 1rem;
+  border-color: rgba(236,216,168,.5);
+  border-radius: 6px;
+  color: #ead9ae;
+}
+.brand-words strong {
+  font-size: .63rem;
+  font-weight: 650;
+  letter-spacing: .155em;
+}
+.brand-words small {display:none}
+.win-btn {width: 35px;height: 35px;border-radius: 9px;color:rgba(247,244,229,.79)}
+.win-btn svg{width:16px;height:16px}
+.win-btn:hover{background:rgba(247,241,224,.12)}
+.widget-screen {
+  inset: 57px 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 24px 17px;
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: none;
+  background: linear-gradient(180deg, rgba(11,23,32,.18), rgba(10,20,28,.02) 45%, rgba(6,16,25,.32));
+}
+.widget-screen::-webkit-scrollbar {display:none;}
+.headline {flex-shrink:0;margin-bottom:16px;}
+.headline .eyebrow {display:none;}
+.headline h1 {
+  font: normal 1.74rem/1.15 var(--font-main);
+  letter-spacing: -.035em;
+  color: #fff5e6;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 15px rgba(2,9,18,.25);
+}
+.headline p {font-size: .68rem;color: rgba(244,243,229,.73);margin:0;line-height:1.35;}
+.resin-card {
+  position: relative;
+  flex: 1 1 240px;
+  min-height: 218px;
+  height: auto;
+  border-radius: calc(var(--round) - 1px);
+  border: 1px solid rgba(243,222,180,.13);
+  background: linear-gradient(120deg, rgba(13,31,41,.57), rgba(14,30,40,.35));
+  box-shadow: 0 8px 30px rgba(0,0,0,.085);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation:isolate;
+}
+html[data-wall-target="full"] .resin-card {
+  background:linear-gradient(145deg, rgba(11,23,31,.46), rgba(10,22,33,.23));
+}
+.card-wallpaper {position:absolute;inset:-14%;z-index:-2;}
+.card-tint{position:absolute;inset:0;z-index:-1;background:linear-gradient(160deg, rgba(6,16,22,.54), rgba(7,17,25,.22) 55%,rgba(7,14,23,.68));}
+.card-tint::before {background:rgba(6,13,19,var(--dim))}
+.resin-card-top {
+  display: flex;
+  flex-shrink:0;
+  padding: 18px 19px 0;
+  gap: 10px;
+  align-items:center;
+  justify-content:space-between;
+}
+.resin-card-top > span {
+  font-family: var(--font-ui);
+  font-size: .59rem;
+  font-weight: 650;
+  letter-spacing: .165em;
+  color: rgba(248,238,217,.78);
+}
+.sync-state {
+  min-height: 29px;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 5px 9px;
+  gap:7px;
+  background: rgba(11,25,33,.28);
+  color: #f3ebdd;
+  border-color: rgba(241,231,207,.19);
+}
+.sync-state svg{width:12px;height:12px}
+.balance-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 116px;
+  gap: 9px;
+  padding: 7px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+.resin-gem {align-self:center;width:28px;height:30px;margin-right:2px;color:var(--accent-soft);filter:drop-shadow(0 0 10px rgba(224,215,161,.2));}
+.resin-gem svg{height:100%;width:100%;stroke-width:1.6}
+.resin-number {
+  font:normal calc(var(--dial) * .39)/1 var(--font-main);
+  letter-spacing: -.075em;
+  color: #fff7ed;
+  padding: 0 5px 0 0;
+  text-shadow:0 4px 30px rgba(0,0,0,.18);
+}
+.resin-cap {font-size:.97rem;font-weight:500;align-self:center;margin:26px 0 0 0;color:rgba(246,236,217,.73);letter-spacing:0;}
+.recovery-progress {padding: 0 19px 21px; flex-shrink:0;}
+.progress-heading {display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px;}
+.progress-heading span {font-size:.62rem;letter-spacing:.11em;font-weight:600;color:rgba(244,239,222,.77)}
+.progress-heading #resinState {color:var(--accent-soft);}
+.progress-track {position:relative;height:5px;border-radius:8px;background:rgba(236,224,206,.2);overflow:visible;}
+.progress-track::before,.progress-track::after {content:'';position:absolute;width:2px;height:9px;top:-2px;background:rgba(240,223,177,.52);border-radius:2px;}
+.progress-track::before{left:0}.progress-track::after{right:0}
+.progress-fill {width:0%;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--accent-soft));box-shadow:0 0 9px rgba(214,223,183,.2);transition:width .6s ease;}
+.legacy-progress {display:none}
+.recovery-row {
+  display:flex;
+  flex-shrink:0;
+  align-items:stretch;
+  gap:14px;
+  margin:18px 0 17px;
+  padding:0 2px;
+}
+.recovery-item {display:flex;flex:1;gap:5px;min-width:0;}
+.recovery-item small {font-size:.56rem;font-weight:670;letter-spacing:.17em;color:rgba(236,220,188,.77)}
+.recovery-item strong {font:normal 1.28rem/1.15 var(--font-main);white-space:nowrap;color:#fff6e6;letter-spacing:-.02em;}
+.recovery-item span {font-size:.57rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;color:rgba(227,231,226,.75);}
+.recovery-separator {background:rgba(236,227,205,.14);margin:2px 2px;}
+.main-actions {display:flex;gap:10px;flex-shrink:0;}
+.action-main,.action-quiet {min-height:39px;border-radius:10px;padding:9px 11px;font-size:.67rem;letter-spacing:.01em;font-weight:660;}
+.action-main {
+  background:rgba(241,226,189,.94);
+  color:#142329;
+  border-color:rgba(244,225,189,.9);
+  flex:1.2;
+}
+.action-main svg{width:16px;height:16px}
+.action-quiet {background:rgba(255,255,255,.07);border:1px solid rgba(235,234,221,.19);color:rgba(255,248,230,.94);flex:.85;}
+.app-footnote {
+  font-size:.57rem;
+  color:rgba(230,234,229,.73);
+  padding:0 8px;
+  margin:11px 0 0;
+  text-align:center;
+  line-height:1.4;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  flex-shrink:0;
+}
+html[data-border="off"] .resin-card {border-color:transparent;}
+html[data-border="on"] .resin-card {border-color:rgba(246,229,182,.26);}
+html[data-gauge="simple"] .progress-track {height:3px;}
+html[data-gauge="simple"] .progress-track::before,html[data-gauge="simple"] .progress-track::after {display:none;}
+html[data-gauge="heavy"] .progress-track {height:10px;}
+html[data-gauge="heavy"] .progress-track::before,html[data-gauge="heavy"] .progress-track::after {height:14px;}
+html[data-motion="off"] .progress-fill{transition:none}
+html[data-layout="compact"] .widget-screen{padding:16px 19px 14px;}
+html[data-layout="compact"] .headline{margin-bottom:10px;}
+html[data-layout="compact"] .headline h1{font-size:1.55rem;}
+html[data-layout="compact"] .resin-card{min-height:200px;}
+html[data-layout="compact"] .balance-display{min-height:106px;}
+html[data-layout="compact"] .resin-number{font-size:calc(var(--dial) * .33);}
+html[data-layout="compact"] .recovery-row{margin:14px 0;}
+html[data-layout="compact"] .app-footnote{margin-top:8px;}
+@media (max-height:640px){
+ .widget-screen{padding-top:16px;padding-bottom:12px;}
+ .headline{margin-bottom:11px;}
+ .headline h1{font-size:1.56rem;}
+ .resin-card{min-height:202px;}
+ .resin-card-top{padding-top:12px;}
+ .balance-display{min-height:108px;}
+ .resin-number{font-size:calc(var(--dial) * .34);}
+ .recovery-progress{padding-bottom:17px;}
+ .recovery-row{margin:13px 0;}
+ .app-footnote{margin-top:7px;}
+}
+@media(max-width:445px){
+ .chrome{padding:0 10px 0 16px;}
+ .win-btn{width:30px;}
+ .widget-screen{padding-left:16px;padding-right:16px;}
+ .resin-card-top{padding-left:15px;padding-right:15px;}
+ .recovery-progress{padding-left:15px;padding-right:15px;}
+ .balance-display{gap:7px;}
+ .resin-number{font-size:calc(var(--dial) * .35);}
+}
+/* Final visual pass: the reading is presented directly over the scene.
+   No large opaque panel or circular dial obscuring the wallpaper. */
+.resin-card,
+html[data-wall-target="full"] .resin-card {
+  background: linear-gradient(90deg, rgba(7,19,28,.17), rgba(7,19,28,.025) 90%);
+  border: 1px solid transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter:none;
+}
+html[data-wall-target="card"] .resin-card {
+  background:linear-gradient(110deg,rgba(9,23,30,.42),rgba(8,20,30,.1));
+  border-radius: calc(var(--round) - 1px);
+  border-color:rgba(241,218,171,.21);
+}
+html[data-wall-target="full"] .card-tint,
+html[data-wall-target="none"] .card-tint {display:none;}
+.resin-card-top{padding:10px 8px 0;}
+.balance-display {
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 11px;
+  gap: 8px;
+  min-height: 117px;
+}
+.resin-gem {align-self:auto;margin:0;width:24px;height:27px;flex:0 0 24px;}
+.resin-number {line-height:1;padding-right:4px;}
+.resin-cap {align-self:auto;margin:31px 0 0 0;}
+.recovery-progress{padding:0 8px 14px;}
+.progress-heading span{font-size:.58rem;}
+html[data-border="off"] .resin-card {border-color:transparent;}
+html[data-border="on"] .resin-card {border-color:rgba(234,214,167,.24);border-radius:calc(var(--round) - 2px);}
+html[data-layout="compact"] .balance-display {min-height:100px;}

@@ -1,0 +1,78 @@
+{
+  "name": "istaroth",
+  "version": "2.4.18",
+  "private": true,
+  "description": "Istaroth — Your Companion Throughout Time! Illustrated Celestial Atelier and nine regional styles.",
+  "main": "main.js",
+  "author": "Istaroth open-source contributors",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check wallpaper-v2413.js && node --check hoyolab-sync.js && node --check chronicle-sync.js && node --check chronicle-ui.js && node --check windows-startup.js && node --check resin-telemetry.js && node --check tray-icon.js && node --check update-service.js",
+    "build:win": "electron-builder --win nsis --x64",
+    "test:startup": "node test_startup.js",
+    "test:v22": "node check-v22.js"
+  },
+  "devDependencies": {
+    "electron": "45.1.0",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "com.community.istaroth",
+    "productName": "Istaroth",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "hoyolab-sync.js",
+      "preload.js",
+      "index.html",
+      "renderer.js",
+      "wallpaper-v2413.js",
+      "wallpaper-v2413.css",
+      "wallpaper-v2414.css",
+      "wallpaper-v2415.css",
+      "styles.css",
+      "assets/**/*",
+      "package.json",
+      "refined.css",
+      "chronicle-sync.js",
+      "chronicle-ui.js",
+      "chronicle.css",
+      "celestial.css",
+      "regional-themes.css",
+      "mini-widget.css",
+      "windows-startup.js",
+      "resin-telemetry.js",
+      "tray-icon.js",
+      "update-service.js",
+      "v22.css",
+      "istaroth-theme.css",
+      "realm-themes.css",
+      "atelier-v243.css",
+      "atelier-v244.css",
+      "atelier-v248.css",
+      "atelier-v2410.css",
+      "atelier-v2411.css",
+      "atelier-v2412.css",
+      "wallpaper-v2417.css",
+      "done-theme-v2418.css"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "Istaroth-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "perMachine": false
+    }
+  }
+}

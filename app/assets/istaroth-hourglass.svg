@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512">
+<defs>
+ <radialGradient id="bg" cx=".39" cy=".23" r=".83"><stop stop-color="#3b3769"/><stop offset=".54" stop-color="#18203f"/><stop offset="1" stop-color="#0d1832"/></radialGradient>
+ <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0bf"/><stop offset=".3" stop-color="#cba56b"/><stop offset=".55" stop-color="#f4db98"/><stop offset=".82" stop-color="#9b70a4"/><stop offset="1" stop-color="#f2d1a4"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#e6f3ff" stop-opacity=".87"/><stop offset=".51" stop-color="#80a9e6" stop-opacity=".15"/><stop offset="1" stop-color="#f8e4ff" stop-opacity=".7"/></linearGradient>
+ <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f9eabb"/><stop offset="1" stop-color="#e0a46c"/></linearGradient>
+ <linearGradient id="wind" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#66d8d1" stop-opacity="0"/><stop offset=".46" stop-color="#8bdcd7"/><stop offset="1" stop-color="#c1f2ed" stop-opacity=".05"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+<rect x="18" y="18" width="476" height="476" rx="122" fill="url(#bg)" stroke="#dac18f" stroke-width="4"/>
+<circle cx="256" cy="253" r="175" fill="none" stroke="url(#metal)" stroke-width="5" opacity=".82"/>
+<circle cx="256" cy="253" r="157" fill="none" stroke="#b4a1c1" stroke-width="1.6" stroke-dasharray="4 15" opacity=".65"/>
+<path d="M72 330C129 415 214 423 274 378C346 328 345 290 441 292" fill="none" stroke="url(#wind)" stroke-width="15" stroke-linecap="round" opacity=".66"/>
+<path d="M65 340C150 390 201 386 253 356C336 308 388 315 449 299" fill="none" stroke="#9ceee4" stroke-width="2.4" stroke-linecap="round" opacity=".6"/>
+<path d="M99 190C161 138 160 122 205 116" fill="none" stroke="url(#wind)" stroke-width="10" opacity=".7"/>
+<!-- hourglass capitals -->
+<path d="M193 137H319M196 377H316" stroke="url(#metal)" stroke-width="13" stroke-linecap="round"/>
+<path d="M208 145C211 183 238 209 253 235C269 209 298 183 302 145M208 370C211 328 241 303 255 277C270 304 299 332 302 370" fill="url(#glass)" stroke="url(#metal)" stroke-width="8" stroke-linejoin="round"/>
+<path d="M228 173H282C280 200 263 212 256 226C247 211 232 198 228 173Z" fill="url(#sand)" opacity=".96"/>
+<path d="M252 239H258L256 300" fill="none" stroke="#f7e3ad" stroke-width="4" stroke-linecap="round"/>
+<path d="M224 348Q256 319 288 348L293 362H219Z" fill="url(#sand)" opacity=".96"/>
+<path d="M180 137H332M180 377H332" stroke="#fff4d3" opacity=".52" stroke-width="2"/>
+<!-- cardinal stars -->
+<path d="M256 48 264 73 287 81 264 89 256 113 248 89 225 81 248 73Z" fill="#f8db9a"/>
+<path d="M411 183 416 194 428 199 416 205 411 217 406 205 395 199 406 194Z" fill="#f6deb1"/>
+<path d="M111 283 116 296 129 301 116 306 111 318 106 306 93 301 106 296Z" fill="#d5ebec"/>
+<path d="M349 404 352 412 361 416 352 420 349 429 345 420 337 416 345 412Z" fill="#ecceae"/>
+<g fill="#eed9ac" opacity=".65"><circle cx="375" cy="129" r="3"/><circle cx="150" cy="138" r="2"/><circle cx="377" cy="359" r="2"/></g>
+</svg>

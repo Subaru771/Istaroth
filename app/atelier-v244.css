@@ -1,0 +1,194 @@
+/* v2.4.5 — approved illustrated regional scenery, including a theme-responsive atelier header.
+   No SVG polygon scenery or fixed Istaroth-clock illustration in the settings header.
+   Assets and readable labels remain separate. */
+/* v2.4.4 — original illustrated scenery cut directly from the approved mockup.
+   Preserves live HTML labels, font scaling, aria-pressed selection, and all nine themes. */
+.settings-heading .atelier-scene {
+ width:46%; opacity:.91;
+ background-image:linear-gradient(90deg,rgba(38,29,69,1) 0%,rgba(38,29,69,.6) 18%,rgba(38,29,69,0) 45%),url('assets/theme-art/atelier-hero.webp') !important;
+ background-size:cover,cover !important;
+ background-position:center,right center !important;
+ filter:none;
+}
+.settings-heading .atelier-orbit,.settings-heading .atelier-glass {display:none !important;}
+ .palette-grid {--art:url('assets/theme-art/istaroth.webp');}
+html .settings-screen .palette-option {
+ /* Keep labels responsive and source-driven, with exact scenic illustrations underneath. */
+ background-image:linear-gradient(90deg,rgba(23,20,47,.76) 0%,rgba(23,20,47,.64) 30%,rgba(23,20,47,.23) 66%,rgba(23,20,47,.02) 95%),var(--art) !important;
+ background-position:center,right center !important;
+ background-size:cover,cover !important;
+ background-repeat:no-repeat !important;
+ isolation:isolate;
+}
+.palette-option::after {background:linear-gradient(90deg,rgba(8,10,28,.20),transparent 65%) !important;}
+.palette-option[data-palette="istaroth"] {--art:url('assets/theme-art/istaroth.webp');}
+.palette-option[data-palette="mondstadt"] {--art:url('assets/theme-art/mondstadt.webp');}
+.palette-option[data-palette="liyue"] {--art:url('assets/theme-art/liyue.webp');}
+.palette-option[data-palette="inazuma"] {--art:url('assets/theme-art/inazuma.webp');}
+.palette-option[data-palette="sumeru"] {--art:url('assets/theme-art/sumeru.webp');}
+.palette-option[data-palette="fontaine"] {--art:url('assets/theme-art/fontaine.webp');}
+.palette-option[data-palette="natlan"] {--art:url('assets/theme-art/natlan.webp');}
+.palette-option[data-palette="nodkrai"] {--art:url('assets/theme-art/nodkrai.webp');}
+.palette-option[data-palette="snezhnaya"] {--art:url('assets/theme-art/snezhnaya.webp');}
+/* Crisp responsive labels/colour swatches, rather than baked text from a screenshot. */
+.palette-option > span {font-size:1.13rem;line-height:1.15;text-shadow:0 2px 8px rgba(15,10,27,.9);}
+.palette-option > span small {font-size:.68rem;text-shadow:0 1px 6px rgba(15,10,27,.95);}
+.palette-option .realm-sigil {background:color-mix(in srgb,var(--card-glow) 26%,rgba(34,25,65,.8));}
+@media(max-width:850px) {
+ .palette-option > span{font-size:.95rem}
+ .palette-option > span small{font-size:.6rem}
+ .settings-heading .atelier-scene{width:42%;}
+}
+
+
+/* v2.4.5: Theme-driven header scene. Always follows the actual selected palette,
+   including loaded preferences and saved design profiles, through html[data-palette].
+   The header uses exactly the same approved illustrated assets as its theme card.
+   The ornamental geometry and extra regional SVG layer are explicitly removed. */
+html { --atelier-hero-art: url('assets/theme-art/istaroth.webp'); }
+html[data-palette="istaroth"]   { --atelier-hero-art:url('assets/theme-art/istaroth.webp'); }
+html[data-palette="mondstadt"]  { --atelier-hero-art:url('assets/theme-art/mondstadt.webp'); }
+html[data-palette="liyue"]      { --atelier-hero-art:url('assets/theme-art/liyue.webp'); }
+html[data-palette="inazuma"]    { --atelier-hero-art:url('assets/theme-art/inazuma.webp'); }
+html[data-palette="sumeru"]     { --atelier-hero-art:url('assets/theme-art/sumeru.webp'); }
+html[data-palette="fontaine"]   { --atelier-hero-art:url('assets/theme-art/fontaine.webp'); }
+html[data-palette="natlan"]     { --atelier-hero-art:url('assets/theme-art/natlan.webp'); }
+html[data-palette="nodkrai"]    { --atelier-hero-art:url('assets/theme-art/nodkrai.webp'); }
+html[data-palette="snezhnaya"]  { --atelier-hero-art:url('assets/theme-art/snezhnaya.webp'); }
+/* Remove any former geometric/polygon artwork and secondary region SVG overlays. */
+html .settings-heading::after { display:none !important; content:none !important; background:none !important; }
+html .settings-heading .atelier-orbit,
+html .settings-heading .atelier-glass {display:none !important;}
+html .settings-heading .atelier-scene {
+  position:absolute; inset:0 0 0 auto;
+  width:48%; opacity:1; pointer-events:none; z-index:0;
+  background-image:linear-gradient(90deg,var(--atelier-hero-edge, #292145) 0%,color-mix(in srgb,var(--atelier-hero-edge, #292145) 55%,transparent) 28%,transparent 65%),var(--atelier-hero-art) !important;
+  background-size:cover,cover !important;
+  background-position:center,center center !important;
+  background-repeat:no-repeat !important;
+  filter:none !important;
+  clip-path:none !important;
+  -webkit-mask-image:none !important;
+  mask-image:none !important;
+  transition:opacity .18s ease;
+}
+/* Use the active palette's background rather than forcing an Istaroth-colored strip. */
+html[data-palette="istaroth"] .settings-heading {--atelier-hero-edge:#292145;}
+html:not([data-palette="istaroth"]) .settings-heading {--atelier-hero-edge:var(--realm-sky);}
+/* Text is never covered by art on narrower screens. */
+@media(max-width:850px){
+ html .settings-heading .atelier-scene{width:43%;opacity:.75;}
+}
+@media(max-width:620px){
+ html .settings-heading .atelier-scene{width:33%;opacity:.45;}
+}
+@media(prefers-reduced-motion:reduce){ html .settings-heading .atelier-scene{transition:none;} }
+/* Feather the real illustration into the themed background; no hard rectangular seam. */
+html .settings-heading .atelier-scene {
+  width:68% !important;
+  background-image:var(--atelier-hero-art) !important;
+  background-position:right center !important;
+  background-size:cover !important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.25) 25%,#000 57%) !important;
+  mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.25) 25%,#000 57%) !important;
+}
+@media(max-width:850px){html .settings-heading .atelier-scene {width:60% !important;}}
+@media(max-width:620px){html .settings-heading .atelier-scene {width:48% !important;opacity:.6;}}
+
+
+/* v2.4.6 — no polygons anywhere.
+   Use the same illustrated region artwork across the dashboard, settings header and mini widget.
+   Remove vector/polygon scenery and symbolic geometry overlays everywhere. */
+html { --region-hero-art:url('assets/theme-art/istaroth.webp'); }
+html[data-palette="istaroth"]  { --region-hero-art:url('assets/theme-art/istaroth.webp'); }
+html[data-palette="mondstadt"] { --region-hero-art:url('assets/theme-art/mondstadt.webp'); }
+html[data-palette="liyue"]     { --region-hero-art:url('assets/theme-art/liyue.webp'); }
+html[data-palette="inazuma"]   { --region-hero-art:url('assets/theme-art/inazuma.webp'); }
+html[data-palette="sumeru"]    { --region-hero-art:url('assets/theme-art/sumeru.webp'); }
+html[data-palette="fontaine"]  { --region-hero-art:url('assets/theme-art/fontaine.webp'); }
+html[data-palette="natlan"]    { --region-hero-art:url('assets/theme-art/natlan.webp'); }
+html[data-palette="nodkrai"]   { --region-hero-art:url('assets/theme-art/nodkrai.webp'); }
+html[data-palette="snezhnaya"] { --region-hero-art:url('assets/theme-art/snezhnaya.webp'); }
+
+/* Dashboard main area: replace polygon/vector scenery with the illustrated art. */
+html .widget-screen::before {
+  content:'' !important; position:absolute; inset:0 !important; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(180deg,rgba(5,10,18,.10) 0%,rgba(5,10,18,.14) 34%,rgba(5,10,18,.36) 100%),
+    linear-gradient(90deg,rgba(6,10,18,.82) 0%,rgba(6,10,18,.50) 28%,rgba(6,10,18,.10) 52%,rgba(6,10,18,.04) 100%),
+    var(--region-hero-art) !important;
+  background-size:cover,cover,cover !important;
+  background-repeat:no-repeat !important;
+  background-position:center,center,right center !important;
+  opacity:.32 !important;
+}
+html .widget-screen .dash-pane, html .widget-screen .headline, html .widget-screen .resin-card {
+  position:relative; z-index:1;
+}
+/* Mini widget: same illustrated art, no polygon/vector scenery. */
+html .mini-screen::before {
+  content:'' !important; position:absolute; inset:0 !important; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(180deg,rgba(7,10,18,.18),rgba(7,10,18,.38)),
+    linear-gradient(90deg,rgba(7,10,18,.78) 0%,rgba(7,10,18,.35) 42%,rgba(7,10,18,.08) 100%),
+    var(--region-hero-art) !important;
+  background-size:cover,cover,cover !important;
+  background-repeat:no-repeat !important;
+  background-position:center,center,right center !important;
+  opacity:.30 !important;
+}
+html .mini-screen > * { position:relative; z-index:1; }
+
+/* Resin card: remove decorative symbolic geometry and use clean surfaces only. */
+html .resin-card::after,
+html .mini-screen::after,
+html .dashboard-tabs::before,
+html .chrome::after,
+html .dash-head::after,
+html .account-identity::after {
+  display:none !important; content:none !important;
+}
+
+/* Use a soft illustrated hint inside the resin card instead of vector/polygon marks. */
+html .resin-card::before {
+  content:'' !important; position:absolute; inset:0 !important; pointer-events:none; z-index:-1;
+  background-image:
+    linear-gradient(180deg,rgba(5,10,18,.08),rgba(5,10,18,.28)),
+    linear-gradient(90deg,rgba(8,14,24,.68) 0%,rgba(8,14,24,.24) 42%,rgba(8,14,24,.05) 100%),
+    var(--region-hero-art) !important;
+  background-repeat:no-repeat !important;
+  background-size:cover,cover,cover !important;
+  background-position:center,center,right center !important;
+  opacity:.16;
+  border:1px solid color-mix(in srgb,var(--accent) 36%,transparent) !important;
+  border-radius:calc(max(12px,var(--round)) - 10px) !important;
+}
+html[data-wall-target="card"] .resin-card::before { opacity:.08; }
+
+/* Remove remaining region SVG/polygon overlays from settings and realm themes. */
+html .settings-heading::after,
+html .settings-heading .atelier-orbit,
+html .settings-heading .atelier-glass {
+  display:none !important; content:none !important; background:none !important;
+}
+
+/* Keep the selected-region header image, but make it softer and proportional. */
+html .settings-heading .atelier-scene {
+  width:66% !important;
+  opacity:1 !important;
+  background-image:var(--region-hero-art) !important;
+  background-size:cover !important;
+  background-position:right center !important;
+  background-repeat:no-repeat !important;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.22) 24%,#000 56%) !important;
+  mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.22) 24%,#000 56%) !important;
+}
+@media(max-width:850px){ html .settings-heading .atelier-scene { width:58% !important; opacity:.88 !important; } }
+@media(max-width:620px){ html .settings-heading .atelier-scene { width:46% !important; opacity:.66 !important; } }
+
+/* When users apply a full wallpaper, the custom wallpaper still wins. */
+html[data-wall-target="full"] .widget-screen::before,
+html[data-wall-target="full"] .mini-screen::before { opacity:0 !important; }
+
+/* Leave the theme cards illustrated, not polygonal. */
+html .palette-option::after { background:linear-gradient(90deg,rgba(8,10,28,.18),transparent 65%) !important; }

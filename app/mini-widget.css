@@ -1,0 +1,41 @@
+/* Istaroth 2.1 — resin-only desktop mode. Loaded last, scoped to mini elements. */
+.mini-screen{position:relative;z-index:1;display:flex;flex:1;min-height:0;padding:0;color:var(--theme-ink);background:color-mix(in srgb,var(--theme-paper) 93%,transparent);overflow:hidden}
+.mini-screen.hidden{display:none!important}
+.mini-inner{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;min-width:0;padding:14px 20px 10px;gap:6px}
+.mini-kicker{display:flex;align-items:center;gap:7px;font:750 11px/1.2 var(--journal-sans),sans-serif;letter-spacing:.13em;color:var(--theme-ink);white-space:nowrap}
+.mini-star{font-size:18px;line-height:1;color:var(--accent)}
+.mini-status{margin-left:auto;display:flex;align-items:center;gap:5px;font:700 9px var(--journal-sans),sans-serif;letter-spacing:.04em;color:var(--theme-ink);opacity:.86}
+.mini-status i{width:7px;height:7px;border-radius:50%;background:#b9a89b;display:block}
+.mini-status i.live{background:#4dba84;box-shadow:0 0 0 3px rgba(77,186,132,.13)}
+.mini-status i.offline{background:#c49649}
+.mini-balance{display:flex;align-items:center;justify-content:space-between;min-height:65px}
+.mini-count{display:flex;align-items:baseline;gap:7px;white-space:nowrap}
+.mini-count strong{font:600 58px/.95 var(--journal-serif),Georgia,serif;letter-spacing:-.065em;color:var(--theme-ink);font-variant-numeric:tabular-nums}
+.mini-cap{font:600 16px var(--journal-sans),sans-serif;color:var(--theme-ink);opacity:.58}
+.mini-diamond{font:46px/1 var(--journal-serif),Georgia,serif;color:var(--accent);opacity:.6;margin-right:8px}
+.mini-track{height:7px;flex:none;border-radius:20px;background:color-mix(in srgb,var(--theme-ink) 15%,transparent);overflow:hidden}
+.mini-fill{height:100%;width:0%;border-radius:20px;background:linear-gradient(90deg,var(--accent),var(--accent-soft));transition:width .8s ease}
+.mini-facts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:5px}
+.mini-facts>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.mini-fact-label{font:700 9px/1.2 var(--journal-sans),sans-serif;letter-spacing:.14em;color:var(--theme-ink);opacity:.6}
+.mini-facts strong{font:600 20px/1.1 var(--journal-serif),Georgia,serif;color:var(--theme-ink);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.mini-footer{display:flex;align-items:center;gap:6px;margin-top:auto;min-width:0;border-top:1px solid color-mix(in srgb,var(--theme-ink) 13%,transparent);padding-top:7px}
+.mini-footer>span{flex:1;min-width:0;font:600 10px/1.2 var(--journal-sans),sans-serif;color:var(--theme-ink);opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-refresh,.mini-open{border:0;background:transparent;color:var(--theme-ink);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;border-radius:7px;height:27px;flex:none}
+.mini-refresh{width:27px}.mini-open{font:700 10px var(--journal-sans),sans-serif;padding:0 4px}
+.mini-refresh:hover,.mini-open:hover{background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.mini-refresh svg,.mini-open svg{height:15px;width:15px;stroke:currentColor;stroke-width:2;fill:none}
+.mini-open svg{width:13px;height:13px}
+.mini-mode-setting{border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:12px;padding:14px;margin:10px 0 18px;background:color-mix(in srgb,var(--accent) 8%,transparent)}
+html[data-screen="mini"] .chrome{height:56px;min-height:56px;padding:0 6px 0 12px}
+html[data-screen="mini"] .brand-mark{width:30px;height:30px}
+html[data-screen="mini"] .brand-words strong{font-size:12px}
+html[data-screen="mini"] .brand-words small{display:none}
+html[data-screen="mini"] .win-btn{width:27px;height:30px;padding:5px}
+html[data-screen="mini"] .window-actions{gap:1px}
+html[data-screen="mini"] .app-frame{border-radius:15px}
+html[data-screen="mini"] .background-art{opacity:.24}
+html[data-screen="mini"] .chrome::after{display:none}
+html[data-screen="mini"] .mini-screen::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 95% 10%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 74%)}
+
+html[data-motion="off"] .mini-fill{transition:none}

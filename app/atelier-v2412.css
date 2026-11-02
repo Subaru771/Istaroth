@@ -1,0 +1,40 @@
+/* Istaroth 2.4.12 — independent Main / Mini wallpaper and layout settings.
+   Regional illustrations are still exclusive to Customization > Style. */
+
+/* Clearly labeled, distinct editing scopes in Wallpaper and Layout. */
+.settings-screen .widget-scope-picker{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;
+  padding:5px;margin:0 0 9px;
+  border:1px solid color-mix(in srgb,var(--accent) 42%,transparent);
+  border-radius:13px;background:rgba(6,13,25,.25);
+}
+.settings-screen .widget-scope-picker button{
+  border:1px solid transparent;border-radius:9px;
+  background:transparent;color:var(--muted);
+  padding:10px 13px;min-height:41px;
+  font:650 .81rem 'Segoe UI',sans-serif;
+}
+.settings-screen .widget-scope-picker button.active{
+  border-color:color-mix(in srgb,var(--accent) 65%,transparent);
+  color:#fff5de;
+  background:linear-gradient(155deg,color-mix(in srgb,var(--accent) 28%,#25354c),color-mix(in srgb,var(--accent) 12%,#142037));
+  box-shadow:0 3px 14px rgba(0,0,0,.15);
+}
+.settings-screen .widget-scope-picker button:focus-visible{
+  outline:2px solid var(--accent-soft);outline-offset:2px;
+}
+.settings-screen .wp-scope-description{
+  margin:0 2px 14px;min-height:25px;
+  color:var(--muted);font:400 .73rem/1.5 'Segoe UI',sans-serif;
+}
+.settings-screen .layout-scope-picker{max-width:680px;margin-bottom:15px}
+.settings-screen .layout-main-settings,
+.settings-screen .layout-mini-settings{max-width:780px}
+.settings-screen .layout-main-settings.hidden,
+.settings-screen .layout-mini-settings.hidden,
+.settings-screen #mainWallpaperTarget.hidden{display:none!important}
+.settings-screen .layout-mini-settings .slider-control{max-width:530px}
+.settings-screen .layout-mini-settings .check-row{max-width:680px}
+.settings-screen .layout-mini-settings .mini-mode-setting{margin:10px 0 18px}
+
+/* Wallpaper styling replaced by the isolated v2.4.13 module. */

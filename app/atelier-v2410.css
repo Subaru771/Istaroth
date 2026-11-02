@@ -1,0 +1,31 @@
+/* Istaroth v2.4.10 — illustrated region artwork is confined to the Style customization gallery.
+   Remove automatic regional pictures from the resin dashboard, its card, and the Mini Widget.
+   User-selected wallpaper is a separate setting and remains fully supported. */
+
+/* The earlier illustrated pseudo-elements were decorative, not functional.
+   No background scene is painted on the dashboard or Mini Widget for any palette. */
+html .widget-screen::before,
+html .mini-screen::before {
+  content:none !important;
+  display:none !important;
+  background:none !important;
+  background-image:none !important;
+}
+
+/* Preserve the resin card's subtle border, without adding regional scenery. */
+html .resin-card::before {
+  background:none !important;
+  background-image:none !important;
+  border:1px solid color-mix(in srgb,var(--accent) 36%,transparent) !important;
+}
+
+/* The gallery and its selected-region image remain under Customization > Style.
+   Hide the artwork on Account, Wallpaper, Layout, Alerts and Windows tabs. */
+html .settings-screen .settings-heading .atelier-scene { display:none !important; }
+html .settings-screen:has(.settings-page[data-page="style"]:not(.hidden))
+     .settings-heading .atelier-scene { display:block !important; }
+
+/* Disable decorative region-image fallback in all widget views, including mini. */
+html .widget-screen,html .mini-screen,html .resin-card {
+  --realm-scene:none;
+}

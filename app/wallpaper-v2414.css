@@ -1,0 +1,20 @@
+/* v2.4.14 — Two separate top-level Wallpaper pages. Never show Main/Mini options inside each other. */
+.settings-screen .setting-tabs{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.settings-screen .setting-tabs .tab{padding:0 4px;min-width:0;font-size:.72rem;white-space:normal;line-height:1.12}
+.settings-screen .wp14-page {width:100%;max-width:1100px;margin:0 auto}
+.wp14-heading{display:flex;flex-direction:column;gap:6px;margin:0 0 17px 1px}
+.wp14-heading .section-label{margin:0;color:var(--accent-soft)}
+.wp14-heading h2{margin:0;color:var(--ink);font:500 1.65rem/1.18 Georgia,'Palatino Linotype',serif}
+.wp14-heading p{margin:0;color:var(--muted);font:400 .76rem/1.5 'Segoe UI',sans-serif}
+.wp14-page .wp13-workspace{margin-top:0}
+.wp14-page .wp13-scope-label strong{font-size:1.08rem}
+.wp14-page .wp13-controls{min-width:0}
+.wp14-page .wp13-preview-panel{top:0}
+/* Hard boundary: Main root wallpaper properties must never change Mini's background. */
+html[data-screen="mini"] .mini-screen,
+html[data-screen="settings"] .wp13-frame:has(.mini-screen) .mini-screen {
+  background:radial-gradient(ellipse at 86% 0%,color-mix(in srgb,var(--accent) 14%,transparent),transparent 67%),linear-gradient(136deg,var(--theme-paper),var(--theme-deep)) !important;
+}
+@media(max-width:900px){.settings-screen .setting-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}.settings-screen .setting-tabs .tab{min-height:38px;font-size:.75rem}}
+@media(max-width:580px){.settings-screen .setting-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:800px){.wp14-page .wp13-workspace{grid-template-columns:1fr}.wp14-page .wp13-preview-panel{position:relative}}

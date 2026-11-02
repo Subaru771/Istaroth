@@ -1,0 +1,323 @@
+/* Istaroth 2.4.2 — nine official-lore-inspired visual regions.
+  Regional scenes are original vector illustrations, not HoYoverse artwork.
+  Preserves all user wallpaper/custom-color/font/profile controls. */
+
+:root[data-palette="mondstadt"]{
+ --accent:#7cdec2;--accent-soft:#e7ffed;--dark:#102e35;--dark2:#2a5860;
+ --theme-ink:#f7f3fb;--theme-ink2:#faf5ff;--theme-deep:#102e35;--theme-rail:#0a3337;--theme-rail2:#102e35;
+ --theme-paper:#2a5860;--theme-paper2:#0a3337;--theme-surface:#23505a;
+ --theme-edge:color-mix(in srgb,#8adbc4 57%,transparent);
+ --theme-accent-dark:color-mix(in srgb,var(--accent) 76%,#172238);--theme-accent-light:#e7ffed;
+ --journal-paper:var(--theme-paper);--journal-paper2:var(--theme-paper2);--journal-ink:var(--theme-ink);
+ --journal-gold:var(--accent);--journal-gold2:var(--accent-soft);--journal-navy:var(--theme-deep);--journal-navy2:var(--theme-rail);
+ --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#8adbc4 38%,transparent);
+ --realm-sky:#102e35;--realm-sky2:#2a5860;--realm-rail:#0a3337;--realm-panel:#23505a;
+ --realm-line:#8adbc4;--realm-glow:#b5f2db;--realm-low:#6ac5b6;
+ --realm-symbol:'✧';--realm-scene:url('assets/regions/mondstadt.svg');color-scheme:dark;
+}
+
+:root[data-palette="liyue"]{
+ --accent:#e4b66b;--accent-soft:#ffe7b3;--dark:#34261c;--dark2:#6d5034;
+ --theme-ink:#f7f3fb;--theme-ink2:#faf5ff;--theme-deep:#34261c;--theme-rail:#332c23;--theme-rail2:#34261c;
+ --theme-paper:#6d5034;--theme-paper2:#332c23;--theme-surface:#594632;
+ --theme-edge:color-mix(in srgb,#e9bf7e 57%,transparent);
+ --theme-accent-dark:color-mix(in srgb,var(--accent) 76%,#172238);--theme-accent-light:#ffe7b3;
+ --journal-paper:var(--theme-paper);--journal-paper2:var(--theme-paper2);--journal-ink:var(--theme-ink);
+ --journal-gold:var(--accent);--journal-gold2:var(--accent-soft);--journal-navy:var(--theme-deep);--journal-navy2:var(--theme-rail);
+ --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#e9bf7e 38%,transparent);
+ --realm-sky:#34261c;--realm-sky2:#6d5034;--realm-rail:#332c23;--realm-panel:#594632;
+ --realm-line:#e9bf7e;--realm-glow:#b2d29c;--realm-low:#de9569;
+ --realm-symbol:'◆';--realm-scene:url('assets/regions/liyue.svg');color-scheme:dark;
+}
+
+:root[data-palette="inazuma"]{
+ --accent:#c8a0fc;--accent-soft:#f1dfff;--dark:#241937;--dark2:#513975;
+ --theme-ink:#f7f3fb;--theme-ink2:#faf5ff;--theme-deep:#241937;--theme-rail:#271b46;--theme-rail2:#241937;
+ --theme-paper:#513975;--theme-paper2:#271b46;--theme-surface:#453267;
+ --theme-edge:color-mix(in srgb,#d6b1f5 57%,transparent);
+ --theme-accent-dark:color-mix(in srgb,var(--accent) 76%,#172238);--theme-accent-light:#f1dfff;
+ --journal-paper:var(--theme-paper);--journal-paper2:var(--theme-paper2);--journal-ink:var(--theme-ink);
+ --journal-gold:var(--accent);--journal-gold2:var(--accent-soft);--journal-navy:var(--theme-deep);--journal-navy2:var(--theme-rail);
+ --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#d6b1f5 38%,transparent);
+ --realm-sky:#241937;--realm-sky2:#513975;--realm-rail:#271b46;--realm-panel:#453267;
+ --realm-line:#d6b1f5;--realm-glow:#f1addc;--realm-low:#8b77e5;
+ --realm-symbol:'✦';--realm-scene:url('assets/regions/inazuma.svg');color-scheme:dark;
+}
+
+:root[data-palette="sumeru"]{
+ --accent:#9cd99f;--accent-soft:#eaf5c3;--dark:#112c29;--dark2:#365a45;
+ --theme-ink:#f7f3fb;--theme-ink2:#faf5ff;--theme-deep:#112c29;--theme-rail:#162f29;--theme-rail2:#112c29;
+ --theme-paper:#365a45;--theme-paper2:#162f29;--theme-surface:#31523e;
+ --theme-edge:color-mix(in srgb,#9ccf9e 57%,transparent);
+ --theme-accent-dark:color-mix(in srgb,var(--accent) 76%,#172238);--theme-accent-light:#eaf5c3;
+ --journal-paper:var(--theme-paper);--journal-paper2:var(--theme-paper2);--journal-ink:var(--theme-ink);
+ --journal-gold:var(--accent);--journal-gold2:var(--accent-soft);--journal-navy:var(--theme-deep);--journal-navy2:var(--theme-rail);
+ --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#9ccf9e 38%,transparent);
+ --realm-sky:#112c29;--realm-sky2:#365a45;--realm-rail:#162f29;--realm-panel:#31523e;
+ --realm-line:#9ccf9e;--realm-glow:#d8c693;--realm-low:#6bc1a5;
+ --realm-symbol:'❀';--realm-scene:url('assets/regions/sumeru.svg');color-scheme:dark;
+}
+
+:root[data-palette="fontaine"]{
+ --accent:#92d6f8;--accent-soft:#ffebb7;--dark:#102d45;--dark2:#315b76;
+ --theme-ink:#f7f3fb;--theme-ink2:#faf5ff;--theme-deep:#102d45;--theme-rail:#16364e;--theme-rail2:#102d45;
+ --theme-paper:#315b76;--theme-paper2:#16364e;--theme-surface:#2a516e;
+ --theme-edge:color-mix(in srgb,#a8dbe9 57%,transparent);
+ --theme-accent-dark:color-mix(in srgb,var(--accent) 76%,#172238);--theme-accent-light:#ffebb7;
+ --journal-paper:var(--theme-paper);--journal-paper2:var(--theme-paper2);--journal-ink:var(--theme-ink);
+ --journal-gold:var(--accent);--journal-gold2:var(--accent-soft);--journal-navy:var(--theme-deep);--journal-navy2:var(--theme-rail);
+ --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#a8dbe9 38%,transparent);
+ --realm-sky:#102d45;--realm-sky2:#315b76;--realm-rail:#16364e;--realm-panel:#2a516e;
+ --realm-line:#a8dbe9;--realm-glow:#dfc89a;--realm-low:#6fb5e2;
+ --realm-symbol:'◈';--realm-scene:url('assets/regions/fontaine.svg');color-scheme:dark;
+}
+
+:root[data-palette="natlan"]{
+ --accent:#ffac74;--accent-soft:#ffe9bd;--dark:#321d22;--dark2:#79432e;
+ --theme-ink:#f7f3fb;--theme-ink2:#faf5ff;--theme-deep:#321d22;--theme-rail:#3c2026;--theme-rail2:#321d22;
+ --theme-paper:#79432e;--theme-paper2:#3c2026;--theme-surface:#683f33;
+ --theme-edge:color-mix(in srgb,#eca879 57%,transparent);
+ --theme-accent-dark:color-mix(in srgb,var(--accent) 76%,#172238);--theme-accent-light:#ffe9bd;
+ --journal-paper:var(--theme-paper);--journal-paper2:var(--theme-paper2);--journal-ink:var(--theme-ink);
+ --journal-gold:var(--accent);--journal-gold2:var(--accent-soft);--journal-navy:var(--theme-deep);--journal-navy2:var(--theme-rail);
+ --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#eca879 38%,transparent);
+ --realm-sky:#321d22;--realm-sky2:#79432e;--realm-rail:#3c2026;--realm-panel:#683f33;
+ --realm-line:#eca879;--realm-glow:#ffbd63;--realm-low:#e76b52;
+ --realm-symbol:'✹';--realm-scene:url('assets/regions/natlan.svg');color-scheme:dark;
+}
+
+:root[data-palette="nodkrai"]{
+ --accent:#b2d9fc;--accent-soft:#f0f7ff;--dark:#152238;--dark2:#344b69;
+ --theme-ink:#f7f3fb;--theme-ink2:#faf5ff;--theme-deep:#152238;--theme-rail:#1c2c47;--theme-rail2:#152238;
+ --theme-paper:#344b69;--theme-paper2:#1c2c47;--theme-surface:#30445c;
+ --theme-edge:color-mix(in srgb,#bdd4f4 57%,transparent);
+ --theme-accent-dark:color-mix(in srgb,var(--accent) 76%,#172238);--theme-accent-light:#f0f7ff;
+ --journal-paper:var(--theme-paper);--journal-paper2:var(--theme-paper2);--journal-ink:var(--theme-ink);
+ --journal-gold:var(--accent);--journal-gold2:var(--accent-soft);--journal-navy:var(--theme-deep);--journal-navy2:var(--theme-rail);
+ --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#bdd4f4 38%,transparent);
+ --realm-sky:#152238;--realm-sky2:#344b69;--realm-rail:#1c2c47;--realm-panel:#30445c;
+ --realm-line:#bdd4f4;--realm-glow:#b6caff;--realm-low:#e2a1be;
+ --realm-symbol:'☾';--realm-scene:url('assets/regions/nodkrai.svg');color-scheme:dark;
+}
+
+:root[data-palette="snezhnaya"]{
+ --accent:#b9d5ec;--accent-soft:#f3fcff;--dark:#1e2f42;--dark2:#52677a;
+ --theme-ink:#f7f3fb;--theme-ink2:#faf5ff;--theme-deep:#1e2f42;--theme-rail:#1c2d3f;--theme-rail2:#1e2f42;
+ --theme-paper:#52677a;--theme-paper2:#1c2d3f;--theme-surface:#354d63;
+ --theme-edge:color-mix(in srgb,#bfd9eb 57%,transparent);
+ --theme-accent-dark:color-mix(in srgb,var(--accent) 76%,#172238);--theme-accent-light:#f3fcff;
+ --journal-paper:var(--theme-paper);--journal-paper2:var(--theme-paper2);--journal-ink:var(--theme-ink);
+ --journal-gold:var(--accent);--journal-gold2:var(--accent-soft);--journal-navy:var(--theme-deep);--journal-navy2:var(--theme-rail);
+ --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#bfd9eb 38%,transparent);
+ --realm-sky:#1e2f42;--realm-sky2:#52677a;--realm-rail:#1c2d3f;--realm-panel:#354d63;
+ --realm-line:#bfd9eb;--realm-glow:#e2f6ff;--realm-low:#8cacc2;
+ --realm-symbol:'❄';--realm-scene:url('assets/regions/snezhnaya.svg');color-scheme:dark;
+}
+/* Full-surface atmosphere for all non-default worlds. No opaque black overlays. */
+html:not([data-palette="istaroth"]) .app-frame {
+  background:linear-gradient(125deg,var(--realm-sky),var(--realm-sky2));
+  border:1px solid color-mix(in srgb,var(--realm-line) 70%,transparent);
+}
+html:not([data-palette="istaroth"]) .chrome {
+  background:linear-gradient(115deg,var(--realm-rail),var(--realm-sky2));
+  border-color:color-mix(in srgb,var(--realm-line) 48%,transparent);
+}
+html:not([data-palette="istaroth"]) .brand-words strong {color:#fff8ef}
+html:not([data-palette="istaroth"]) .brand-words small {color:var(--accent-soft)}
+html:not([data-palette="istaroth"]) .dashboard-tabs {
+  background:linear-gradient(167deg,var(--realm-sky),var(--realm-rail) 57%,var(--realm-sky2));
+  border-color:color-mix(in srgb,var(--realm-line) 46%,transparent);
+}
+html:not([data-palette="istaroth"]) .dashboard-tabs .dash-tab {color:#e2deef}
+html:not([data-palette="istaroth"]) .dashboard-tabs .dash-tab.active {
+  color:#fffdfa;border:1px solid color-mix(in srgb,var(--accent) 70%,transparent);
+  background:linear-gradient(125deg,color-mix(in srgb,var(--accent) 35%,transparent),color-mix(in srgb,var(--realm-low) 25%,transparent));
+}
+html:not([data-palette="istaroth"]) .widget-screen {
+  background:radial-gradient(ellipse at 90% 6%,color-mix(in srgb,var(--realm-glow) 21%,transparent),transparent 54%),
+    radial-gradient(ellipse at 3% 90%,color-mix(in srgb,var(--realm-low) 25%,transparent),transparent 61%),
+    linear-gradient(150deg,var(--realm-sky),var(--realm-sky2)); color:#f7f0fd;
+}
+html:not([data-palette="istaroth"]) .widget-screen::before {
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:radial-gradient(circle at 12% 16%,var(--realm-glow) 0 1px,transparent 2px),
+    radial-gradient(circle at 82% 37%,var(--realm-line) 0 1px,transparent 2px),
+    repeating-linear-gradient(145deg,transparent 0 38px,color-mix(in srgb,var(--realm-glow) 4%,transparent) 39px 40px,transparent 41px 79px);
+}
+html:not([data-palette="istaroth"]) .widget-screen .dash-pane {position:relative;z-index:1}
+html:not([data-palette="istaroth"]) .widget-screen .headline h1,
+html:not([data-palette="istaroth"]) .dash-head h2 {color:#fff6ed}
+html:not([data-palette="istaroth"]) .headline .eyebrow,
+html:not([data-palette="istaroth"]) .dash-eyebrow {color:var(--accent-soft)}
+html:not([data-palette="istaroth"]) .widget-screen .resin-card {
+  background:radial-gradient(ellipse at 70% 24%,color-mix(in srgb,var(--realm-glow) 24%,transparent),transparent 57%),
+    linear-gradient(135deg,var(--realm-panel),var(--realm-sky));
+  border:1px solid color-mix(in srgb,var(--realm-line) 65%,transparent);
+  box-shadow:0 12px 31px rgba(4,5,16,.2),inset 0 1px 0 rgba(250,244,255,.08);
+}
+html:not([data-palette="istaroth"]) .resin-card::after {
+  content:var(--realm-symbol);position:absolute;right:15px;bottom:6px;
+  font:80px/1 Georgia,serif;color:color-mix(in srgb,var(--realm-glow) 12%,transparent);
+  pointer-events:none;
+}
+html:not([data-palette="istaroth"]) .resin-number {color:#fff8ed;text-shadow:0 2px 17px rgba(0,0,0,.25)}
+html:not([data-palette="istaroth"]) .resin-cap,
+html:not([data-palette="istaroth"]) .progress-heading span {color:#e9dcef}
+html:not([data-palette="istaroth"]) .sync-state {background:color-mix(in srgb,var(--realm-sky) 81%,transparent);color:#fff6e7;border-color:var(--realm-line)}
+html:not([data-palette="istaroth"]) .recovery-item,
+html:not([data-palette="istaroth"]) .metric-tile,
+html:not([data-palette="istaroth"]) .data-section,
+html:not([data-palette="istaroth"]) .dash-hint,
+html:not([data-palette="istaroth"]) .combat-floor {
+  background:linear-gradient(145deg,var(--realm-panel),color-mix(in srgb,var(--realm-panel) 70%,var(--realm-sky)));
+  border:1px solid color-mix(in srgb,var(--realm-line) 43%,transparent);
+}
+html:not([data-palette="istaroth"]) .recovery-item strong,
+html:not([data-palette="istaroth"]) .metric-value,
+html:not([data-palette="istaroth"]) .data-row-value,
+html:not([data-palette="istaroth"]) .data-section-title {color:#fcf5f4}
+html:not([data-palette="istaroth"]) .recovery-item small,
+html:not([data-palette="istaroth"]) .section-label,
+html:not([data-palette="istaroth"]) .data-section-title {color:var(--accent-soft)}
+html:not([data-palette="istaroth"]) .recovery-item span,
+html:not([data-palette="istaroth"]) .metric-title,
+html:not([data-palette="istaroth"]) .data-row-label,
+html:not([data-palette="istaroth"]) .data-row-help {color:#d7d2e1}
+html:not([data-palette="istaroth"]) .settings-screen {
+  color:#f3edf7;background:linear-gradient(155deg,var(--realm-sky),var(--realm-sky2))
+}
+html:not([data-palette="istaroth"]) .settings-heading,
+html:not([data-palette="istaroth"]) .setting-tabs,
+html:not([data-palette="istaroth"]) .settings-footer {
+  background:color-mix(in srgb,var(--realm-rail) 80%,var(--realm-panel));
+  border-color:color-mix(in srgb,var(--realm-line) 55%,transparent);
+}
+html:not([data-palette="istaroth"]) .settings-heading h1,
+html:not([data-palette="istaroth"]) .field,
+html:not([data-palette="istaroth"]) .slider-title label,
+html:not([data-palette="istaroth"]) .check-row,
+html:not([data-palette="istaroth"]) .check-row strong {color:#f8f3fa}
+html:not([data-palette="istaroth"]) .settings-heading p,
+html:not([data-palette="istaroth"]) .field-note,
+html:not([data-palette="istaroth"]) .check-row small {color:#d2cede}
+html:not([data-palette="istaroth"]) .tab {color:#e2dce9}
+html:not([data-palette="istaroth"]) .tab.active {color:#fffdf7;background:var(--realm-panel);border:1px solid var(--realm-line)}
+html:not([data-palette="istaroth"]) .palette-option,
+html:not([data-palette="istaroth"]) .connection-state,
+html:not([data-palette="istaroth"]) .profile-entry {
+  color:#f8f2fa;background:var(--realm-panel);border-color:color-mix(in srgb,var(--realm-line) 60%,transparent);
+}
+html:not([data-palette="istaroth"]) .palette-option[aria-pressed="true"] {
+  background:color-mix(in srgb,var(--accent) 28%,var(--realm-panel));
+  border:1px solid var(--accent-soft);color:#fff8fd;
+}
+html:not([data-palette="istaroth"]) .field input:not([type=color]),
+html:not([data-palette="istaroth"]) .field select,
+html:not([data-palette="istaroth"]) .profile-create input,
+html:not([data-palette="istaroth"]) .uid-details input,
+html:not([data-palette="istaroth"]) .uid-details select {
+  color:#fff9fd;background:var(--realm-sky);border-color:color-mix(in srgb,var(--realm-line) 62%,transparent);
+}
+html:not([data-palette="istaroth"]) .mini-screen {
+  background:radial-gradient(ellipse at 89% 12%,color-mix(in srgb,var(--realm-glow) 31%,transparent),transparent 61%),
+    radial-gradient(ellipse at 5% 95%,color-mix(in srgb,var(--realm-low) 24%,transparent),transparent 56%),
+    linear-gradient(142deg,var(--realm-sky),var(--realm-panel)); color:#f9f2fc;
+}
+html:not([data-palette="istaroth"]) .mini-screen::after {
+  content:var(--realm-symbol);position:absolute;right:20px;bottom:12px;font:55px/1 Georgia,serif;
+  color:color-mix(in srgb,var(--realm-glow) 13%,transparent);pointer-events:none
+}
+html:not([data-palette="istaroth"]) .mini-kicker,
+html:not([data-palette="istaroth"]) .mini-facts strong,
+html:not([data-palette="istaroth"]) .mini-count strong,
+html:not([data-palette="istaroth"]) .mini-status,
+html:not([data-palette="istaroth"]) .mini-footer {color:#f9effc}
+html:not([data-palette="istaroth"]) .mini-fact-label,
+html:not([data-palette="istaroth"]) .mini-cap {color:#d8d0e6}
+html:not([data-palette="istaroth"]) .mini-track {background:color-mix(in srgb,var(--realm-line) 30%,transparent)}
+html:not([data-palette="istaroth"]) .mini-fill,
+html:not([data-palette="istaroth"]) .progress-fill,
+html:not([data-palette="istaroth"]) .area-fill {
+  background:linear-gradient(90deg,var(--realm-low),var(--accent),var(--accent-soft));
+}
+html:not([data-palette="istaroth"]) .mini-overview,
+html:not([data-palette="istaroth"]) .mini-float-controls button {
+  background:var(--realm-panel);color:#fff5fd;border-color:var(--realm-line)
+}
+/* Keep user-provided wallpaper visible in either mode, not replaced by preset imagery. */
+html:not([data-palette="istaroth"])[data-wall-target="full"] .widget-screen {background:color-mix(in srgb,var(--realm-sky) 78%,transparent)}
+
+html:not([data-palette="istaroth"])[data-wall-target="card"] .resin-card .card-wallpaper {opacity:1}
+
+/* Avoid accidental animation for users who disabled Motion. */
+@media (prefers-reduced-motion: reduce) {html * {animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Gallery layout adapts to the installed Windows settings window. */
+.settings-page .palette-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.palette-grid .palette-option{min-height:68px;gap:12px;padding:10px 12px}
+.palette-grid .palette-option i{width:30px;height:30px;border-radius:11px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.17),0 0 0 1px rgba(0,0,0,.10)}
+.palette-grid .palette-option span{min-width:0;font-size:.77rem;line-height:1.2}
+.palette-grid .palette-option span small{display:block;margin-top:5px;font-size:.57rem;font-weight:450;opacity:.85;line-height:1.25}
+@media(max-width:430px){.settings-page .palette-grid{grid-template-columns:1fr}}
+
+/* Regional landscape is a decoration only: it never intercepts mouse or keyboard events. */
+html:not([data-palette="istaroth"]) .widget-screen::before {
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(180deg,transparent 5%,rgba(1,8,14,.12) 75%,rgba(1,8,14,.3)),var(--realm-scene);
+  background-position:center,center bottom;background-size:cover,cover;background-repeat:no-repeat;
+  opacity:.52;
+}
+html:not([data-palette="istaroth"]) .mini-screen::before {
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(180deg,transparent,rgba(2,7,15,.22)),var(--realm-scene);
+  background-position:center, 58% 70%;background-size:cover,cover;background-repeat:no-repeat;
+  opacity:.38;
+}
+html:not([data-palette="istaroth"]) .mini-screen > * {position:relative;z-index:1}
+html:not([data-palette="istaroth"]) .palette-option i {
+  background-image:linear-gradient(135deg,color-mix(in srgb,var(--swatch) 46%,transparent),transparent 92%);
+}
+/* A full user-uploaded wallpaper supersedes the built-in landscape art. */
+html:not([data-palette="istaroth"])[data-wall-target="full"] .widget-screen::before,
+html:not([data-palette="istaroth"])[data-wall-target="full"] .mini-screen::before {opacity:0}
+/* Keep the original Istaroth preset fully untouched. */
+
+html[data-palette="mondstadt"] .settings-heading::after {
+  content:"";position:absolute;right:0;top:0;width:40%;height:100%;pointer-events:none;
+  background:var(--realm-scene) center 42%/cover no-repeat;opacity:.12;
+}
+
+html[data-palette="liyue"] .settings-heading::after {
+  content:"";position:absolute;right:0;top:0;width:40%;height:100%;pointer-events:none;
+  background:var(--realm-scene) center 42%/cover no-repeat;opacity:.12;
+}
+
+html[data-palette="inazuma"] .settings-heading::after {
+  content:"";position:absolute;right:0;top:0;width:40%;height:100%;pointer-events:none;
+  background:var(--realm-scene) center 42%/cover no-repeat;opacity:.12;
+}
+
+html[data-palette="sumeru"] .settings-heading::after {
+  content:"";position:absolute;right:0;top:0;width:40%;height:100%;pointer-events:none;
+  background:var(--realm-scene) center 42%/cover no-repeat;opacity:.12;
+}
+
+html[data-palette="fontaine"] .settings-heading::after {
+  content:"";position:absolute;right:0;top:0;width:40%;height:100%;pointer-events:none;
+  background:var(--realm-scene) center 42%/cover no-repeat;opacity:.12;
+}
+
+html[data-palette="natlan"] .settings-heading::after {
+  content:"";position:absolute;right:0;top:0;width:40%;height:100%;pointer-events:none;
+  background:var(--realm-scene) center 42%/cover no-repeat;opacity:.12;
+}
+
+html[data-palette="nodkrai"] .settings-heading::after {
+  content:"";position:absolute;right:0;top:0;width:40%;height:100%;pointer-events:none;
+  background:var(--realm-scene) center 42%/cover no-repeat;opacity:.12;
+}
+
+html[data-palette="snezhnaya"] .settings-heading::after {
+  content:"";position:absolute;right:0;top:0;width:40%;height:100%;pointer-events:none;
+  background:var(--realm-scene) center 42%/cover no-repeat;opacity:.12;
+}

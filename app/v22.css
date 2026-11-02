@@ -1,0 +1,30 @@
+/* Istaroth 2.2 additions: accessible sizes and scoped elements */
+.mini-float-controls{position:absolute;right:12px;top:28px;z-index:9;display:flex;gap:3px;opacity:.65;transition:opacity .18s}
+.mini-float-controls:hover,.mini-float-controls:focus-within{opacity:1}
+.mini-float-controls button{border:1px solid color-mix(in srgb,var(--theme-ink) 14%,transparent);background:color-mix(in srgb,var(--theme-paper) 83%,transparent);color:var(--theme-ink);font:700 12px var(--journal-sans),sans-serif;padding:3px 6px;border-radius:7px;cursor:pointer;min-width:23px;min-height:25px}
+.mini-float-controls button:first-child{font-size:10px;padding:3px 6px}
+.mini-overview{position:absolute;inset:40px 8px auto 8px;z-index:8;background:color-mix(in srgb,var(--theme-paper) 97%,transparent);border:1px solid color-mix(in srgb,var(--accent) 42%,transparent);color:var(--theme-ink);border-radius:12px;box-shadow:0 14px 32px #0003;padding:12px 13px;max-height:205px;overflow:auto}
+.mini-overview>strong{display:block;font:700 14px var(--journal-serif),Georgia,serif}
+.mini-overview>span{display:block;font:500 10px var(--journal-sans),sans-serif;opacity:.7;margin-bottom:8px}
+.mini-overview #miniOverviewContents>div{display:flex;justify-content:space-between;gap:10px;line-height:1.7;font:500 11px var(--journal-sans),sans-serif;border-top:1px solid #9992;padding-top:2px;margin-top:2px}
+.mini-overview #miniOverviewContents>div strong{text-align:right}
+html[data-screen="mini"][data-floating="on"] .chrome{display:none}
+html[data-screen="mini"][data-floating="on"] .mini-inner{padding-top:12px}
+html[data-screen="mini"][data-floating="on"] .mini-kicker{-webkit-app-region:drag;padding:3px 0 5px}
+html[data-screen="mini"][data-floating="on"] .mini-float-controls{top:9px;opacity:.85;-webkit-app-region:no-drag}
+html[data-screen="mini"][data-floating="on"] .mini-facts{margin-top:2px}
+html[data-screen="mini"] .mini-kicker{padding-right:145px}
+html[data-screen="mini"] .mini-status{font-size:8px}
+.history-summary{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:8px 0 14px}
+.history-summary>div{padding:17px;background:color-mix(in srgb,var(--theme-paper) 90%,var(--accent));border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);border-radius:12px;display:flex;flex-direction:column;gap:6px}
+.history-summary small{font-size:12px;opacity:.75}.history-summary strong{font-size:27px;color:var(--theme-ink)}
+.history-chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));align-items:end;gap:7px;height:180px;margin:12px 0 16px;padding:0 4px}
+.history-day{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;height:100%;font:600 11px var(--journal-sans),sans-serif;color:var(--theme-ink)}
+.history-day i{width:100%;max-width:29px;min-height:3px;background:linear-gradient(0deg,var(--accent),var(--accent-soft));border-radius:5px 5px 2px 2px;opacity:.9}
+.history-day b{font-size:11px;font-weight:600}.history-day small{font-size:10px;opacity:.75}
+.settings-page[data-page="updates"] .field input{width:100%}
+@media(max-width:550px){.history-chart{gap:3px}.history-summary strong{font-size:22px}}
+/* Keep hover controls separate from HoYoLAB connection status in the tiny header. */
+html[data-screen="mini"][data-floating="on"] .mini-status{display:none}
+html[data-screen="mini"][data-floating="on"] .mini-kicker{padding-right:0;max-width:55%}
+html[data-screen="mini"][data-floating="on"] .mini-float-controls button{background:color-mix(in srgb,var(--theme-paper) 94%,transparent)}
