@@ -10,6 +10,8 @@ See your Original Resin, daily commissions, Realm currency and more, right on yo
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform: Windows 10/11 x64](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078D4)
 ![Version: 1.0](https://img.shields.io/badge/release-v1.0-informational)
+[![Source checks](https://github.com/Subaru771/Istaroth/actions/workflows/checks.yml/badge.svg)](https://github.com/Subaru771/Istaroth/actions/workflows/checks.yml)
+[![CodeQL](https://github.com/Subaru771/Istaroth/actions/workflows/codeql.yml/badge.svg)](https://github.com/Subaru771/Istaroth/actions/workflows/codeql.yml)
 
 [Download](../../releases) · [Changelog](CHANGELOG.md) · [Privacy](PRIVACY.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md)
 
@@ -40,6 +42,7 @@ See your Original Resin, daily commissions, Realm currency and more, right on yo
 **Windows integration**
 - Autostart, always-on-top and close-to-tray
 - Automatic connection recovery
+- Read-only new-release notifications and manual update checks in the system tray; unsigned installers are not executed automatically
 
 ## Installation
 
@@ -86,7 +89,7 @@ The repository contains the Electron application in `app/` and a custom Go graph
 **Run the app** (requires Node.js), from `app/`:
 
 ```bash
-npm install
+npm ci
 npm start
 ```
 
@@ -96,7 +99,10 @@ npm start
 npm run check
 npm run test:startup
 npm run test:v22
+npm run test:security
 ```
+
+**Release checklist:** [Security checks, repeatable builds, signing, and Windows QA](docs/RELEASE_READINESS.md).
 
 **Build the Windows Setup** (requires Go):
 
