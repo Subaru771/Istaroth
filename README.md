@@ -6,9 +6,9 @@
 
 A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
-![Version](https://img.shields.io/badge/version-v1.0-8168d9) ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4) [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![Version](https://img.shields.io/badge/version-v1.0.1-8168d9) ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4) [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-[**Download v1.0**](https://github.com/Subaru771/Istaroth/releases/tag/1.0) · [Privacy](PRIVACY.md) · [Security](SECURITY.md) · [Report an issue](../../issues)
+[**Download v1.0.1**](https://github.com/Subaru771/Istaroth/releases/tag/v1.0.1) · [Privacy](PRIVACY.md) · [Security](SECURITY.md) · [Report an issue](../../issues)
 
 </div>
 
@@ -30,41 +30,38 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 ## Install
 
-**Currently published v1.0:** The download below is the original unsigned Windows installer. It downloads the Electron runtime during first installation. A standard **offline NSIS installer and extracted portable ZIP** are being prepared and tested, but are **not yet published release downloads**. See [Windows distributions and migration tests](docs/WINDOWS_DISTRIBUTION.md).
+**v1.0.1:** Choose the standard **offline NSIS installer** or the **portable ZIP**. Both include Electron and do not download a runtime during installation. The original [v1.0 Go installer](https://github.com/Subaru771/Istaroth/releases/tag/1.0) is preserved for older installations. See [Windows distribution and migration guidance](docs/WINDOWS_DISTRIBUTION.md).
 
-1. Download [`Istaroth_Setup_v1.0.exe`](https://github.com/Subaru771/Istaroth/releases/download/1.0/Istaroth_Setup_v1.0.exe) for **Windows 10/11 x64**.
-2. Quit any existing Istaroth tray instance and run Setup. On first installation it downloads the official Electron runtime and checks its pinned SHA-256.
-3. Open **Settings → Account** and sign in on the official HoYoLAB page.
+1. On **Windows 10/11 x64**, download the [v1.0.1 offline installer](https://github.com/Subaru771/Istaroth/releases/download/v1.0.1/Istaroth-v1.0.1-Setup-Windows-x64-UNSIGNED.exe), or the [portable ZIP](https://github.com/Subaru771/Istaroth/releases/download/v1.0.1/Istaroth-v1.0.1-Portable-Windows-x64-UNSIGNED.zip).
+2. Quit any running Istaroth tray instance. For Setup, run the EXE; for portable, extract the entire ZIP and run `Istaroth.exe`.
+3. Open **Settings → Account** and sign in through the official HoYoLAB page.
 
-**Note:** The v1.0 installer is **unsigned** and may show a Microsoft SmartScreen reputation warning. Do not bypass antivirus malware detections. Istaroth is independent of HoYoverse/Cognosphere and uses unofficial HoYoLAB endpoints, which may change.
+**Note:** Both v1.0.1 packages are **unsigned** and may show a Microsoft SmartScreen reputation warning. Do not bypass antivirus malware detections. Istaroth is independent of HoYoverse/Cognosphere and uses unofficial HoYoLAB endpoints, which may change.
 
 ## Verify the download
 
-The published v1.0 installer has this SHA-256:
+Each v1.0.1 download has a same-named `.sha256` file attached to the [release](https://github.com/Subaru771/Istaroth/releases/tag/v1.0.1), generated after the package is built.
 
-```text
-d0cbf9b6185cc7749dca099ecbaf8c16d32fca7c2976475f0b65b505929428e7
-```
-
-Run in Windows Command Prompt next to the downloaded EXE:
+To verify either file in Windows Command Prompt:
 
 ```cmd
-certutil -hashfile Istaroth_Setup_v1.0.exe SHA256
+certutil -hashfile Istaroth-v1.0.1-Setup-Windows-x64-UNSIGNED.exe SHA256
+certutil -hashfile Istaroth-v1.0.1-Portable-Windows-x64-UNSIGNED.zip SHA256
 ```
 
-Compare the result with the hash above or [the checksum attached to the GitHub release](https://github.com/Subaru771/Istaroth/releases/download/1.0/Istaroth_Setup_v1.0.exe.sha256). A matching hash confirms identical bytes, **not** publisher identity or malware safety. See the [Code signing policy](CODE_SIGNING.md).
+Compare the output to the corresponding `.sha256` download. Matching hashes confirm identical bytes, **not** publisher identity or malware safety. See the [Code signing policy](CODE_SIGNING.md).
 
 ## Source and contributions
 
 - **Electron app:** `app/`
 - **Offline NSIS installer and portable ZIP:** built from `app/` with electron-builder ([QA and compatibility](docs/WINDOWS_DISTRIBUTION.md))
-- **Legacy Go installer source:** `installer/` (for published v1.0 compatibility)
+- **Legacy Go installer source:** `installer/` (preserved for v1.0 compatibility)
 - **Build scripts:** `scripts/`
 - **Automated checks:** [GitHub Actions](../../actions)
 - **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md)
 - **Changes:** [CHANGELOG.md](CHANGELOG.md)
 
-To run from source, install Node.js and run `npm ci` then `npm start` from `app/`. To build the standalone Windows candidates, run `npm run build:win` on Windows x64 after `npm ci`. See [distribution instructions](docs/WINDOWS_DISTRIBUTION.md).
+To run from source, install Node.js and run `npm ci` then `npm start` from `app/`. To build the standalone Windows packages, run `npm run build:win` on Windows x64 after `npm ci`. See [distribution instructions](docs/WINDOWS_DISTRIBUTION.md).
 
 Istaroth stores sign-in state and settings locally, preserving the legacy `Teyvat Pulse` profile for existing installations. Read [PRIVACY.md](PRIVACY.md) before connecting an account.
 
