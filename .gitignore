@@ -13,3 +13,5 @@ build/
 **/userData/
 .DS_Store
 Thumbs.db
+# Generated from app/ by scripts/build_embedded_app.py
+installer/app.zip

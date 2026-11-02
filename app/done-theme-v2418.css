@@ -1,4 +1,4 @@
-/* Istaroth 2.4.18: Theme-aware Settings Done button.
+/* Istaroth 1.0: Theme-aware Settings Done button.
    Derived from the current palette and optional user accent. No hard-coded
    Istaroth-purple override on regions other than Istaroth. */
 html .settings-footer #doneButton {

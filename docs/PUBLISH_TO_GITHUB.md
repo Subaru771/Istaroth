@@ -1,12 +1,14 @@
-# Publish Istaroth v2.4.18 on GitHub — Windows, no CMD
+# Publish Istaroth 1.0 on GitHub
 
-1. Sign into GitHub and create a **public** repository named `Istaroth`, without adding a separate README, license, or .gitignore.
-2. Extract `Istaroth_v2.4.18_Gallery_Only_Source.zip`.
-3. In GitHub Desktop, choose **File → Add local repository**, select the extracted project folder, and choose **Create repository here** if prompted. Commit your changes and click **Publish repository**; ensure **Keep this code private** is unchecked.
-4. Check the public repository contains `app/`, `installer/`, `LICENSE`, `PRIVACY.md` and `.github/workflows/checks.yml`.
-5. Open the **Actions** tab and check that the source-check/build workflow succeeds.
-6. Under **Releases**, choose **Draft a new release**, create tag `v2.4.18`, title it `Istaroth v2.4.18 — Public Release`, and leave **Set as a pre-release** unchecked.
-7. Copy text from `docs/RELEASE_NOTES.md` into the release description. Attach BOTH files from the `Release_Assets` folder: the setup `.exe` and its `.sha256` file.
-8. Publish the release. Test that a signed-out visitor can download it. Optionally enable GitHub's **Private vulnerability reporting**.
+Repository: https://github.com/Subaru771/Istaroth
 
-The setup is not signed. Do not promise that open source removes SmartScreen or guarantees safety. GitHub releases include a source snapshot automatically.
+1. Confirm the source code and README use public version **1.0**, and that GitHub Actions checks pass.
+2. Open https://github.com/Subaru771/Istaroth/releases/new
+3. Create a new tag **`v1.0`** from the main branch.
+4. Title the release **`Istaroth 1.0 — Your Companion Throughout Time!`**
+5. Do not select **Set as a pre-release**.
+6. Paste `docs/RELEASE_NOTES.md` as the release description.
+7. Upload `Istaroth_Setup_v1.0.exe` and `Istaroth_Setup_v1.0.exe.sha256` from the publishing kit.
+8. Publish. Verify the link works for a logged-out visitor and that the checksum matches.
+
+The executable is unsigned. Source availability and SHA-256 do not constitute a code signature or security audit.

@@ -28,7 +28,7 @@ import (
 var appArchive []byte
 
 const appName = "Istaroth"
-const version = "2.4.18"
+const version = "1.0"
 const runtimeURL = "https://github.com/electron/electron/releases/download/v45.1.0/electron-v45.1.0-win32-x64.zip"
 const runtimeSHA = "55eaba17abff7b5bba6c3bbc85068967379024fe742fe9c7fdba9118922ccbe2"
 const runKey = `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`

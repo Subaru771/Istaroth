@@ -6,7 +6,7 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 Istaroth displays HoYoLAB information, including Original Resin, in a customizable desktop companion with an optional floating Mini Resin Widget.
 
-> **Current build: v2.4.18.** The installer is unsigned and has not undergone an independent security audit. HoYoLAB integration relies on unofficial endpoints and may change. Istaroth is not affiliated with or endorsed by HoYoverse or Cognosphere.
+> **Current release: v1.0.** The installer is unsigned and has not undergone an independent security audit. HoYoLAB integration relies on unofficial endpoints and may change. Istaroth is not affiliated with or endorsed by HoYoverse or Cognosphere.
 
 ## Preview
 
@@ -68,7 +68,7 @@ To build the Windows Setup from source, install Go and run from `installer/`:
 go build -ldflags="-H=windowsgui" -o Istaroth_Setup.exe main.go wizard.go
 ```
 
-The installer embeds `installer/app.zip`. CI checks its contents against the tracked app source and builds a Windows setup artifact. The published installer SHA-256 confirms the download's bytes; it is not a code signature or a guarantee of safety.
+The installer embeds `installer/app.zip`. Generate it with `python scripts/build_embedded_app.py` before compiling the installer. CI generates the same archive from source and builds a Windows setup artifact. The published installer SHA-256 confirms the download's bytes; it is not a code signature or a guarantee of safety.
 
 ## Artwork and acknowledgements
 
@@ -78,10 +78,10 @@ The project code is [MIT licensed](LICENSE). Do not assume that external game as
 
 [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
-### Wallpaper Studio (v2.4.17)
+### Wallpaper Studio
 
 Main wallpaper and Mini wallpaper now have their own **top-level settings pages**, with separate image storage, position, blur, darkness, zoom and live previews. Main additionally supports Full Widget / Resin Card placement. Existing wallpaper files are retained.
 
-## Wallpaper editor (2.4.17)
+## Wallpaper editor
 
 Open **Settings → Main wallpaper** or **Settings → Mini wallpaper**. These are different pages, not a two-widget selector inside Main. Each uses separate image storage, sliders, reset and real widget preview. Main's full/card wallpaper target never controls the Mini Widget.
