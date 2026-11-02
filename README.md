@@ -8,7 +8,7 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 ![Version](https://img.shields.io/badge/version-v1.0-8168d9) ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4) [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-[**Download v1.0**](../../releases/latest) · [Privacy](PRIVACY.md) · [Security](SECURITY.md) · [Report an issue](../../issues)
+[**Download v1.0**](https://github.com/Subaru771/Istaroth/releases/tag/1.0) · [Privacy](PRIVACY.md) · [Security](SECURITY.md) · [Report an issue](../../issues)
 
 </div>
 
@@ -30,7 +30,7 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 ## Install
 
-1. Download [`Istaroth_Setup_v1.0.exe`](../../releases/latest) for **Windows 10/11 x64**.
+1. Download [`Istaroth_Setup_v1.0.exe`](https://github.com/Subaru771/Istaroth/releases/download/1.0/Istaroth_Setup_v1.0.exe) for **Windows 10/11 x64**.
 2. Quit any existing Istaroth tray instance and run Setup. On first installation it downloads the official Electron runtime and checks its pinned SHA-256.
 3. Open **Settings → Account** and sign in on the official HoYoLAB page.
 
@@ -50,7 +50,7 @@ Run in Windows Command Prompt next to the downloaded EXE:
 certutil -hashfile Istaroth_Setup_v1.0.exe SHA256
 ```
 
-Compare the result with the hash above or [the checksums file](checksums/Istaroth_Setup_v1.0.exe.sha256). A matching hash confirms identical bytes, **not** publisher identity or malware safety. See [code signing](CODE_SIGNING.md).
+Compare the result with the hash above or [the checksum attached to the GitHub release](https://github.com/Subaru771/Istaroth/releases/download/1.0/Istaroth_Setup_v1.0.exe.sha256). A matching hash confirms identical bytes, **not** publisher identity or malware safety. See [code signing](CODE_SIGNING.md).
 
 ## Source and contributions
 
