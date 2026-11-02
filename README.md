@@ -20,7 +20,7 @@ See your Original Resin, daily commissions, Realm currency and more, right on yo
 
 ## Preview
 
-![Istaroth's nine illustrated regional styles](docs/images/style-gallery.png)
+![Istaroth's nine styles](docs/images/style-gallery.png)
 
 ![Istaroth Windows and widget settings](docs/images/windows-settings.png)
 
@@ -33,7 +33,7 @@ See your Original Resin, daily commissions, Realm currency and more, right on yo
 - Account, exploration, combat and TCG information where available
 
 **Appearance**
-- Nine color themes with illustrated regional styles: Istaroth, Mondstadt, Liyue, Inazuma, Sumeru, Fontaine, Natlan, Nod-Krai and Snezhnaya
+- Nine color themes: Istaroth, Mondstadt, Liyue, Inazuma, Sumeru, Fontaine, Natlan, Nod-Krai and Snezhnaya
 - Custom typography, accent colors, layouts and saved appearance profiles
 - **Wallpaper Studio**: separate wallpaper pages for the Main and Mini widgets (see [Wallpapers](#wallpapers))
 
