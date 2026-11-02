@@ -54,3 +54,46 @@ jobs:
           path: |
             installer/Istaroth_Setup_Built_From_Source.exe
             installer/Istaroth_Setup_Built_From_Source.exe.sha256
+
+  # This candidate is for QA only. It bundles Electron instead of downloading
+  # the runtime during setup. It must pass real Windows install/uninstall tests
+  # before it can replace the published Go-based Istaroth 1.0 installer.
+  build-standard-nsis-candidate:
+    needs: source-checks
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Electron and electron-builder
+        working-directory: app
+        shell: pwsh
+        run: npm install --no-audit --no-fund
+      - name: Package full-offline Electron + NSIS candidate
+        working-directory: app
+        shell: pwsh
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npx electron-builder --win nsis --x64 --publish never
+      - name: Verify build artifacts, generate SHA-256
+        working-directory: app
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.exe' | Select-Object -First 1
+          if (-not $exe) { throw 'NSIS installer not produced' }
+          $sig = Get-AuthenticodeSignature -LiteralPath $exe.FullName
+          Write-Host "Candidate signature: $($sig.Status) (unsigned expected)"
+          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $exe.FullName).Hash.ToLowerInvariant()
+          Set-Content -Encoding ascii -Path ($exe.FullName + '.sha256') -Value "$hash  $($exe.Name)"
+          Write-Host "Candidate file: $($exe.Name)"
+          Write-Host "SHA-256: $hash"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Istaroth-standard-NSIS-candidate-UNSIGNED-NOT-RELEASE
+          path: |
+            app/dist/Istaroth-Setup-*.exe
+            app/dist/Istaroth-Setup-*.exe.sha256
+          if-no-files-found: error
