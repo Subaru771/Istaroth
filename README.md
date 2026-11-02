@@ -14,13 +14,11 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 ## Preview
 
-**Istaroth on Windows**
+![Animated Istaroth feature tour: Resin tracking, Mini Widget, themes, and wallpaper customization](docs/images/istaroth-feature-tour.gif)
 
-![Istaroth Windows app and settings](docs/images/windows-settings.png)
+*Illustrative feature tour using sample data; not a live HoYoLAB account recording.*
 
-**Nine appearance themes**
-
-![Istaroth theme gallery](docs/images/style-gallery.png)
+[Real Windows screenshot](docs/images/windows-settings.png) · [Nine-theme gallery](docs/images/style-gallery.png)
 
 ## Features
 
