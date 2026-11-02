@@ -34,7 +34,7 @@ jobs:
           if ($package.version -ne '1.0.1' -or $lock.version -ne '1.0.1') {
             throw 'Unexpected package version, or missing version lock.'
           }
-          if ($lock.packages.''.version -ne $package.version) {
+          if ($lock.packages.PSObject.Properties[''].Value.version -ne $package.version) {
             throw 'Package lock root version mismatch'
           }
           if (-not (Test-Path 'docs/RELEASE_NOTES_v1.0.1.md')) {
