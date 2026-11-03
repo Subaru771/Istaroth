@@ -96,3 +96,9 @@ html .setting-tabs [data-tab="main-wallpaper"],
 html .setting-tabs [data-tab="mini-wallpaper"],
 html .settings-page[data-page="main-wallpaper"],
 html .settings-page[data-page="mini-wallpaper"] { display: none !important; }
+
+/* Wallpaper tabs are gone; use a single balanced row for the five remaining pages. */
+html .setting-tabs { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+@media (max-width: 650px) {
+  html .setting-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+}
