@@ -1,17 +1,18 @@
 {
   "name": "istaroth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
-  "description": "Istaroth v1.0.1 — offline Windows Genshin Impact desktop companion",
+  "description": "Istaroth v1.0.2 — hardened HoYoLAB and offline Windows Genshin Impact desktop companion",
   "main": "main.js",
   "author": "Istaroth open-source contributors",
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check wallpaper-v2413.js && node --check hoyolab-sync.js && node --check chronicle-sync.js && node --check chronicle-ui.js && node --check windows-startup.js && node --check resin-telemetry.js && node --check tray-icon.js && node --check update-service.js",
+    "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check wallpaper-v2413.js && node --check hoyolab-sync.js && node --check chronicle-sync.js && node --check chronicle-ui.js && node --check windows-startup.js && node --check resin-telemetry.js && node --check tray-icon.js && node --check update-service.js && node test_security.js",
     "build:win": "electron-builder --win nsis zip --x64 --publish never",
     "test:startup": "node test_startup.js",
-    "test:v22": "node check-v22.js"
+    "test:v22": "node check-v22.js",
+    "test:security": "node test_security.js"
   },
   "devDependencies": {
     "electron": "45.1.0",
@@ -27,6 +28,7 @@
     "files": [
       "main.js",
       "hoyolab-sync.js",
+      "trust-policy.js",
       "preload.js",
       "index.html",
       "renderer.js",
