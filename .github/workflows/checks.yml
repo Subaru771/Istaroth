@@ -39,6 +39,9 @@ jobs:
       - name: IPC, navigation and cookie allowlist tests
         working-directory: app
         run: npm run test:security
+      - name: Color-only design and asset regression tests
+        working-directory: app
+        run: npm run test:colors
 
   build-offline-windows-candidates:
     needs: source-checks
@@ -71,7 +74,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           if (-not (Test-Path 'dist/win-unpacked/Istaroth.exe')) { throw 'The Windows GUI executable is missing' }
           if (-not (Test-Path 'dist/win-unpacked/resources/app.asar')) { throw 'Electron app archive is missing' }
-          node -e 'const asar=require("@electron/asar");const paths=asar.listPackage("dist/win-unpacked/resources/app.asar").map(p=>p.split(String.fromCharCode(92)).join("/"));for(const file of ["main.js","preload.js","index.html","hoyolab-sync.js","trust-policy.js"]){if(!paths.some(p=>p===file||p.endsWith("/"+file)))throw new Error("Missing packaged app file: "+file+"; sample paths: "+paths.slice(0,12).join(","))}console.log("Verified",paths.length,"files in app.asar")'
+          node -e 'const asar=require("@electron/asar");const paths=asar.listPackage("dist/win-unpacked/resources/app.asar").map(p=>p.split(String.fromCharCode(92)).join("/"));for(const file of ["main.js","preload.js","index.html","hoyolab-sync.js","trust-policy.js","color-only.css"]){if(!paths.some(p=>p===file||p.endsWith("/"+file)))throw new Error("Missing packaged app file: "+file+"; sample paths: "+paths.slice(0,12).join(","))}if(paths.some(p=>/assets\\/(?:regions|theme-art)\\//.test(p)||/assets\\/istaroth-.*\\.svg$/.test(p)))throw new Error("Decorative image assets found in package");console.log("Verified",paths.length,"files in app.asar")'
           if ($LASTEXITCODE -ne 0) { throw 'Packaged source verification failed' }
           $exe = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.exe' | Select-Object -First 1
           $zip = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.zip' | Select-Object -First 1

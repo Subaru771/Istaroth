@@ -7,7 +7,8 @@ Istaroth is an unofficial Windows desktop companion. **There is no developer-ope
 | HoYoLAB cookies | Authenticate read-only account queries | Stored in a dedicated persistent Electron browser session on this PC and sent to supported official HoYoLAB/HoYoverse API hosts |
 | Genshin UID, region and nickname | Select an account | Stored locally and used for API requests |
 | Resin readings, alerts and settings | Display timers and history | Stored locally, not sent to an Istaroth server |
-| Theme preferences and wallpapers | Personalize the widgets | Stored locally on your PC |
+| Color themes and appearance preferences | Customize the color-only widgets | Stored locally on your PC |
+| Wallpapers from earlier versions | No longer used by v1.0.2 | Preserved locally for compatibility; never loaded, uploaded, or deleted by the new version |
 | Release metadata | Check for new versions | The app may contact the public GitHub Releases API for `Subaru771/Istaroth`; checks can be disabled; unsigned EXEs are not executed automatically |
 | Offline installer and portable ZIP | Run Istaroth without a runtime download during installation | Electron is bundled in the GitHub release package |
 

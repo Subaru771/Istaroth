@@ -5,7 +5,9 @@
 - Strengthened Electron IPC sender-frame validation and local navigation boundaries.
 - Reduced which HoYoLAB session cookies are sent to official read-only API endpoints.
 - Added security regression tests for URL policy, IPC, CSP, and cookie forwarding.
-- Preserved the existing v1.0.1 visual themes, Main and Mini widgets, and local user profile path.
+- Replaced theme illustrations and uploaded wallpapers with color-only gradients while preserving nine distinct color palettes, Main/Mini widgets and layout controls.
+- Removed wallpaper upload settings and image IPC. Legacy wallpaper files remain on disk for compatibility with prior versions.
+- Excluded decorative SVG/WebP assets from the installer and portable ZIP; functional Windows icons remain.
 - Updated privacy documentation and release QA.
 
 **Status:** Windows binary QA and live HoYoLAB sign-in/synchronization still require testing before the public v1.0.2 release.
