@@ -37,13 +37,13 @@
 .atelier-scene{pointer-events:none;position:absolute;inset:0 0 0 auto;width:44%;z-index:0;
  background-image:linear-gradient(90deg,#31254c,rgba(48,39,90,.18) 36%),
  radial-gradient(ellipse at 77% 74%,rgba(174,125,213,.28),transparent 61%),
- url('assets/regions/nodkrai.svg');background-position:center,right center,right 37%;background-size:cover,cover,cover;opacity:.72}
+ none;background-position:center,right center,right 37%;background-size:cover,cover,cover;opacity:.72}
 .atelier-orbit{position:absolute;right:18%;top:3px;width:192px;height:192px;border:2px solid rgba(249,204,145,.34);
  border-radius:100%;box-shadow:0 0 0 17px rgba(216,174,232,.045),0 0 0 27px rgba(248,199,133,.06);transform:rotate(-23deg)}
 .atelier-orbit:before{content:'';position:absolute;inset:22px;border:1px dashed rgba(239,203,156,.5);border-radius:100%}
 .atelier-orbit:after{content:'✦';font:42px Georgia,serif;position:absolute;top:-19px;right:25px;color:#f9d18e;text-shadow:0 0 20px #e2b9f4}
 .atelier-glass{position:absolute;right:27%;top:30px;width:82px;height:116px;opacity:.85;
- background:url('assets/istaroth-hourglass.svg') center/contain no-repeat;filter:drop-shadow(0 0 12px rgba(250,215,180,.7))}
+ background:none center/contain no-repeat;filter:drop-shadow(0 0 12px rgba(250,215,180,.7))}
 .setting-tabs{flex:0 0 auto;position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
  margin:14px 28px 0;padding:5px;gap:6px;border:1px solid rgba(216,169,218,.38);border-radius:22px;
  background:linear-gradient(105deg,rgba(27,23,59,.88),rgba(38,27,72,.93));box-shadow:0 5px 18px rgba(8,10,31,.13)}
@@ -64,7 +64,7 @@
 .section-aside{white-space:nowrap;font:.60rem 'Segoe UI',sans-serif;letter-spacing:.18em;color:#c1b1d0;margin-left:auto}
 .palette-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
 .palette-option{
- --card-bg:#242347;--card-glow:#dec4aa;--card-scene:url('assets/regions/nodkrai.svg');
+ --card-bg:#242347;--card-glow:#dec4aa;--card-scene:none;
  position:relative;display:flex;align-items:center;gap:12px;height:99px;min-height:99px;overflow:hidden;
  border-radius:17px;border:1px solid rgba(229,197,220,.45);padding:12px 15px;
  background:linear-gradient(90deg,var(--card-bg) 0%,var(--card-bg) 25%,rgba(34,34,68,.35) 100%),var(--card-scene);
@@ -86,15 +86,15 @@
  text-shadow:0 2px 9px #15112b}
 .palette-option > span small{display:block;margin-top:5px;font:450 .68rem/1.25 'Segoe UI',sans-serif;
  color:#f0e5ed;text-shadow:0 1px 8px #15112b}
-.palette-option[data-palette="istaroth"]{--card-bg:#222044;--card-glow:#f0d49d;--card-scene:url('assets/istaroth-atelier-card.svg')}
-.palette-option[data-palette="mondstadt"]{--card-bg:#153b45;--card-glow:#a2edd7;--card-scene:url('assets/regions/mondstadt.svg')}
-.palette-option[data-palette="liyue"]{--card-bg:#493323;--card-glow:#f0cc85;--card-scene:url('assets/regions/liyue.svg')}
-.palette-option[data-palette="inazuma"]{--card-bg:#33244d;--card-glow:#ddb5ff;--card-scene:url('assets/regions/inazuma.svg')}
-.palette-option[data-palette="sumeru"]{--card-bg:#1a4236;--card-glow:#b7eca3;--card-scene:url('assets/regions/sumeru.svg')}
-.palette-option[data-palette="fontaine"]{--card-bg:#1c3d5e;--card-glow:#a9dfff;--card-scene:url('assets/regions/fontaine.svg')}
-.palette-option[data-palette="natlan"]{--card-bg:#4e2729;--card-glow:#f9b688;--card-scene:url('assets/regions/natlan.svg')}
-.palette-option[data-palette="nodkrai"]{--card-bg:#243252;--card-glow:#d1e9fa;--card-scene:url('assets/regions/nodkrai.svg')}
-.palette-option[data-palette="snezhnaya"]{--card-bg:#293b55;--card-glow:#d0ebff;--card-scene:url('assets/regions/snezhnaya.svg')}
+.palette-option[data-palette="istaroth"]{--card-bg:#222044;--card-glow:#f0d49d;--card-scene:none}
+.palette-option[data-palette="mondstadt"]{--card-bg:#153b45;--card-glow:#a2edd7;--card-scene:none}
+.palette-option[data-palette="liyue"]{--card-bg:#493323;--card-glow:#f0cc85;--card-scene:none}
+.palette-option[data-palette="inazuma"]{--card-bg:#33244d;--card-glow:#ddb5ff;--card-scene:none}
+.palette-option[data-palette="sumeru"]{--card-bg:#1a4236;--card-glow:#b7eca3;--card-scene:none}
+.palette-option[data-palette="fontaine"]{--card-bg:#1c3d5e;--card-glow:#a9dfff;--card-scene:none}
+.palette-option[data-palette="natlan"]{--card-bg:#4e2729;--card-glow:#f9b688;--card-scene:none}
+.palette-option[data-palette="nodkrai"]{--card-bg:#243252;--card-glow:#d1e9fa;--card-scene:none}
+.palette-option[data-palette="snezhnaya"]{--card-bg:#293b55;--card-glow:#d0ebff;--card-scene:none}
 .section-label.spaced{margin-top:34px}
 .settings-page[data-page="style"] .field, .settings-page[data-page="style"] .slider-title,
 .settings-page[data-page="style"] .check-row{color:#ece1e9}
