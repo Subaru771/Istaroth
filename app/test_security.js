@@ -42,13 +42,15 @@ assert.throws(()=>parseNotes({},{}),/valid resin/);
 (async()=>{
   const header=await getAuthHeader({cookies:{get:async()=>[
     {name:'ltoken_v2',domain:'.hoyolab.com',value:'private-token'},
+    {name:'ltuid_v2',domain:'hoyoverse.com',value:'valid-id'},
     {name:'cookie_token_v2',domain:'hoyoverse.com',value:'private-token-2'},
+    {name:'stoken_v2',domain:'.hoyolab.com',value:'high-priv-token'},
     {name:'ltoken',domain:'.hoyolab.com.attacker.example',value:'attacker-token'},
     {name:'other_cookie',domain:'.hoyolab.com',value:'other-value'},
     {name:'stoken',domain:'example.com',value:'attacker-token'}
   ]}});
   assert.match(header,/ltoken_v2=private-token/);
-  assert.match(header,/cookie_token_v2=private-token-2/);
+  assert.match(header,/ltuid_v2=valid-id/);\n  assert.doesNotMatch(header,/cookie_token_v2|private-token-2|stoken_v2|high-priv-token/);
   assert.doesNotMatch(header,/attacker-token|other-value/);
   console.log('Istaroth trust boundaries, CSP, IPC, and cookie filtering checks passed.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
