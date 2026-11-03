@@ -147,17 +147,8 @@ async function refreshLive() {
 }
 
 const SIZE = { width: 610, height: 770 }; // Comfortable default for larger typography
-const WALLPAPER_LIMIT = 8 * 1024 * 1024;
-const wallpaperFile = () => path.join(app.getPath('userData'), 'teyvat-pulse-wallpaper.webp');
-// Mini has a separate local file. Keep the original Main path untouched for upgrades.
-const miniWallpaperFile = () => path.join(app.getPath('userData'), 'istaroth-mini-wallpaper.webp');
-const resinWallpaperFile = () => path.join(app.getPath('userData'), 'istaroth-resin-card-wallpaper.webp');
-function wallpaperBytes(data) {
-  if (typeof data !== 'string' || !data.startsWith('data:image/webp;base64,') || data.length > WALLPAPER_LIMIT*1.5) throw new Error('Invalid wallpaper.');
-  const raw=Buffer.from(data.slice('data:image/webp;base64,'.length),'base64');
-  if(raw.length===0 || raw.length>WALLPAPER_LIMIT || raw.toString('ascii',0,4)!=='RIFF' || raw.toString('ascii',8,12)!=='WEBP') throw new Error('Only WebP images up to 8 MB are supported after processing.');
-  return raw;
-}
+// Legacy image files are preserved on disk for previous-version compatibility;
+// this color-only release does not load, upload, overwrite or delete them.
 
 async function pollForUpdates(manual=false) {
   if (!updates || !updates.settings().autoCheck && !manual) return;
@@ -417,53 +408,6 @@ if (!gotLock) {
       await hoyoSession.clearCache();
       lastTrayAmount='';trayUpdate();
       pushSyncStatus(); return publicSyncStatus();
-    });
-    handleTrusted('wallpaper:set', (_event, data) => {
-      const bytes=wallpaperBytes(data);
-      const destination=wallpaperFile();fs.mkdirSync(path.dirname(destination),{recursive:true});
-      const tmp=destination+'.tmp';fs.writeFileSync(tmp,bytes);fs.renameSync(tmp,destination);
-      return 'data:image/webp;base64,'+bytes.toString('base64');
-    });
-    handleTrusted('wallpaper:get', () => {
-      try{const info=fs.statSync(wallpaperFile());if(info.size>WALLPAPER_LIMIT)return '';
-        const bytes=fs.readFileSync(wallpaperFile());if(bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')return '';
-        return 'data:image/webp;base64,'+bytes.toString('base64');
-      }catch{return '';}
-    });
-    handleTrusted('wallpaper:clear', () => {try{fs.unlinkSync(wallpaperFile());}catch(e){if(e.code!=='ENOENT')throw e;}return true;});
-    handleTrusted('wallpaper:mini:set', (_event, data) => {
-      const bytes=wallpaperBytes(data);
-      const destination=miniWallpaperFile();fs.mkdirSync(path.dirname(destination),{recursive:true});
-      const tmp=destination+'.tmp';fs.writeFileSync(tmp,bytes);fs.renameSync(tmp,destination);
-      return 'data:image/webp;base64,'+bytes.toString('base64');
-    });
-    handleTrusted('wallpaper:mini:get', () => {
-      try{const info=fs.statSync(miniWallpaperFile());if(info.size>WALLPAPER_LIMIT)return '';
-        const bytes=fs.readFileSync(miniWallpaperFile());if(bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')return '';
-        return 'data:image/webp;base64,'+bytes.toString('base64');
-      }catch{return '';}
-    });
-    handleTrusted('wallpaper:mini:clear', () => {
-      try{fs.unlinkSync(miniWallpaperFile());}catch(e){if(e.code!=='ENOENT')throw e;}
-      return true;
-    });
-    // The resin card has a third, isolated wallpaper file. Never overwrite Main/Mini images.
-    handleTrusted('wallpaper:resin:set', (_event,data) => {
-      const bytes=wallpaperBytes(data);
-      const dest=resinWallpaperFile();fs.mkdirSync(path.dirname(dest),{recursive:true});
-      const temp=dest+'.tmp';fs.writeFileSync(temp,bytes);fs.renameSync(temp,dest);
-      return 'data:image/webp;base64,'+bytes.toString('base64');
-    });
-    handleTrusted('wallpaper:resin:get', () => {
-      try{const info=fs.statSync(resinWallpaperFile());if(info.size>WALLPAPER_LIMIT)return '';
-        const bytes=fs.readFileSync(resinWallpaperFile());
-        if(bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')return '';
-        return 'data:image/webp;base64,'+bytes.toString('base64');
-      }catch{return '';}
-    });
-    handleTrusted('wallpaper:resin:clear', () => {
-      try{fs.unlinkSync(resinWallpaperFile());}catch(e){if(e.code!=='ENOENT')throw e;}
-      return true;
     });
     handleTrusted('window:size', (_event, mode) => {
       if (!mainWindow || mainWindow.isDestroyed()) return false;
