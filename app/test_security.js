@@ -50,7 +50,8 @@ assert.throws(()=>parseNotes({},{}),/valid resin/);
     {name:'stoken',domain:'example.com',value:'attacker-token'}
   ]}});
   assert.match(header,/ltoken_v2=private-token/);
-  assert.match(header,/ltuid_v2=valid-id/);\n  assert.doesNotMatch(header,/cookie_token_v2|private-token-2|stoken_v2|high-priv-token/);
+  assert.match(header,/ltuid_v2=valid-id/);
+  assert.doesNotMatch(header,/cookie_token_v2|private-token-2|stoken_v2|high-priv-token/);
   assert.doesNotMatch(header,/attacker-token|other-value/);
   console.log('Istaroth trust boundaries, CSP, IPC, and cookie filtering checks passed.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
