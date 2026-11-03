@@ -13,7 +13,7 @@
  --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#8adbc4 38%,transparent);
  --realm-sky:#102e35;--realm-sky2:#2a5860;--realm-rail:#0a3337;--realm-panel:#23505a;
  --realm-line:#8adbc4;--realm-glow:#b5f2db;--realm-low:#6ac5b6;
- --realm-symbol:'✧';--realm-scene:url('assets/regions/mondstadt.svg');color-scheme:dark;
+ --realm-symbol:'✧';--realm-scene:none;color-scheme:dark;
 }
 
 :root[data-palette="liyue"]{
@@ -27,7 +27,7 @@
  --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#e9bf7e 38%,transparent);
  --realm-sky:#34261c;--realm-sky2:#6d5034;--realm-rail:#332c23;--realm-panel:#594632;
  --realm-line:#e9bf7e;--realm-glow:#b2d29c;--realm-low:#de9569;
- --realm-symbol:'◆';--realm-scene:url('assets/regions/liyue.svg');color-scheme:dark;
+ --realm-symbol:'◆';--realm-scene:none;color-scheme:dark;
 }
 
 :root[data-palette="inazuma"]{
@@ -41,7 +41,7 @@
  --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#d6b1f5 38%,transparent);
  --realm-sky:#241937;--realm-sky2:#513975;--realm-rail:#271b46;--realm-panel:#453267;
  --realm-line:#d6b1f5;--realm-glow:#f1addc;--realm-low:#8b77e5;
- --realm-symbol:'✦';--realm-scene:url('assets/regions/inazuma.svg');color-scheme:dark;
+ --realm-symbol:'✦';--realm-scene:none;color-scheme:dark;
 }
 
 :root[data-palette="sumeru"]{
@@ -55,7 +55,7 @@
  --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#9ccf9e 38%,transparent);
  --realm-sky:#112c29;--realm-sky2:#365a45;--realm-rail:#162f29;--realm-panel:#31523e;
  --realm-line:#9ccf9e;--realm-glow:#d8c693;--realm-low:#6bc1a5;
- --realm-symbol:'❀';--realm-scene:url('assets/regions/sumeru.svg');color-scheme:dark;
+ --realm-symbol:'❀';--realm-scene:none;color-scheme:dark;
 }
 
 :root[data-palette="fontaine"]{
@@ -69,7 +69,7 @@
  --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#a8dbe9 38%,transparent);
  --realm-sky:#102d45;--realm-sky2:#315b76;--realm-rail:#16364e;--realm-panel:#2a516e;
  --realm-line:#a8dbe9;--realm-glow:#dfc89a;--realm-low:#6fb5e2;
- --realm-symbol:'◈';--realm-scene:url('assets/regions/fontaine.svg');color-scheme:dark;
+ --realm-symbol:'◈';--realm-scene:none;color-scheme:dark;
 }
 
 :root[data-palette="natlan"]{
@@ -83,7 +83,7 @@
  --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#eca879 38%,transparent);
  --realm-sky:#321d22;--realm-sky2:#79432e;--realm-rail:#3c2026;--realm-panel:#683f33;
  --realm-line:#eca879;--realm-glow:#ffbd63;--realm-low:#e76b52;
- --realm-symbol:'✹';--realm-scene:url('assets/regions/natlan.svg');color-scheme:dark;
+ --realm-symbol:'✹';--realm-scene:none;color-scheme:dark;
 }
 
 :root[data-palette="nodkrai"]{
@@ -97,7 +97,7 @@
  --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#bdd4f4 38%,transparent);
  --realm-sky:#152238;--realm-sky2:#344b69;--realm-rail:#1c2c47;--realm-panel:#30445c;
  --realm-line:#bdd4f4;--realm-glow:#b6caff;--realm-low:#e2a1be;
- --realm-symbol:'☾';--realm-scene:url('assets/regions/nodkrai.svg');color-scheme:dark;
+ --realm-symbol:'☾';--realm-scene:none;color-scheme:dark;
 }
 
 :root[data-palette="snezhnaya"]{
@@ -111,7 +111,7 @@
  --ink:#f7f1fa;--muted:#cbd0db;--hair:color-mix(in srgb,#bfd9eb 38%,transparent);
  --realm-sky:#1e2f42;--realm-sky2:#52677a;--realm-rail:#1c2d3f;--realm-panel:#354d63;
  --realm-line:#bfd9eb;--realm-glow:#e2f6ff;--realm-low:#8cacc2;
- --realm-symbol:'❄';--realm-scene:url('assets/regions/snezhnaya.svg');color-scheme:dark;
+ --realm-symbol:'❄';--realm-scene:none;color-scheme:dark;
 }
 /* Full-surface atmosphere for all non-default worlds. No opaque black overlays. */
 html:not([data-palette="istaroth"]) .app-frame {

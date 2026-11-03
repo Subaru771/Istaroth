@@ -14,19 +14,17 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 ## Preview
 
-![Animated Istaroth feature tour: Resin tracking, Mini Widget, themes, and wallpaper customization](docs/images/istaroth-feature-tour.gif)
-
-*Illustrative feature tour using sample data; not a live HoYoLAB account recording.*
-
-[Real Windows screenshot](docs/images/windows-settings.png) · [Nine-theme gallery](docs/images/style-gallery.png)
+**v1.0.2 candidate:** All illustrative and uploaded wallpapers have been removed from the in-app UI. The nine themes now use colors and gradients only. Updated screenshots will be added after Windows QA; older preview images represent v1.0.1, not this candidate.
 
 ## Features
 
 - **Live Resin tracking** using your own HoYoLAB session, with recovery estimates and reminders.
 - **Main and Mini widgets** with tray controls, always-on-top mode and Windows startup.
-- **Nine themes**, custom appearance and separate wallpapers for the Main Widget, Resin Card and Mini Widget.
+- **Nine color-only themes**, customizable typography, colors and layout; no illustrations or uploaded wallpaper images in the v1.0.2 candidate.
 - **Daily information** including commissions, expeditions, Realm currency and other available HoYoLAB panels.
 - **Local history and alerts** with configurable quiet hours.
+
+> **In development:** The image-free v1.0.2 candidate is not published yet. The public v1.0.1 installer still contains its original wallpaper feature.
 
 ## Install
 

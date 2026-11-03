@@ -5,7 +5,7 @@
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" http-equiv="Content-Security-Policy"/>
 <meta content="light" name="color-scheme"/><title>Istaroth · Your Companion Throughout Time!</title>
-<link href="assets/icon.png" rel="icon"/><link href="styles.css" rel="stylesheet"/><link href="refined.css" rel="stylesheet"/><link href="chronicle.css" rel="stylesheet"/><link href="celestial.css" rel="stylesheet"/><link href="regional-themes.css" rel="stylesheet"/><link href="mini-widget.css" rel="stylesheet"/><link href="v22.css" rel="stylesheet"/><link href="istaroth-theme.css" rel="stylesheet"/><link href="realm-themes.css" rel="stylesheet"/><link href="atelier-v243.css" rel="stylesheet"/><link href="atelier-v244.css" rel="stylesheet"/><link href="atelier-v248.css" rel="stylesheet"/><link href="atelier-v2410.css" rel="stylesheet"/><link href="atelier-v2412.css" rel="stylesheet"/><link href="wallpaper-v2413.css" rel="stylesheet"/><link href="wallpaper-v2414.css" rel="stylesheet"/><link href="wallpaper-v2415.css" rel="stylesheet"/><link href="wallpaper-v2417.css" rel="stylesheet"/><link href="done-theme-v2418.css" rel="stylesheet"/>
+<link href="styles.css" rel="stylesheet"/><link href="refined.css" rel="stylesheet"/><link href="chronicle.css" rel="stylesheet"/><link href="celestial.css" rel="stylesheet"/><link href="regional-themes.css" rel="stylesheet"/><link href="mini-widget.css" rel="stylesheet"/><link href="v22.css" rel="stylesheet"/><link href="istaroth-theme.css" rel="stylesheet"/><link href="realm-themes.css" rel="stylesheet"/><link href="atelier-v243.css" rel="stylesheet"/><link href="atelier-v244.css" rel="stylesheet"/><link href="atelier-v248.css" rel="stylesheet"/><link href="atelier-v2410.css" rel="stylesheet"/><link href="atelier-v2412.css" rel="stylesheet"/><link href="wallpaper-v2413.css" rel="stylesheet"/><link href="wallpaper-v2414.css" rel="stylesheet"/><link href="wallpaper-v2415.css" rel="stylesheet"/><link href="wallpaper-v2417.css" rel="stylesheet"/><link href="done-theme-v2418.css" rel="stylesheet"/><link href="color-only.css" rel="stylesheet"/>
 </head>
 <body>
 <svg aria-hidden="true" class="svg-defs" xmlns="http://www.w3.org/2000/svg">
@@ -22,9 +22,9 @@
 <symbol id="ic-info" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5m0-8h.01"></path></symbol>
 </svg>
 <div class="app-frame" id="frame">
-<div aria-hidden="true" class="background-art" id="backgroundArt"></div>
+
 <header class="chrome drag-region">
-<div class="brand"><div aria-hidden="true" class="brand-mark"><img alt="" src="assets/istaroth-hourglass.svg"/></div><div class="brand-words"><strong>ISTAROTH</strong><small>YOUR COMPANION THROUGHOUT TIME!</small></div></div>
+<div class="brand"><div aria-hidden="true" class="brand-mark"><span class="brand-glyph" aria-hidden="true">✦</span></div><div class="brand-words"><strong>ISTAROTH</strong><small>YOUR COMPANION THROUGHOUT TIME!</small></div></div>
 <div class="window-actions no-drag">
 <button aria-label="Switch to mini resin widget" aria-pressed="false" class="win-btn" id="modeButton" title="Switch to mini resin widget" type="button"><svg><use href="#ic-mini"></use></svg></button>
 <button aria-label="Toggle always on top" aria-pressed="false" class="win-btn" id="pinButton" title="Always on top" type="button"><svg><use href="#ic-pin"></use></svg></button>
@@ -51,7 +51,7 @@
 <p id="subtitleText">Every moment returns to you.</p>
 </div>
 <section aria-label="Current Original Resin" class="resin-card">
-<div aria-hidden="true" class="card-wallpaper"></div>
+
 <div aria-hidden="true" class="card-tint"></div>
 <div class="resin-card-top">
 <span class="balance-label">ORIGINAL RESIN · TIMEKEEPER</span>
@@ -83,7 +83,7 @@
 <section aria-label="Genius Invokation" class="dash-pane hidden" id="pane-cards" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">GENIUS INVOKATION · VI</span><h2>TCG collection</h2></div><button aria-label="Refresh TCG" class="dash-refresh" data-refresh="chronicle" type="button">↻</button></div><div class="dash-content" id="dash-cards"></div></section>
 <section aria-label="Resin readings history" class="dash-pane hidden" id="pane-history" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">THE RESIN LEDGER · VII</span><h2>Resin history</h2></div><button aria-label="Refresh local readings" class="dash-refresh" id="historyRefresh" type="button">↻</button></div><div class="dash-content" id="dash-history"><p class="field-note">Loading local HoYoLAB readings…</p></div></section>
 </main>
-<main aria-label="Mini Original Resin widget" class="mini-screen hidden" id="miniScreen"><div class="mini-wallpaper-layer" aria-hidden="true"></div>
+<main aria-label="Mini Original Resin widget" class="mini-screen hidden" id="miniScreen">
 <div class="mini-inner">
 <div class="mini-kicker"><span aria-hidden="true" class="mini-star" id="miniRealmMark">✦</span> ORIGINAL RESIN <span class="mini-status"><i id="miniLamp"></i><span id="miniSyncLabel">NOT CONNECTED</span></span></div>
 <div aria-label="Mini widget controls" class="mini-float-controls no-drag"><button id="miniOverviewButton" title="Daily overview" type="button">Daily ▾</button><button id="miniFloatPin" title="Toggle always on top" type="button">✧</button><button id="miniHideButton" title="Minimize mini widget" type="button">−</button><button id="miniCloseButton" title="Close Istaroth" type="button">×</button></div>
@@ -95,8 +95,8 @@
 </div>
 </main>
 <main aria-label="Customization settings" class="settings-screen hidden" id="settingsScreen">
-<div class="settings-heading"><div aria-hidden="true" class="atelier-scene"></div><button class="back-btn" id="backButton" type="button"><svg><use href="#ic-back"></use></svg> Back to widget</button><div><div class="eyebrow">THE ATELIER · CUSTOMIZE YOUR JOURNAL</div><h1>Your journal, your world.</h1><p>Change the atmosphere, preserve the adventure. Your choices are saved locally.</p></div></div>
-<nav aria-label="Settings categories" class="setting-tabs" role="tablist"><button aria-selected="true" class="tab active" data-tab="style" role="tab" type="button">Style</button><button aria-selected="false" class="tab" data-tab="main-wallpaper" role="tab" type="button">Main wallpaper</button><button aria-selected="false" class="tab" data-tab="mini-wallpaper" role="tab" type="button">Mini wallpaper</button><button aria-selected="false" class="tab" data-tab="layout" role="tab" type="button">Layout</button><button aria-selected="false" class="tab" data-tab="account" role="tab" type="button">Account</button><button aria-selected="false" class="tab" data-tab="alerts" role="tab" type="button">Alerts</button><button aria-selected="false" class="tab" data-tab="windows" role="tab" type="button">Windows</button></nav>
+<div class="settings-heading"><button class="back-btn" id="backButton" type="button"><svg><use href="#ic-back"></use></svg> Back to widget</button><div><div class="eyebrow">THE ATELIER · CUSTOMIZE YOUR JOURNAL</div><h1>Your journal, your world.</h1><p>Change the atmosphere, preserve the adventure. Your choices are saved locally.</p></div></div>
+<nav aria-label="Settings categories" class="setting-tabs" role="tablist"><button aria-selected="true" class="tab active" data-tab="style" role="tab" type="button">Style</button><button aria-selected="false" class="tab" data-tab="layout" role="tab" type="button">Layout</button><button aria-selected="false" class="tab" data-tab="account" role="tab" type="button">Account</button><button aria-selected="false" class="tab" data-tab="alerts" role="tab" type="button">Alerts</button><button aria-selected="false" class="tab" data-tab="windows" role="tab" type="button">Windows</button></nav>
 <div class="settings-scroll">
 <section class="settings-page" data-page="style">
 <div class="section-label">01 / THEME PALETTES <span class="section-aside">CHOOSE A REGION’S ATMOSPHERE</span></div><div aria-label="Choose color theme" class="palette-grid" id="paletteGrid">
@@ -117,61 +117,6 @@
 <div class="check-row"><span><strong>Fine border</strong><small>Subtle outline around the resin display</small></span><button aria-checked="true" aria-label="Toggle border" class="switch" id="borderInput" role="switch" type="button"></button></div>
 <div class="check-row"><span><strong>Motion</strong><small>Gentle gauge transitions</small></span><button aria-checked="true" aria-label="Toggle motion" class="switch" id="motionInput" role="switch" type="button"></button></div>
 <div class="button-row"><button class="small-quiet" id="accentReset" type="button">Reset accent colour</button><button class="small-quiet" id="restoreStyle" type="button">Restore default style</button></div>
-</section>
-<section class="settings-page hidden wp14-page" data-page="main-wallpaper" aria-label="Main Widget wallpaper settings">
-<div class="wp14-heading"><span class="section-label">MAIN WIDGET · WALLPAPER</span><h2>Main wallpaper</h2><p>Choose an image, adjust its position and preview changes to the Main Widget. These settings never alter Mini.</p></div>
-<div class="wp13-workspace" id="mainWpWorkspace" data-wp13-workspace="main">
-<div class="wp13-controls">
-<div class="wp13-scope-label"><strong>Main Widget wallpaper</strong><span>These controls affect the Main Widget only.</span></div>
-<div class="wp13-thumbnail" id="mainWpThumbnail"><span id="mainWpEmpty">No wallpaper selected</span></div>
-<div class="button-row"><button type="button" class="solid-small" id="mainWpChoose">Choose Main image</button><button type="button" class="small-quiet" id="mainWpClear">Remove image</button></div>
-<input class="visually-hidden" id="mainWpFile" type="file" accept="image/png,image/jpeg,image/webp"/>
-<p class="field-note">PNG, JPG or WebP · up to 8 MB · stored locally. Images are never uploaded.</p>
-<p class="wp17-hint">Main background is the backdrop behind the journal. To customize the resin display itself, use <strong>Resin card wallpaper</strong> below.</p>
-<div class="slider-control"><div class="slider-title"><label for="mainWpDim">Darkness</label><output id="mainWpDimOutput">—</output></div><input id="mainWpDim" data-wp13-slider="dim" type="range" min="0" max="90" value="0"/><p>Main Widget only</p></div>
-<div class="slider-control"><div class="slider-title"><label for="mainWpBlur">Blur</label><output id="mainWpBlurOutput">—</output></div><input id="mainWpBlur" data-wp13-slider="blur" type="range" min="0" max="18" value="0"/><p>Main Widget only</p></div>
-<div class="slider-control"><div class="slider-title"><label for="mainWpZoom">Zoom</label><output id="mainWpZoomOutput">—</output></div><input id="mainWpZoom" data-wp13-slider="zoom" type="range" min="100" max="220" value="100"/><p>Main Widget only</p></div>
-<div class="slider-control"><div class="slider-title"><label for="mainWpX">Horizontal position</label><output id="mainWpXOutput">—</output></div><input id="mainWpX" data-wp13-slider="x" type="range" min="0" max="100" value="0"/><p>Main Widget only</p></div>
-<div class="slider-control"><div class="slider-title"><label for="mainWpY">Vertical position</label><output id="mainWpYOutput">—</output></div><input id="mainWpY" data-wp13-slider="y" type="range" min="0" max="100" value="0"/><p>Main Widget only</p></div>
-<button type="button" class="small-quiet wp13-reset" id="mainWpReset">Reset Main background adjustments</button>
-<div class="wp17-resin-separator" role="separator"></div>
-<div class="wp13-scope-label wp17-section-title"><strong>Resin card wallpaper</strong><span>A separate image behind Original Resin, independently adjustable from the main background and Mini Widget.</span></div>
-<div class="wp13-thumbnail" id="resinWpThumbnail"><span id="resinWpEmpty">No resin card wallpaper selected</span></div>
-<div class="button-row"><button type="button" class="solid-small" id="resinWpChoose">Choose resin card image</button><button type="button" class="small-quiet" id="resinWpClear">Remove image</button></div>
-<input class="visually-hidden" id="resinWpFile" type="file" accept="image/png,image/jpeg,image/webp"/>
-<p class="field-note">Only the resin card uses this picture. Changes appear in the live preview on the right.</p>
-<div class="slider-control"><div class="slider-title"><label for="resinWpDim">Resin card darkness</label><output id="resinWpDimOutput">—</output></div><input id="resinWpDim" type="range" min="0" max="90" value="30"/></div>
-<div class="slider-control"><div class="slider-title"><label for="resinWpBlur">Resin card blur</label><output id="resinWpBlurOutput">—</output></div><input id="resinWpBlur" type="range" min="0" max="18" value="0"/></div>
-<div class="slider-control"><div class="slider-title"><label for="resinWpZoom">Resin card zoom</label><output id="resinWpZoomOutput">—</output></div><input id="resinWpZoom" type="range" min="100" max="220" value="110"/></div>
-<div class="slider-control"><div class="slider-title"><label for="resinWpX">Horizontal position</label><output id="resinWpXOutput">—</output></div><input id="resinWpX" type="range" min="0" max="100" value="50"/></div>
-<div class="slider-control"><div class="slider-title"><label for="resinWpY">Vertical position</label><output id="resinWpYOutput">—</output></div><input id="resinWpY" type="range" min="0" max="100" value="50"/></div>
-<button type="button" class="small-quiet wp13-reset" id="resinWpReset">Reset resin card adjustments</button>
-</div>
-<aside class="wp13-preview-panel"><div class="wp13-preview-heading"><strong>LIVE PREVIEW · MAIN</strong><small>Real widget layout, scaled to fit</small></div>
-<div class="wp13-viewport" id="mainWpViewport"><div class="wp13-stage" id="mainWpStage" aria-hidden="true"></div></div>
-<div class="wp13-preview-foot" id="mainWpMessage">Adjust the wallpaper to see the result here.</div>
-</aside></div>
-</section>
-<section class="settings-page hidden wp14-page" data-page="mini-wallpaper" aria-label="Mini Widget wallpaper settings">
-<div class="wp14-heading"><span class="section-label">MINI WIDGET · WALLPAPER</span><h2>Mini wallpaper</h2><p>A fully independent image, darkness, blur, zoom and position. Nothing on this page changes Main.</p></div>
-<div class="wp13-workspace" id="miniWpWorkspace" data-wp13-workspace="mini">
-<div class="wp13-controls">
-<div class="wp13-scope-label"><strong>Mini Widget wallpaper</strong><span>These controls affect the Mini Widget only.</span></div>
-<div class="wp13-thumbnail" id="miniWpThumbnail"><span id="miniWpEmpty">No wallpaper selected</span></div>
-<div class="button-row"><button type="button" class="solid-small" id="miniWpChoose">Choose Mini image</button><button type="button" class="small-quiet" id="miniWpClear">Remove image</button></div>
-<input class="visually-hidden" id="miniWpFile" type="file" accept="image/png,image/jpeg,image/webp"/>
-<p class="field-note">PNG, JPG or WebP · up to 8 MB · stored locally. Images are never uploaded.</p>
-<div class="slider-control"><div class="slider-title"><label for="miniWpDim">Darkness</label><output id="miniWpDimOutput">—</output></div><input id="miniWpDim" data-wp13-slider="dim" type="range" min="0" max="90" value="0"/><p>Mini Widget only</p></div>
-<div class="slider-control"><div class="slider-title"><label for="miniWpBlur">Blur</label><output id="miniWpBlurOutput">—</output></div><input id="miniWpBlur" data-wp13-slider="blur" type="range" min="0" max="18" value="0"/><p>Mini Widget only</p></div>
-<div class="slider-control"><div class="slider-title"><label for="miniWpZoom">Zoom</label><output id="miniWpZoomOutput">—</output></div><input id="miniWpZoom" data-wp13-slider="zoom" type="range" min="100" max="220" value="100"/><p>Mini Widget only</p></div>
-<div class="slider-control"><div class="slider-title"><label for="miniWpX">Horizontal position</label><output id="miniWpXOutput">—</output></div><input id="miniWpX" data-wp13-slider="x" type="range" min="0" max="100" value="0"/><p>Mini Widget only</p></div>
-<div class="slider-control"><div class="slider-title"><label for="miniWpY">Vertical position</label><output id="miniWpYOutput">—</output></div><input id="miniWpY" data-wp13-slider="y" type="range" min="0" max="100" value="0"/><p>Mini Widget only</p></div>
-<button type="button" class="small-quiet wp13-reset" id="miniWpReset">Reset Mini wallpaper adjustments</button>
-</div>
-<aside class="wp13-preview-panel"><div class="wp13-preview-heading"><strong>LIVE PREVIEW · MINI</strong><small>Real widget layout, scaled to fit</small></div>
-<div class="wp13-viewport" id="miniWpViewport"><div class="wp13-stage" id="miniWpStage" aria-hidden="true"></div></div>
-<div class="wp13-preview-foot" id="miniWpMessage">Only the Mini Widget uses this image. Open Mini mode from the widget header to view it outside Settings.</div>
-</aside></div>
 </section>
 <section class="settings-page hidden" data-page="layout">
 <div class="widget-scope-picker layout-scope-picker" role="group" aria-label="Choose widget layout settings">

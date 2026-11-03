@@ -36,6 +36,12 @@ jobs:
       - name: Read-only updater security tests
         working-directory: app
         run: node test_update_service.js
+      - name: IPC, navigation and cookie allowlist tests
+        working-directory: app
+        run: npm run test:security
+      - name: Color-only design and asset regression tests
+        working-directory: app
+        run: npm run test:colors
 
   build-offline-windows-candidates:
     needs: source-checks
@@ -68,7 +74,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           if (-not (Test-Path 'dist/win-unpacked/Istaroth.exe')) { throw 'The Windows GUI executable is missing' }
           if (-not (Test-Path 'dist/win-unpacked/resources/app.asar')) { throw 'Electron app archive is missing' }
-          node -e 'const asar=require("@electron/asar");const paths=asar.listPackage("dist/win-unpacked/resources/app.asar").map(p=>p.split(String.fromCharCode(92)).join("/"));for(const file of ["main.js","preload.js","index.html","hoyolab-sync.js"]){if(!paths.some(p=>p===file||p.endsWith("/"+file)))throw new Error("Missing packaged app file: "+file+"; sample paths: "+paths.slice(0,12).join(","))}console.log("Verified",paths.length,"files in app.asar")'
+          node -e 'const asar=require("@electron/asar");const paths=asar.listPackage("dist/win-unpacked/resources/app.asar").map(p=>p.split(String.fromCharCode(92)).join("/"));for(const file of ["main.js","preload.js","index.html","hoyolab-sync.js","trust-policy.js","color-only.css"]){if(!paths.some(p=>p===file||p.endsWith("/"+file)))throw new Error("Missing packaged app file: "+file+"; sample paths: "+paths.slice(0,12).join(","))}if(paths.some(p=>p.includes("assets/regions/")||p.includes("assets/theme-art/")||(p.includes("assets/istaroth-")&&p.endsWith(".svg"))))throw new Error("Decorative image assets found in package");console.log("Verified",paths.length,"files in app.asar")'
           if ($LASTEXITCODE -ne 0) { throw 'Packaged source verification failed' }
           $exe = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.exe' | Select-Object -First 1
           $zip = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.zip' | Select-Object -First 1
@@ -82,20 +88,20 @@ jobs:
             if (-not ($names | Where-Object { $_ -match '(^|/)Istaroth[.]exe$' })) { throw 'Portable ZIP has no Istaroth.exe' }
             if (-not ($names | Where-Object { $_ -match '(^|/)resources/app[.]asar$' })) { throw 'Portable ZIP has no app.asar' }
           } finally { $archive.Dispose() }
-          Move-Item -LiteralPath $exe.FullName -Destination 'dist/Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe'
-          Move-Item -LiteralPath $zip.FullName -Destination 'dist/Istaroth-v1.0-portable-QA-UNSIGNED.zip'
-          foreach ($name in @('Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe','Istaroth-v1.0-portable-QA-UNSIGNED.zip')) {
+          Move-Item -LiteralPath $exe.FullName -Destination 'dist/Istaroth-v1.0.2-offline-setup-QA-UNSIGNED.exe'
+          Move-Item -LiteralPath $zip.FullName -Destination 'dist/Istaroth-v1.0.2-portable-QA-UNSIGNED.zip'
+          foreach ($name in @('Istaroth-v1.0.2-offline-setup-QA-UNSIGNED.exe','Istaroth-v1.0.2-portable-QA-UNSIGNED.zip')) {
             $hash = (Get-FileHash -LiteralPath "dist/$name" -Algorithm SHA256).Hash.ToLowerInvariant()
             Set-Content -NoNewline -Encoding ascii -Path "dist/$name.sha256" -Value "$hash  $name`n"
             Write-Host "$name SHA256: $hash"
           }
       - uses: actions/upload-artifact@v4
         with:
-          name: Istaroth-v1.0-Offline-NSIS-and-Portable-Windows-QA-UNSIGNED
+          name: Istaroth-v1.0.2-Offline-NSIS-and-Portable-Windows-QA-UNSIGNED
           path: |
-            app/dist/Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe
-            app/dist/Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe.sha256
-            app/dist/Istaroth-v1.0-portable-QA-UNSIGNED.zip
-            app/dist/Istaroth-v1.0-portable-QA-UNSIGNED.zip.sha256
+            app/dist/Istaroth-v1.0.2-offline-setup-QA-UNSIGNED.exe
+            app/dist/Istaroth-v1.0.2-offline-setup-QA-UNSIGNED.exe.sha256
+            app/dist/Istaroth-v1.0.2-portable-QA-UNSIGNED.zip
+            app/dist/Istaroth-v1.0.2-portable-QA-UNSIGNED.zip.sha256
           retention-days: 14
           if-no-files-found: error

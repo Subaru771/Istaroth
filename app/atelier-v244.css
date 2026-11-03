@@ -5,13 +5,13 @@
    Preserves live HTML labels, font scaling, aria-pressed selection, and all nine themes. */
 .settings-heading .atelier-scene {
  width:46%; opacity:.91;
- background-image:linear-gradient(90deg,rgba(38,29,69,1) 0%,rgba(38,29,69,.6) 18%,rgba(38,29,69,0) 45%),url('assets/theme-art/atelier-hero.webp') !important;
+ background-image:linear-gradient(90deg,rgba(38,29,69,1) 0%,rgba(38,29,69,.6) 18%,rgba(38,29,69,0) 45%),none !important;
  background-size:cover,cover !important;
  background-position:center,right center !important;
  filter:none;
 }
 .settings-heading .atelier-orbit,.settings-heading .atelier-glass {display:none !important;}
- .palette-grid {--art:url('assets/theme-art/istaroth.webp');}
+ .palette-grid {--art:none;}
 html .settings-screen .palette-option {
  /* Keep labels responsive and source-driven, with exact scenic illustrations underneath. */
  background-image:linear-gradient(90deg,rgba(23,20,47,.76) 0%,rgba(23,20,47,.64) 30%,rgba(23,20,47,.23) 66%,rgba(23,20,47,.02) 95%),var(--art) !important;
@@ -21,15 +21,15 @@ html .settings-screen .palette-option {
  isolation:isolate;
 }
 .palette-option::after {background:linear-gradient(90deg,rgba(8,10,28,.20),transparent 65%) !important;}
-.palette-option[data-palette="istaroth"] {--art:url('assets/theme-art/istaroth.webp');}
-.palette-option[data-palette="mondstadt"] {--art:url('assets/theme-art/mondstadt.webp');}
-.palette-option[data-palette="liyue"] {--art:url('assets/theme-art/liyue.webp');}
-.palette-option[data-palette="inazuma"] {--art:url('assets/theme-art/inazuma.webp');}
-.palette-option[data-palette="sumeru"] {--art:url('assets/theme-art/sumeru.webp');}
-.palette-option[data-palette="fontaine"] {--art:url('assets/theme-art/fontaine.webp');}
-.palette-option[data-palette="natlan"] {--art:url('assets/theme-art/natlan.webp');}
-.palette-option[data-palette="nodkrai"] {--art:url('assets/theme-art/nodkrai.webp');}
-.palette-option[data-palette="snezhnaya"] {--art:url('assets/theme-art/snezhnaya.webp');}
+.palette-option[data-palette="istaroth"] {--art:none;}
+.palette-option[data-palette="mondstadt"] {--art:none;}
+.palette-option[data-palette="liyue"] {--art:none;}
+.palette-option[data-palette="inazuma"] {--art:none;}
+.palette-option[data-palette="sumeru"] {--art:none;}
+.palette-option[data-palette="fontaine"] {--art:none;}
+.palette-option[data-palette="natlan"] {--art:none;}
+.palette-option[data-palette="nodkrai"] {--art:none;}
+.palette-option[data-palette="snezhnaya"] {--art:none;}
 /* Crisp responsive labels/colour swatches, rather than baked text from a screenshot. */
 .palette-option > span {font-size:1.13rem;line-height:1.15;text-shadow:0 2px 8px rgba(15,10,27,.9);}
 .palette-option > span small {font-size:.68rem;text-shadow:0 1px 6px rgba(15,10,27,.95);}
@@ -45,16 +45,16 @@ html .settings-screen .palette-option {
    including loaded preferences and saved design profiles, through html[data-palette].
    The header uses exactly the same approved illustrated assets as its theme card.
    The ornamental geometry and extra regional SVG layer are explicitly removed. */
-html { --atelier-hero-art: url('assets/theme-art/istaroth.webp'); }
-html[data-palette="istaroth"]   { --atelier-hero-art:url('assets/theme-art/istaroth.webp'); }
-html[data-palette="mondstadt"]  { --atelier-hero-art:url('assets/theme-art/mondstadt.webp'); }
-html[data-palette="liyue"]      { --atelier-hero-art:url('assets/theme-art/liyue.webp'); }
-html[data-palette="inazuma"]    { --atelier-hero-art:url('assets/theme-art/inazuma.webp'); }
-html[data-palette="sumeru"]     { --atelier-hero-art:url('assets/theme-art/sumeru.webp'); }
-html[data-palette="fontaine"]   { --atelier-hero-art:url('assets/theme-art/fontaine.webp'); }
-html[data-palette="natlan"]     { --atelier-hero-art:url('assets/theme-art/natlan.webp'); }
-html[data-palette="nodkrai"]    { --atelier-hero-art:url('assets/theme-art/nodkrai.webp'); }
-html[data-palette="snezhnaya"]  { --atelier-hero-art:url('assets/theme-art/snezhnaya.webp'); }
+html { --atelier-hero-art: none; }
+html[data-palette="istaroth"]   { --atelier-hero-art:none; }
+html[data-palette="mondstadt"]  { --atelier-hero-art:none; }
+html[data-palette="liyue"]      { --atelier-hero-art:none; }
+html[data-palette="inazuma"]    { --atelier-hero-art:none; }
+html[data-palette="sumeru"]     { --atelier-hero-art:none; }
+html[data-palette="fontaine"]   { --atelier-hero-art:none; }
+html[data-palette="natlan"]     { --atelier-hero-art:none; }
+html[data-palette="nodkrai"]    { --atelier-hero-art:none; }
+html[data-palette="snezhnaya"]  { --atelier-hero-art:none; }
 /* Remove any former geometric/polygon artwork and secondary region SVG overlays. */
 html .settings-heading::after { display:none !important; content:none !important; background:none !important; }
 html .settings-heading .atelier-orbit,
@@ -99,16 +99,16 @@ html .settings-heading .atelier-scene {
 /* v2.4.6 — no polygons anywhere.
    Use the same illustrated region artwork across the dashboard, settings header and mini widget.
    Remove vector/polygon scenery and symbolic geometry overlays everywhere. */
-html { --region-hero-art:url('assets/theme-art/istaroth.webp'); }
-html[data-palette="istaroth"]  { --region-hero-art:url('assets/theme-art/istaroth.webp'); }
-html[data-palette="mondstadt"] { --region-hero-art:url('assets/theme-art/mondstadt.webp'); }
-html[data-palette="liyue"]     { --region-hero-art:url('assets/theme-art/liyue.webp'); }
-html[data-palette="inazuma"]   { --region-hero-art:url('assets/theme-art/inazuma.webp'); }
-html[data-palette="sumeru"]    { --region-hero-art:url('assets/theme-art/sumeru.webp'); }
-html[data-palette="fontaine"]  { --region-hero-art:url('assets/theme-art/fontaine.webp'); }
-html[data-palette="natlan"]    { --region-hero-art:url('assets/theme-art/natlan.webp'); }
-html[data-palette="nodkrai"]   { --region-hero-art:url('assets/theme-art/nodkrai.webp'); }
-html[data-palette="snezhnaya"] { --region-hero-art:url('assets/theme-art/snezhnaya.webp'); }
+html { --region-hero-art:none; }
+html[data-palette="istaroth"]  { --region-hero-art:none; }
+html[data-palette="mondstadt"] { --region-hero-art:none; }
+html[data-palette="liyue"]     { --region-hero-art:none; }
+html[data-palette="inazuma"]   { --region-hero-art:none; }
+html[data-palette="sumeru"]    { --region-hero-art:none; }
+html[data-palette="fontaine"]  { --region-hero-art:none; }
+html[data-palette="natlan"]    { --region-hero-art:none; }
+html[data-palette="nodkrai"]   { --region-hero-art:none; }
+html[data-palette="snezhnaya"] { --region-hero-art:none; }
 
 /* Dashboard main area: replace polygon/vector scenery with the illustrated art. */
 html .widget-screen::before {

@@ -22,10 +22,10 @@ const NOTE_URLS = [
   'https://bbs-api-os.hoyoverse.com/game_record/genshin/api/dailyNote'
 ];
 const REGION_MAP = Object.freeze({ os_asia: 'asia', os_euro: 'europe', os_usa: 'america', os_cht: 'tw' });
+// Send only the least-privilege HoYoLAB login cookies needed by read-only APIs.
+// High-privilege stoken, account, and cookie_token fields must not be forwarded.
 const AUTH_COOKIE_NAMES = new Set([
-  'ltuid', 'ltoken', 'ltuid_v2', 'ltoken_v2', 'ltmid_v2',
-  'account_id', 'account_id_v2', 'cookie_token', 'cookie_token_v2',
-  'stuid', 'stoken', 'stoken_v2', 'mid', 'mid_v2'
+  'ltuid', 'ltoken', 'ltuid_v2', 'ltoken_v2', 'ltmid_v2'
 ]);
 
 function safeRole(raw) {
@@ -72,7 +72,11 @@ function requestJson(endpoint, cookieHeader, headers = {}) {
     }, response => {
       if (response.statusCode !== 200) {
         response.resume();
-        reject(new Error(`HoYoLAB responded with HTTP ${response.statusCode}`));
+        reject(new Error(
+          response.statusCode === 404 || response.statusCode === 410
+            ? `HoYoLAB API endpoint may have changed (HTTP ${response.statusCode}); check for an Istaroth update.`
+            : `HoYoLAB responded with HTTP ${response.statusCode}`
+        ));
         return;
       }
       let buffer = '';
@@ -92,7 +96,9 @@ function requestJson(endpoint, cookieHeader, headers = {}) {
   });
 }
 function checkResponse(result) {
-  if (!result || typeof result !== 'object') throw new Error('Invalid HoYoLAB response');
+  if (!result || typeof result !== 'object' || !Object.hasOwn(result, 'retcode')) {
+    throw new Error('HoYoLAB API returned an incompatible response; check for an Istaroth update.');
+  }
   if (result.retcode !== 0) {
     const code = Number(result.retcode);
     if (code === 10001 || code === -100 || code === -101 || code === -10001) throw new Error('HoYoLAB session expired. Please sign in again.');

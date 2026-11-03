@@ -9,6 +9,7 @@ const {createStartupService} = require('./windows-startup');
 const {ResinTelemetry} = require('./resin-telemetry');
 const {trayPng} = require('./tray-icon');
 const {UpdateService} = require('./update-service');
+const {isOfficialHoYoUrl,isLocalAppUrl} = require('./trust-policy');
 
 // Preserve the original Teyvat Pulse userData directory and Chromium partition.
 // Changing this path would sign existing users out and hide their saved resin history.
@@ -36,6 +37,7 @@ let refreshTimer = null;
 let startupService=null;
 let telemetry=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
 let securityInfo={partition:'isolated HoYoLAB session',encryption:'checking'};
+let lastAnnouncedRelease='';
 let chronicleState = null;
 let chronicleTask = null;
 let chronicleStarted = 0;
@@ -92,12 +94,7 @@ function publicSyncStatus() {
 function pushSyncStatus() {
   if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('hoyolab:status', publicSyncStatus());
 }
-function officialSite(url) {
-  try {
-    const u = new URL(url);
-    return u.protocol === 'https:' && ['hoyolab.com','hoyoverse.com','mihoyo.com'].some(d => u.hostname === d || u.hostname.endsWith('.' + d));
-  } catch { return false; }
-}
+const officialSite = isOfficialHoYoUrl;
 function openLoginWindow() {
   if (loginWindow && !loginWindow.isDestroyed()) { loginWindow.show(); loginWindow.focus(); return true; }
   loginWindow = new BrowserWindow({
@@ -150,16 +147,34 @@ async function refreshLive() {
 }
 
 const SIZE = { width: 610, height: 770 }; // Comfortable default for larger typography
-const WALLPAPER_LIMIT = 8 * 1024 * 1024;
-const wallpaperFile = () => path.join(app.getPath('userData'), 'teyvat-pulse-wallpaper.webp');
-// Mini has a separate local file. Keep the original Main path untouched for upgrades.
-const miniWallpaperFile = () => path.join(app.getPath('userData'), 'istaroth-mini-wallpaper.webp');
-const resinWallpaperFile = () => path.join(app.getPath('userData'), 'istaroth-resin-card-wallpaper.webp');
-function wallpaperBytes(data) {
-  if (typeof data !== 'string' || !data.startsWith('data:image/webp;base64,') || data.length > WALLPAPER_LIMIT*1.5) throw new Error('Invalid wallpaper.');
-  const raw=Buffer.from(data.slice('data:image/webp;base64,'.length),'base64');
-  if(raw.length===0 || raw.length>WALLPAPER_LIMIT || raw.toString('ascii',0,4)!=='RIFF' || raw.toString('ascii',8,12)!=='WEBP') throw new Error('Only WebP images up to 8 MB are supported after processing.');
-  return raw;
+// Legacy image files are preserved on disk for previous-version compatibility;
+// this color-only release does not load, upload, overwrite or delete them.
+
+async function pollForUpdates(manual=false) {
+  if (!updates || !updates.settings().autoCheck && !manual) return;
+  try {
+    const status=await updates.check(false);
+    const release=status.latest;
+    if (!release?.version) {
+      if (manual && Notification.isSupported()) {
+        new Notification({title:'Istaroth is up to date',body:'No newer published release was found.'}).show();
+      }
+      return;
+    }
+    if (!manual && lastAnnouncedRelease===release.version) return;
+    lastAnnouncedRelease=release.version;
+    if (!Notification.isSupported()) return;
+    const notice=new Notification({
+      title:'Istaroth '+release.version+' is available',
+      body:'Open the official GitHub Releases page to review and install this update.'
+    });
+    notice.on('click',()=>shell.openExternal(release.releaseUrl).catch(()=>{}));
+    notice.show();
+  } catch (err) {
+    if (manual && Notification.isSupported()) {
+      new Notification({title:'Could not check for updates',body:'Check your internet connection and try again.'}).show();
+    }
+  }
 }
 
 const allowedLinks = {
@@ -247,6 +262,7 @@ function createTray() {
     { label: 'Show Istaroth', click: showWindow },
     { label: 'Hide widget', click: () => mainWindow?.hide() },
     { label: 'Sync HoYoLAB now', click: () => refreshLive().catch(()=>{}) ,enabled:!!selectedRole},
+    { label: 'Check for updates', click: () => pollForUpdates(true).catch(()=>{}) },
     { type: 'separator' },
     { label: 'Quit completely', click: () => { allowQuit = true; app.quit(); } }
   ]);
@@ -294,7 +310,23 @@ function createWindow() {
   });
   mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   mainWindow.webContents.on('will-navigate', (event, url) => {
-    if (!url.startsWith('file://')) event.preventDefault();
+    if (!isLocalAppUrl(url, path.join(__dirname, 'index.html'))) event.preventDefault();
+  });
+  mainWindow.webContents.on('will-redirect', (event, url) => {
+    if (!isLocalAppUrl(url, path.join(__dirname, 'index.html'))) event.preventDefault();
+  });
+}
+
+// Deny IPC from auxiliary, navigated, or subframe web contents.
+function handleTrusted(channel, callback) {
+  ipcMain.handle(channel, (event, ...args) => {
+    if (!mainWindow || mainWindow.isDestroyed() ||
+        event.sender !== mainWindow.webContents ||
+        !event.senderFrame ||
+        event.senderFrame !== mainWindow.webContents.mainFrame) {
+      throw new Error('Untrusted IPC sender');
+    }
+    return callback(event, ...args);
   });
 }
 
@@ -313,30 +345,30 @@ if (!gotLock) {
     startupService=createStartupService(app,{env:process.env,execPath:process.execPath,isPackaged:app.isPackaged,appPath:app.getAppPath(),isBundled:fs.existsSync(path.join(path.dirname(process.execPath),'resources','app','package.json'))},path.join(app.getPath('userData'),'startup-preference.json'));
     const startupResult=startupService.initialize();
     if(startupResult.error) console.warn('Windows startup registration:',startupResult.error);
-    ipcMain.handle('startup:get',()=>startupService.get());
-    ipcMain.handle('startup:set',(_event,enabled)=>startupService.set(enabled));
-    ipcMain.handle('startup:repair',()=>startupService.repair());
-    ipcMain.handle('hoyolab:status', () => publicSyncStatus());
-    ipcMain.handle('hoyolab:test',async()=>{const result=await refreshLive();return {verified:!!result.notes,uid:result.role?.uid||'',fetchedAt:result.notes?.fetchedAt||null,source:'HoYoLAB Real-Time Notes',error:result.error||''};});
-    ipcMain.handle('security:status',()=>securityInfo);
-    ipcMain.handle('telemetry:history',()=>telemetry.getHistory(selectedRole?.uid));
-    ipcMain.handle('telemetry:options',(_event,opts)=>telemetry.options(opts));
-    ipcMain.handle('update:status',()=>updates.status());
-    ipcMain.handle('update:settings',(_event,opts)=>updates.settings(opts));
-    ipcMain.handle('update:check',(_event,download)=>updates.check(!!download));
+    handleTrusted('startup:get',()=>startupService.get());
+    handleTrusted('startup:set',(_event,enabled)=>startupService.set(enabled));
+    handleTrusted('startup:repair',()=>startupService.repair());
+    handleTrusted('hoyolab:status', () => publicSyncStatus());
+    handleTrusted('hoyolab:test',async()=>{const result=await refreshLive();return {verified:!!result.notes,uid:result.role?.uid||'',fetchedAt:result.notes?.fetchedAt||null,source:'HoYoLAB Real-Time Notes',error:result.error||''};});
+    handleTrusted('security:status',()=>securityInfo);
+    handleTrusted('telemetry:history',()=>telemetry.getHistory(selectedRole?.uid));
+    handleTrusted('telemetry:options',(_event,opts)=>telemetry.options(opts));
+    handleTrusted('update:status',()=>updates.status());
+    handleTrusted('update:settings',(_event,opts)=>updates.settings(opts));
+    handleTrusted('update:check',(_event,download)=>updates.check(!!download));
     // Until updates are Authenticode-signed, the app never launches release executables.
     // Keep the check/read-only UI, direct users to the canonical public download page.
-    ipcMain.handle('update:install',()=>shell.openExternal('https://github.com/Subaru771/Istaroth/releases'));
+    handleTrusted('update:install',()=>shell.openExternal('https://github.com/Subaru771/Istaroth/releases'));
 
-    ipcMain.handle('chronicle:status',()=>chroniclePublic());
-    ipcMain.handle('chronicle:refresh',()=>chronicleRefresh(true).then(()=>chroniclePublic()));
-    ipcMain.handle('hoyolab:login', () => openLoginWindow());
-    ipcMain.handle('hoyolab:roles', async () => {
+    handleTrusted('chronicle:status',()=>chroniclePublic());
+    handleTrusted('chronicle:refresh',()=>chronicleRefresh(true).then(()=>chroniclePublic()));
+    handleTrusted('hoyolab:login', () => openLoginWindow());
+    handleTrusted('hoyolab:roles', async () => {
       roleChoices = await hoyo.fetchRoles(hoyoSession);
       pushSyncStatus();
       return publicSyncStatus();
     });
-    ipcMain.handle('hoyolab:select', async (_event, uid) => {
+    handleTrusted('hoyolab:select', async (_event, uid) => {
       const choice = roleChoices.find(r => r.uid === String(uid));
       if (!choice) throw new Error('Choose one of the linked HoYoLAB accounts first.');
       selectedRole = choice;
@@ -348,7 +380,7 @@ if (!gotLock) {
       chronicleRefresh().catch(()=>{});
       return await refreshLive();
     });
-    ipcMain.handle('hoyolab:manualRole', async (_event, uid, region) => {
+    handleTrusted('hoyolab:manualRole', async (_event, uid, region) => {
       const choice = hoyo.safeRole({ game_uid: String(uid), region: String(region), nickname: 'Traveler' });
       if (!choice) throw new Error('Enter a valid UID and choose the matching Genshin server.');
       await hoyo.getAuthHeader(hoyoSession);
@@ -361,13 +393,13 @@ if (!gotLock) {
       chronicleRefresh().catch(()=>{});
       return refreshLive();
     });
-    ipcMain.handle('hoyolab:refresh', () => refreshLive());
-    ipcMain.handle('hoyolab:options', (_event, opts) => {
+    handleTrusted('hoyolab:refresh', () => refreshLive());
+    handleTrusted('hoyolab:options', (_event, opts) => {
       if (opts && hoyo.REFRESH_OPTIONS.includes(opts.minutes)) refreshMinutes = opts.minutes;
       if (opts && typeof opts.auto === 'boolean') autoRefresh = opts.auto;
       saveAccountConfig(); pushSyncStatus(); return publicSyncStatus();
     });
-    ipcMain.handle('hoyolab:disconnect', async () => {
+    handleTrusted('hoyolab:disconnect', async () => {
       selectedRole = null; roleChoices = []; liveNotes = null; lastSyncError = '';clearChronicle();
       saveAccountConfig();
       if (loginWindow && !loginWindow.isDestroyed()) loginWindow.close();
@@ -377,54 +409,7 @@ if (!gotLock) {
       lastTrayAmount='';trayUpdate();
       pushSyncStatus(); return publicSyncStatus();
     });
-    ipcMain.handle('wallpaper:set', (_event, data) => {
-      const bytes=wallpaperBytes(data);
-      const destination=wallpaperFile();fs.mkdirSync(path.dirname(destination),{recursive:true});
-      const tmp=destination+'.tmp';fs.writeFileSync(tmp,bytes);fs.renameSync(tmp,destination);
-      return 'data:image/webp;base64,'+bytes.toString('base64');
-    });
-    ipcMain.handle('wallpaper:get', () => {
-      try{const info=fs.statSync(wallpaperFile());if(info.size>WALLPAPER_LIMIT)return '';
-        const bytes=fs.readFileSync(wallpaperFile());if(bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')return '';
-        return 'data:image/webp;base64,'+bytes.toString('base64');
-      }catch{return '';}
-    });
-    ipcMain.handle('wallpaper:clear', () => {try{fs.unlinkSync(wallpaperFile());}catch(e){if(e.code!=='ENOENT')throw e;}return true;});
-    ipcMain.handle('wallpaper:mini:set', (_event, data) => {
-      const bytes=wallpaperBytes(data);
-      const destination=miniWallpaperFile();fs.mkdirSync(path.dirname(destination),{recursive:true});
-      const tmp=destination+'.tmp';fs.writeFileSync(tmp,bytes);fs.renameSync(tmp,destination);
-      return 'data:image/webp;base64,'+bytes.toString('base64');
-    });
-    ipcMain.handle('wallpaper:mini:get', () => {
-      try{const info=fs.statSync(miniWallpaperFile());if(info.size>WALLPAPER_LIMIT)return '';
-        const bytes=fs.readFileSync(miniWallpaperFile());if(bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')return '';
-        return 'data:image/webp;base64,'+bytes.toString('base64');
-      }catch{return '';}
-    });
-    ipcMain.handle('wallpaper:mini:clear', () => {
-      try{fs.unlinkSync(miniWallpaperFile());}catch(e){if(e.code!=='ENOENT')throw e;}
-      return true;
-    });
-    // The resin card has a third, isolated wallpaper file. Never overwrite Main/Mini images.
-    ipcMain.handle('wallpaper:resin:set', (_event,data) => {
-      const bytes=wallpaperBytes(data);
-      const dest=resinWallpaperFile();fs.mkdirSync(path.dirname(dest),{recursive:true});
-      const temp=dest+'.tmp';fs.writeFileSync(temp,bytes);fs.renameSync(temp,dest);
-      return 'data:image/webp;base64,'+bytes.toString('base64');
-    });
-    ipcMain.handle('wallpaper:resin:get', () => {
-      try{const info=fs.statSync(resinWallpaperFile());if(info.size>WALLPAPER_LIMIT)return '';
-        const bytes=fs.readFileSync(resinWallpaperFile());
-        if(bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')return '';
-        return 'data:image/webp;base64,'+bytes.toString('base64');
-      }catch{return '';}
-    });
-    ipcMain.handle('wallpaper:resin:clear', () => {
-      try{fs.unlinkSync(resinWallpaperFile());}catch(e){if(e.code!=='ENOENT')throw e;}
-      return true;
-    });
-    ipcMain.handle('window:size', (_event, mode) => {
+    handleTrusted('window:size', (_event, mode) => {
       if (!mainWindow || mainWindow.isDestroyed()) return false;
       const sizes = { mini: [360, 296], floating: [360, 248], compact: [510, 680], standard: [610, 770], settings: [1060, 970] };
       const desired = sizes[mode];
@@ -442,30 +427,30 @@ if (!gotLock) {
       mainWindow.setBounds({ x, y, width:w, height:h }, true);
       return true;
     });
-    ipcMain.handle('state:load', () => readData());
-    ipcMain.handle('state:save', (_event, data) => {const success=saveData(data);if(success)updateWindowFloat();return success;});
-    ipcMain.handle('window:pin', (_event, flag) => {
+    handleTrusted('state:load', () => readData());
+    handleTrusted('state:save', (_event, data) => {const success=saveData(data);if(success)updateWindowFloat();return success;});
+    handleTrusted('window:pin', (_event, flag) => {
       mainWindow?.setAlwaysOnTop(!!flag, 'floating');
       return !!mainWindow?.isAlwaysOnTop();
     });
-    ipcMain.handle('window:close-behavior', (_event, flag) => {
+    handleTrusted('window:close-behavior', (_event, flag) => {
       closeToTray = !!flag;
       return closeToTray;
     });
-    ipcMain.handle('window:close', () => {
+    handleTrusted('window:close', () => {
       if (closeToTray && tray && !tray.isDestroyed()) mainWindow?.hide();
       else { allowQuit = true; app.quit(); }
       return true;
     });
-    ipcMain.handle('window:hide', () => { mainWindow?.hide(); return true; });
-    ipcMain.handle('window:minimize', () => { mainWindow?.minimize(); return true; });
-    ipcMain.handle('window:quit', () => { allowQuit = true; app.quit(); });
-    ipcMain.handle('shell:open', (_event, key) => {
+    handleTrusted('window:hide', () => { mainWindow?.hide(); return true; });
+    handleTrusted('window:minimize', () => { mainWindow?.minimize(); return true; });
+    handleTrusted('window:quit', () => { allowQuit = true; app.quit(); });
+    handleTrusted('shell:open', (_event, key) => {
       const url = allowedLinks[key];
       if (!url) return false;
       return shell.openExternal(url).then(() => true).catch(() => false);
     });
-    ipcMain.handle('notify', (_event, payload) => {
+    handleTrusted('notify', (_event, payload) => {
       if (!Notification.isSupported() || typeof payload?.title !== 'string') return false;
       const title = payload.title.slice(0, 90);
       const body = typeof payload.body === 'string' ? payload.body.slice(0, 200) : '';
@@ -485,8 +470,8 @@ if (!gotLock) {
         refreshLive().catch(() => {});
       }
     }, 30_000);
-    setInterval(()=>{if(updates?.settings().repo&&updates.settings().autoCheck)updates.check().catch(()=>{});},6*3600_000).unref();
-    setTimeout(()=>{if(updates?.settings().repo&&updates.settings().autoCheck)updates.check().catch(()=>{});},15_000);
+    setInterval(()=>{pollForUpdates().catch(()=>{});},6*3600_000).unref();
+    setTimeout(()=>{pollForUpdates().catch(()=>{});},15_000);
     if (selectedRole && autoRefresh) setTimeout(() => refreshLive().catch(() => {}), 3500);
   });
   app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
