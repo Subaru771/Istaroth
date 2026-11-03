@@ -22,10 +22,10 @@ const NOTE_URLS = [
   'https://bbs-api-os.hoyoverse.com/game_record/genshin/api/dailyNote'
 ];
 const REGION_MAP = Object.freeze({ os_asia: 'asia', os_euro: 'europe', os_usa: 'america', os_cht: 'tw' });
+// Send only the least-privilege HoYoLAB login cookies needed by read-only APIs.
+// High-privilege stoken, account, and cookie_token fields must not be forwarded.
 const AUTH_COOKIE_NAMES = new Set([
-  'ltuid', 'ltoken', 'ltuid_v2', 'ltoken_v2', 'ltmid_v2',
-  'account_id', 'account_id_v2', 'cookie_token', 'cookie_token_v2',
-  'stuid', 'stoken', 'stoken_v2', 'mid', 'mid_v2'
+  'ltuid', 'ltoken', 'ltuid_v2', 'ltoken_v2', 'ltmid_v2'
 ]);
 
 function safeRole(raw) {
