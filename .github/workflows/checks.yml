@@ -38,6 +38,7 @@ jobs:
         run: node test_update_service.js
 
   build-offline-windows-candidates:
+    if: github.event_name == 'workflow_dispatch'
     needs: source-checks
     runs-on: windows-latest
     steps:
@@ -97,5 +98,5 @@ jobs:
             app/dist/Istaroth-v1.0-offline-setup-QA-UNSIGNED.exe.sha256
             app/dist/Istaroth-v1.0-portable-QA-UNSIGNED.zip
             app/dist/Istaroth-v1.0-portable-QA-UNSIGNED.zip.sha256
-          retention-days: 14
+          retention-days: 3
           if-no-files-found: error
