@@ -33,6 +33,9 @@ jobs:
       - name: Resin and notification tests
         working-directory: app
         run: npm run test:v22
+      - name: Settings layout and wallpaper regression tests
+        working-directory: app
+        run: npm run test:settings
       - name: Read-only updater security tests
         working-directory: app
         run: node test_update_service.js
