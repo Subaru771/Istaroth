@@ -61,10 +61,10 @@ $iscc = (Get-Command iscc -ErrorAction SilentlyContinue).Source
 if (-not $iscc) { $iscc = 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' }
 if (-not (Test-Path $iscc)) { throw 'Inno Setup compiler is missing from the Windows runner.' }
 $source = Join-Path $env:GITHUB_WORKSPACE 'app\dist\win-unpacked'
-& $iscc '/DAppVersion=1.1.0' "/DAppSource=$source" (Join-Path $env:GITHUB_WORKSPACE 'installer\color-only.iss')
+& $iscc '/DAppVersion=1.1.1' "/DAppSource=$source" (Join-Path $env:GITHUB_WORKSPACE 'installer\color-only.iss')
 if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed.' }
 
-$installer = Join-Path $env:GITHUB_WORKSPACE 'app\dist\Istaroth-v1.1.0-Color-Only-Setup-Windows-x64-UNSIGNED.exe'
+$installer = Join-Path $env:GITHUB_WORKSPACE 'app\dist\Istaroth-v1.1.1-Color-Only-Setup-Windows-x64-UNSIGNED.exe'
 if (-not (Test-Path $installer)) { throw 'Installer EXE was not generated.' }
 $auth = Get-AuthenticodeSignature $installer
 if ($auth.Status -ne 'NotSigned') { throw "Unexpected executable signing state: $($auth.Status)" }

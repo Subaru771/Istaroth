@@ -287,6 +287,10 @@ function createWindow() {
   mainWindow.setAlwaysOnTop(!!saved?.ui?.pinned || !!(saved?.ui?.miniMode&&saved?.ui?.floatingMini), 'floating');
   if(saved?.ui?.miniMode&&saved?.ui?.floatingMini){mainWindow.setResizable(false);mainWindow.setSkipTaskbar(true);}
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  // Avoid remembered Chromium zoom magnifying fixed-size desktop widgets.
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.setZoomFactor(1);
+  });
   mainWindow.once('ready-to-show', () => mainWindow?.show());
   mainWindow.on('closed', () => { mainWindow = null; });
   mainWindow.on('close', (event) => {

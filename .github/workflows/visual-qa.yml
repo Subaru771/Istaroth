@@ -1,0 +1,45 @@
+name: Visual QA — Istaroth compact window
+
+on:
+  push:
+    paths:
+      - .github/workflows/visual-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Capture compact and standard layouts in Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p visual-checks
+          BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          PAGE="file://$GITHUB_WORKSPACE/app/index.html"
+          for width in 510 610; do
+            if [ "$width" -eq 510 ]; then height=680; else height=770; fi
+            name="$width"x"$height"
+            timeout 30s "$BROWSER" --headless --no-sandbox --disable-gpu \
+              --disable-dev-shm-usage --disable-extensions \
+              --no-first-run --no-default-browser-check \
+              --allow-file-access-from-files --hide-scrollbars \
+              --virtual-time-budget=3500 \
+              "--user-data-dir=$RUNNER_TEMP/istaroth-chrome-$name" \
+              "--window-size=$width,$height" \
+              "--screenshot=visual-checks/Istaroth-$name.png" "$PAGE" || true
+          done
+          ls -lah visual-checks
+          test -s visual-checks/Istaroth-510x680.png
+          test -s visual-checks/Istaroth-610x770.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Istaroth-responsive-visual-QA
+          path: visual-checks/*.png
+          retention-days: 7
+          if-no-files-found: error
