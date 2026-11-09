@@ -1,8 +1,8 @@
 {
   "name": "istaroth",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
-  "description": "Istaroth v1.1.1 — responsive color-only Windows Genshin Impact companion",
+  "description": "Istaroth v1.1.2 — color-only Windows companion with reliable installer migration",
   "main": "main.js",
   "author": "Istaroth open-source contributors",
   "license": "MIT",
