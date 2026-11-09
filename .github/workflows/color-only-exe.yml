@@ -1,0 +1,72 @@
+name: Build Istaroth color-only Windows EXE
+
+on:
+  push:
+    paths:
+      - .github/workflows/color-only-exe.yml
+      - scripts/build-color-only-exe.ps1
+      - installer/color-only.iss
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  exe:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install exact dependencies
+        working-directory: app
+        run: npm ci --no-audit --no-fund
+
+      - name: Check application, theme UI and regressions
+        working-directory: app
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($test in @('check','test:startup','test:v22','test:settings')) {
+            npm run $test
+            if ($LASTEXITCODE -ne 0) { throw "Test failed: $test" }
+          }
+          node test_update_service.js
+          if ($LASTEXITCODE -ne 0) { throw 'Updater test failed' }
+
+      - name: Create and smoke-test the offline Windows EXE
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/build-color-only-exe.ps1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Istaroth-v1.1.0-Color-Only-Windows-EXE
+          path: |
+            app/dist/Istaroth-v1.1.0-Color-Only-Setup-Windows-x64-UNSIGNED.exe
+            app/dist/Istaroth-v1.1.0-Color-Only-Setup-Windows-x64-UNSIGNED.exe.sha256
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Publish direct EXE download on GitHub prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $exe = 'app\dist\Istaroth-v1.1.0-Color-Only-Setup-Windows-x64-UNSIGNED.exe'
+          $tag = 'v1.1.0-color-only-preview'
+          $notes = 'Windows x64 offline EXE: all application files and Electron included. New color-only Istaroth interface. The bundled Electron runtime was verified against the SHA-256 digest from the previous v1.0.1 release. Source tests and silent installation passed. UNSIGNED preview; installs into a separate directory from v1.0.1.'
+          gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $exe "$exe.sha256" --repo $env:GITHUB_REPOSITORY --clobber
+          } else {
+            gh release create $tag $exe "$exe.sha256" --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title 'Istaroth v1.1.0 Color-only — Windows Preview' --notes $notes --prerelease
+          }
+          if ($LASTEXITCODE -ne 0) { throw 'Could not publish Windows executable' }
