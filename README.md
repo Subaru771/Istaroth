@@ -26,6 +26,14 @@ The downloadable **v1.0.1** release predates this redesign and still includes it
 - **Daily information** including commissions, expeditions, Realm currency and other available HoYoLAB panels.
 - **Local history and alerts** with configurable quiet hours.
 
+## Updating to the color-only build
+
+The current source is **Istaroth v1.1.2**, with five Settings tabs and no region-scene illustrations. The downloadable v1.0.1 release has the old appearance.
+
+If the old illustrated Settings page still opens after installing an updated preview, the older Istaroth process or its shortcut may be taking over. Electron's single-instance protection uses the same profile for all releases. The **v1.1.2 installer closes running older copies and replaces the desktop shortcut** with a link to the new build; it does not erase your HoYoLAB account or saved settings.
+
+After upgrading, check that Settings says **ISTAROTH · v1.1.2 · PREFERENCES**. If a taskbar-pinned icon still opens an older copy, unpin that outdated taskbar icon and pin Istaroth again from the new desktop shortcut. The previous v1.0.1 portable ZIP and installer are not silently uninstalled.
+
 ## Install
 
 **v1.0.1:** Choose the standard **offline NSIS installer** or the **portable ZIP**. Both include Electron and do not download a runtime during installation. The original [v1.0 Go installer](https://github.com/Subaru771/Istaroth/releases/tag/1.0) is preserved for older installations. See [Windows distribution and migration guidance](docs/WINDOWS_DISTRIBUTION.md).
