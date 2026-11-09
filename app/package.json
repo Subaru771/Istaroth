@@ -60,7 +60,8 @@
       "atelier-v2412.css",
       "wallpaper-v2417.css",
       "done-theme-v2418.css",
-      "settings-compact.css"
+      "settings-compact.css",
+      "color-only.css"
     ],
     "win": {
       "target": [

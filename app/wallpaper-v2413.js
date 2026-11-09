@@ -14,7 +14,7 @@ const WallpaperStudio=(()=>{
   const getPrefs=scope=>scope==='main'?state.ui.design:scope==='resin'?state.ui.resinAppearance:state.ui.miniAppearance;
   const resinKeys={get:()=>window.pulseDesktop?.wallpaperResinGet?.(),set:data=>window.pulseDesktop?.wallpaperResinSet?.(data),clear:()=>window.pulseDesktop?.wallpaperResinClear?.()};
   const store=scope=>scope==='main'?mainKeys:scope==='resin'?resinKeys:miniKeys;
-  function imageValue(image){return image?`url("${image.replaceAll('"','%22')}")`:'none';}
+  function imageValue(_image){return 'none';} // Colors only; never render image URLs.
   function apply(){
     if(!state)return;
     const m=getPrefs('main'),n=getPrefs('mini'),r=getPrefs('resin');
@@ -51,27 +51,10 @@ const WallpaperStudio=(()=>{
     refreshPreview();
   }
   async function load(){
-    for(const scope of ['main','mini','resin']){
-      try{
-        const getter=store(scope).get;
-        files[scope]=(window.pulseDesktop && typeof window.pulseDesktop[scope==='main'?'wallpaperGet':scope==='resin'?'wallpaperResinGet':'wallpaperMiniGet']==='function')
-          ? (await getter()||'') : (localStorage.getItem(keyName[scope])||'');
-      }catch(error){files[scope]='';console.warn(scope+' wallpaper load failed',error);}
-    }
-    // Migrate old card-only wallpaper once, preserving its image and adjustment values.
-    // Do not remove Main's historical file, so an interrupted migration loses nothing.
-    if(state.ui.design.wallpaperTarget==='card' && files.main){
-      if(!files.resin){
-        await persistFile('resin',files.main);
-        files.resin=files.main;
-        state.ui.resinAppearance=resinClean(state.ui.design);
-      }
-      // Old card-only image should not unexpectedly become a full Main background.
-      await persistFile('main','',true);
-      files.main='';
-      state.ui.design.wallpaperTarget='full';
-      queueSave();
-    }
+    // Color-only release: do not deserialize saved wallpaper images into memory.
+    // Existing files on disk/localStorage are deliberately preserved, not deleted.
+    // All three images stay inactive, including for previously customized profiles.
+    files.main='';files.mini='';files.resin='';
   }
   function render(){
     if(!state)return;

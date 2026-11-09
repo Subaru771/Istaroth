@@ -1,0 +1,125 @@
+/* Istaroth v1.1 color-only skin.
+ * No bundled scenic imagery or uploaded wallpapers are rendered in the UI.
+ * This intentionally retains all nine palette colors and existing saved preferences.
+ */
+
+/* Shadow previous regional artwork variables with image-free values. */
+html {
+  --realm-scene: none !important;
+  --region-hero-art: none !important;
+  --atelier-hero-art: none !important;
+  --wall-image: none !important;
+  --resin-wall-image: none !important;
+}
+html .app-frame {
+  --region-hero-art: none !important;
+  --atelier-hero-art: none !important;
+}
+html .widget-screen,
+html .mini-screen,
+html .settings-screen {
+  --realm-scene: none !important;
+}
+
+/* Replace themed landscape pictures with palette-dependent light and shading. */
+html .widget-screen::before,
+html[data-palette="istaroth"] .widget-screen::before,
+html:not([data-palette="istaroth"]) .widget-screen::before {
+  content: "" !important;
+  display: block !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  opacity: .64 !important;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse at 80% 5%, color-mix(in srgb, var(--accent) 19%, transparent), transparent 62%),
+    linear-gradient(155deg, transparent 20%, color-mix(in srgb, var(--accent) 5%, transparent) 100%) !important;
+  background-size: cover !important;
+}
+html .mini-screen::before,
+html:not([data-palette="istaroth"]) .mini-screen::before {
+  content: "" !important;
+  display: block !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  opacity: .75 !important;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse at 85% 5%,color-mix(in srgb,var(--accent) 15%,transparent),transparent 70%) !important;
+  background-size: cover !important;
+}
+html .background-art,
+html .background-art::before,
+html .background-art::after,
+html .card-wallpaper,
+html .mini-wallpaper-layer,
+html .settings-heading .atelier-scene,
+html .settings-heading .atelier-orbit,
+html .settings-heading .atelier-glass {
+  display: none !important;
+  background-image: none !important;
+  opacity: 0 !important;
+}
+html .resin-card::before,
+html .resin-card::after {
+  background-image: none !important;
+}
+html .resin-card .card-wallpaper {
+  display: none !important;
+  background-image: none !important;
+  opacity: 0 !important;
+}
+html .resin-card {
+  background-image:
+    radial-gradient(ellipse at 45% 22%, color-mix(in srgb,var(--accent) 25%,transparent),transparent 70%),
+    linear-gradient(145deg, color-mix(in srgb,var(--accent) 13%,#1b2940), #0f1c2d) !important;
+}
+html .mini-screen .mini-inner {
+  background-image: none !important;
+}
+html .settings-screen .palette-option {
+  --art: none !important;
+  --card-scene: none !important;
+  background-image: none !important;
+}
+html .settings-heading::before,
+html .settings-heading::after,
+html .palette-option::after {
+  background-image: none !important;
+}
+html .settings-screen .setting-tabs {
+  grid-template-columns: repeat(5,minmax(0,1fr)) !important;
+}
+html .settings-screen [data-tab="main-wallpaper"],
+html .settings-screen [data-tab="mini-wallpaper"],
+html .settings-screen [data-page="main-wallpaper"],
+html .settings-screen [data-page="mini-wallpaper"] {
+  display: none !important;
+}
+
+/* Even the small header mark is now pure CSS color, not an SVG picture. */
+html .brand-mark {
+  position: relative;
+  display: grid !important;
+  place-items: center;
+  border-radius: 10px;
+  background: linear-gradient(155deg, color-mix(in srgb,var(--accent) 63%,#17223a), color-mix(in srgb,var(--accent) 18%,#0f1b31)) !important;
+  border: 1px solid color-mix(in srgb,var(--accent-soft) 45%,transparent) !important;
+}
+html .brand-mark::after {
+  content: "";
+  width: 35%;
+  height: 35%;
+  border-radius: 4px;
+  transform: rotate(45deg);
+  background: var(--accent-soft);
+  box-shadow: 0 0 10px color-mix(in srgb,var(--accent) 55%,transparent);
+}
+@media (max-width: 580px) {
+  html .settings-screen .setting-tabs {
+    grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .brand-mark::after { transition: none !important; }
+}
