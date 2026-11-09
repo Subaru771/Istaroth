@@ -26,7 +26,7 @@ assert.deepEqual(paletteOptions, [
 ], 'All nine selectable themes must remain available');
 
 for (const id of ['mainWpThumbnail', 'miniWpThumbnail', 'resinWpThumbnail',
-  'mainWpPreview', 'miniWpPreview']) {
+  'mainWpViewport', 'miniWpViewport']) {
   assert.ok(html.includes('id="' + id + '"'), 'Wallpaper setting/preview must remain: ' + id);
 }
 console.log('Settings layout regression checks passed.');
