@@ -87,22 +87,7 @@ jobs:
             if (-not ($names | Where-Object { $_ -match '(^|/)resources/app[.]asar$' })) { throw 'Portable ZIP has no app.asar' }
           } finally { $archive.Dispose() }
           $version = (Get-Content -LiteralPath 'package.json' -Raw | ConvertFrom-Json).version
-          if ($version -notmatch '^\\d+\\.\\d+\\.\\d+
-            $hash = (Get-FileHash -LiteralPath "dist/$name" -Algorithm SHA256).Hash.ToLowerInvariant()
-            Set-Content -NoNewline -Encoding ascii -Path "dist/$name.sha256" -Value "$hash  $name`n"
-            Write-Host "$name SHA256: $hash"
-          }
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Istaroth-Windows-Offline-Setup-and-Portable-QA-UNSIGNED
-          path: |
-            app/dist/Istaroth-v*-Offline-Setup-Windows-x64-QA-UNSIGNED.exe
-            app/dist/Istaroth-v*-Offline-Setup-Windows-x64-QA-UNSIGNED.exe.sha256
-            app/dist/Istaroth-v*-Portable-Windows-x64-QA-UNSIGNED.zip
-            app/dist/Istaroth-v*-Portable-Windows-x64-QA-UNSIGNED.zip.sha256
-          retention-days: 3
-          if-no-files-found: error
-) { throw 'Invalid release candidate version' }
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Invalid release candidate version' }
           $setupName = "Istaroth-v$version-Offline-Setup-Windows-x64-QA-UNSIGNED.exe"
           $portableName = "Istaroth-v$version-Portable-Windows-x64-QA-UNSIGNED.zip"
           Move-Item -LiteralPath $exe.FullName -Destination "dist/$setupName"
@@ -114,7 +99,7 @@ jobs:
           }
       - uses: actions/upload-artifact@v4
         with:
-          name: Istaroth-v1.0-Offline-NSIS-and-Portable-Windows-QA-UNSIGNED
+          name: Istaroth-Windows-Offline-Setup-and-Portable-QA-UNSIGNED
           path: |
             app/dist/Istaroth-v*-Offline-Setup-Windows-x64-QA-UNSIGNED.exe
             app/dist/Istaroth-v*-Offline-Setup-Windows-x64-QA-UNSIGNED.exe.sha256
