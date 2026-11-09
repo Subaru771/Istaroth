@@ -87,7 +87,7 @@ foreach ($relative in @('Istaroth.exe','resources\app.asar')) {
 # Inspect the app archive inside the ACTUAL installed EXE, not only the build
 # directory. This detects an outdated runtime/shortcut combination.
 $installedAsar = Join-Path $installDir 'resources\app.asar'
-node -e 'const a=require("@electron/asar");const f=process.argv[1];const h=a.extractFile(f,"index.html").toString("utf8");const p=JSON.parse(a.extractFile(f,"package.json").toString("utf8"));if(p.version!=="1.1.2"||!h.includes("ISTAROTH · v1.1.2 · PREFERENCES")||!h.includes("color-only.css")||h.includes("Your journal, your world."))throw Error("Installed executable contains outdated UI: "+p.version);console.log("Installed EXE includes the correct v1.1.2 Settings interface")' $installedAsar
+node -e 'const a=require("./app/node_modules/@electron/asar");const f=process.argv[1];const h=a.extractFile(f,"index.html").toString("utf8");const p=JSON.parse(a.extractFile(f,"package.json").toString("utf8"));if(p.version!=="1.1.2"||!h.includes("ISTAROTH · v1.1.2 · PREFERENCES")||!h.includes("color-only.css")||h.includes("Your journal, your world."))throw Error("Installed executable contains outdated UI: "+p.version);console.log("Installed EXE includes the correct v1.1.2 Settings interface")' $installedAsar
 if ($LASTEXITCODE -ne 0) { throw 'Installed UI does not match source.' }
 
 # The old 1.0.x and 1.1.1 installers left shortcuts at the previous location.
