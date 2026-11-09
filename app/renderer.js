@@ -210,7 +210,7 @@ function renderProfiles(){const list=$('profilesList');list.replaceChildren();co
     row.append(title,apply,remove);list.append(row);
   });
 }
-function tab(key){$all('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===key);b.setAttribute('aria-selected',String(b.dataset.tab===key));});
+function tab(key){if(key==='main-wallpaper'||key==='mini-wallpaper')key='style';$all('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===key);b.setAttribute('aria-selected',String(b.dataset.tab===key));});
   $all('[data-page]').forEach(el=>el.classList.toggle('hidden',el.dataset.page!==key));$('settingsScreen').querySelector('.settings-scroll').scrollTop=0;if(key==='main-wallpaper')WallpaperStudio.show('main');if(key==='mini-wallpaper')WallpaperStudio.show('mini');
   const label=$('doneLabel');if(label)label.textContent='Done';}
 async function resizeWindow(){if(!bridge?.size)return;try{await bridge.size(currentView==='settings'?'settings':currentView==='mini'?(state.ui.floatingMini?'floating':'mini'):state.ui.design.size);}catch(e){toast(`Window resizing unavailable: ${e.message}`);}}
