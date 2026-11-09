@@ -1,6 +1,6 @@
 /* Istaroth v1.1 color-only skin.
- * No bundled scenic imagery or uploaded wallpapers are rendered in the UI.
- * This intentionally retains all nine palette colors and existing saved preferences.
+ * No built-in scenic imagery is rendered by the regional themes.
+ * Optional user-uploaded wallpapers are handled separately and can be enabled.
  */
 
 /* Shadow previous regional artwork variables with image-free values. */
@@ -8,8 +8,6 @@ html {
   --realm-scene: none !important;
   --region-hero-art: none !important;
   --atelier-hero-art: none !important;
-  --wall-image: none !important;
-  --resin-wall-image: none !important;
 }
 html .app-frame {
   --region-hero-art: none !important;
@@ -89,12 +87,6 @@ html .palette-option::after {
 }
 html .settings-screen .setting-tabs {
   grid-template-columns: repeat(5,minmax(0,1fr)) !important;
-}
-html .settings-screen [data-tab="main-wallpaper"],
-html .settings-screen [data-tab="mini-wallpaper"],
-html .settings-screen [data-page="main-wallpaper"],
-html .settings-screen [data-page="mini-wallpaper"] {
-  display: none !important;
 }
 
 /* Even the small header mark is now pure CSS color, not an SVG picture. */
