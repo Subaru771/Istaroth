@@ -2,6 +2,7 @@ name: Build Istaroth color-only Windows EXE
 
 on:
   push:
+    branches: [main]
     paths:
       - .github/workflows/color-only-exe.yml
       - scripts/build-color-only-exe.ps1
@@ -47,10 +48,10 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Istaroth-v1.1.1-Color-Only-Windows-EXE
+          name: Istaroth-v1.1.2-Color-Only-Windows-EXE
           path: |
-            app/dist/Istaroth-v1.1.1-Color-Only-Setup-Windows-x64-UNSIGNED.exe
-            app/dist/Istaroth-v1.1.1-Color-Only-Setup-Windows-x64-UNSIGNED.exe.sha256
+            app/dist/Istaroth-v1.1.2-Color-Only-Setup-Windows-x64-UNSIGNED.exe
+            app/dist/Istaroth-v1.1.2-Color-Only-Setup-Windows-x64-UNSIGNED.exe.sha256
           retention-days: 14
           if-no-files-found: error
 
@@ -60,13 +61,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
-          $exe = 'app\dist\Istaroth-v1.1.1-Color-Only-Setup-Windows-x64-UNSIGNED.exe'
-          $tag = 'v1.1.1-responsive-preview'
-          $notes = 'Windows x64 offline EXE: all application files and Electron included. Corrected compact layout, readable font sizes, header controls, and resin digits. Color-only Istaroth interface. The bundled Electron runtime was verified against the SHA-256 digest from the previous v1.0.1 release. Source tests and silent installation passed. UNSIGNED preview; installs into a separate directory from v1.0.1.'
+          $exe = 'app\dist\Istaroth-v1.1.2-Color-Only-Setup-Windows-x64-UNSIGNED.exe'
+          $tag = 'v1.1.2-launch-fix'
+          $notes = 'Windows x64 offline EXE: all application files and Electron included. Color-only interface with automatic closing of old Istaroth processes, corrected desktop shortcut and visible version marker. Responsive compact layout retained. Color-only Istaroth interface. Embedded Electron and actual installed app.asar were validated against the v1.1.2 source. Source tests and silent installation passed. UNSIGNED preview; existing account data are preserved. Old Istaroth.exe processes are closed during installation and the desktop shortcut is replaced.'
           gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
           if ($LASTEXITCODE -eq 0) {
             gh release upload $tag $exe "$exe.sha256" --repo $env:GITHUB_REPOSITORY --clobber
           } else {
-            gh release create $tag $exe "$exe.sha256" --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title 'Istaroth v1.1.1 Responsive Layout Fix — Windows Preview' --notes $notes --prerelease
+            gh release create $tag $exe "$exe.sha256" --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title 'Istaroth v1.1.2 Color-only Installer Fix — Windows Preview' --notes $notes --prerelease
           }
           if ($LASTEXITCODE -ne 0) { throw 'Could not publish Windows executable' }
