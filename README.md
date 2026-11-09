@@ -12,27 +12,31 @@ A free, open-source, unofficial Genshin Impact desktop companion for Windows.
 
 </div>
 
-## Color-only appearance (current source)
+## Appearance and your wallpapers (current source)
 
-The upcoming v1.1 source uses only gradients, swatches and palette colors across its Main, Mini, Resin and Settings interfaces. All nine themes remain available. Picture wallpapers are disabled in this source revision, but older saved image files are **not deleted**.
+Istaroth v1.1.3 keeps **nine color-only regional themes**. Built-in landscape artwork is removed from theme selection and the widget.
 
-The downloadable **v1.0.1** release predates this redesign and still includes its original illustrated appearance.
+**Your own photo wallpapers are supported again**, with separate image upload, preview, removal, darkness, blur, zoom and position controls for the **Main Widget**, **Resin Card**, and **Mini Widget**. Find them in **Settings → Main wallpaper** (including Resin Card) or **Settings → Mini wallpaper**.
+
+If you previously uploaded an image, the application restores its saved file from your existing profile. Themes without a personal wallpaper remain colors-only; no default pictures are bundled.
+
+The original v1.0.1 downloadable release predates these changes. Later preview releases are listed on the [Releases page](https://github.com/Subaru771/Istaroth/releases).
 
 ## Features
 
 - **Live Resin tracking** using your own HoYoLAB session, with recovery estimates and reminders.
 - **Main and Mini widgets** with tray controls, always-on-top mode and Windows startup.
-- **Nine regional color themes**, customizable accents, layouts and typography (current source is color-only).
+- **Nine regional color themes**, personal wallpapers for Main/Resin/Mini, customizable accents, layouts and typography.
 - **Daily information** including commissions, expeditions, Realm currency and other available HoYoLAB panels.
 - **Local history and alerts** with configurable quiet hours.
 
 ## Updating to the color-only build
 
-The current source is **Istaroth v1.1.2**, with five Settings tabs and no region-scene illustrations. The downloadable v1.0.1 release has the old appearance.
+The current source is **Istaroth v1.1.3**, with seven Settings tabs, no built-in illustrated themes, and optional user-provided wallpapers. The downloadable v1.0.1 release has the old appearance.
 
-If the old illustrated Settings page still opens after installing an updated preview, the older Istaroth process or its shortcut may be taking over. Electron's single-instance protection uses the same profile for all releases. The **v1.1.2 installer closes running older copies and replaces the desktop shortcut** with a link to the new build; it does not erase your HoYoLAB account or saved settings.
+If the old illustrated Settings page still opens after installing an updated preview, the older Istaroth process or its shortcut may be taking over. Electron's single-instance protection uses the same profile for all releases. The **v1.1.3 installer closes running older copies and replaces the desktop shortcut** with a link to the new build; it does not erase your HoYoLAB account or saved settings.
 
-After upgrading, check that Settings says **ISTAROTH · v1.1.2 · PREFERENCES**. If a taskbar-pinned icon still opens an older copy, unpin that outdated taskbar icon and pin Istaroth again from the new desktop shortcut. The previous v1.0.1 portable ZIP and installer are not silently uninstalled.
+After upgrading, check that Settings says **ISTAROTH · v1.1.3 · PREFERENCES**. If a taskbar-pinned icon still opens an older copy, unpin that outdated taskbar icon and pin Istaroth again from the new desktop shortcut. The previous v1.0.1 portable ZIP and installer are not silently uninstalled.
 
 ## Install
 

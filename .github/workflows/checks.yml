@@ -39,6 +39,9 @@ jobs:
       - name: Compact window layout regression tests
         working-directory: app
         run: npm run test:layout
+      - name: Personal wallpaper loading and isolation regression tests
+        working-directory: app
+        run: npm run test:wallpapers
       - name: Read-only updater security tests
         working-directory: app
         run: node test_update_service.js
