@@ -1,8 +1,8 @@
 {
   "name": "istaroth",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
-  "description": "Istaroth v1.1.0 candidate — offline Windows Genshin Impact desktop companion",
+  "description": "Istaroth v1.1.1 — responsive color-only Windows Genshin Impact companion",
   "main": "main.js",
   "author": "Istaroth open-source contributors",
   "license": "MIT",
@@ -12,7 +12,8 @@
     "build:win": "electron-builder --win nsis zip --x64 --publish never",
     "test:startup": "node test_startup.js",
     "test:v22": "node check-v22.js",
-    "test:settings": "node test_settings_layout.js"
+    "test:settings": "node test_settings_layout.js",
+    "test:layout": "node test_responsive_layout.js"
   },
   "devDependencies": {
     "electron": "45.1.0",
@@ -62,7 +63,8 @@
       "wallpaper-v2417.css",
       "done-theme-v2418.css",
       "settings-compact.css",
-      "color-only.css"
+      "color-only.css",
+      "layout-rescue.css"
     ],
     "win": {
       "target": [
