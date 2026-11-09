@@ -1,6 +1,6 @@
-; Istaroth color-only offline installer. Electron runtime is bundled with the app.
+; Istaroth offline installer: color-only built-in regional themes, optional user wallpapers. Electron bundled.
 #ifndef AppVersion
-  #define AppVersion "1.1.2"
+  #define AppVersion "1.1.3"
 #endif
 #ifndef AppSource
   #define AppSource "..\app\dist\win-unpacked"
@@ -9,7 +9,7 @@
 [Setup]
 AppId={{B9A6F0E0-9B92-4C68-9961-8AA94B03B2F5}
 AppName=Istaroth
-AppVerName=Istaroth {#AppVersion} — Color Only
+AppVerName=Istaroth {#AppVersion} — Color Themes + Personal Wallpapers
 AppVersion={#AppVersion}
 AppPublisher=Istaroth open-source contributors
 AppPublisherURL=https://github.com/Subaru771/Istaroth
@@ -23,7 +23,7 @@ WizardStyle=modern
 SetupIconFile=..\app\assets\icon.ico
 UninstallDisplayIcon={app}\Istaroth.exe
 OutputDir=..\app\dist
-OutputBaseFilename=Istaroth-v{#AppVersion}-Color-Only-Setup-Windows-x64-UNSIGNED
+OutputBaseFilename=Istaroth-v{#AppVersion}-Wallpapers-Setup-Windows-x64-UNSIGNED
 Compression=lzma2
 SolidCompression=yes
 ArchitecturesAllowed=x64compatible
