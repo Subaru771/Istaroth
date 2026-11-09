@@ -41,7 +41,7 @@ jobs:
         run: node test_update_service.js
 
   build-offline-windows-candidates:
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+    if: github.event_name == 'workflow_dispatch'
     needs: source-checks
     runs-on: windows-latest
     steps:
