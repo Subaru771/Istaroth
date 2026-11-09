@@ -2,9 +2,14 @@
 
 ## v1.1.0 — In development (not yet released)
 
+- Switched Main, Mini, Resin, and Settings surfaces to pure color palettes and gradients; removed decorative images.
+- Removed wallpaper tabs from Settings while keeping existing image files in their user profiles untouched.
+- Disabled wallpaper loading and display to prevent old custom pictures from appearing after upgrading.
+- Kept the nine selectable region colors, accent color, font, layout, account, and alerts.
+
 - Reworked the Settings header into a compact, image-free layout.
 - Replaced illustrated regional theme cards with accessible color swatches and responsive three-column choices.
-- Kept all seven settings sections and the independent Main, Resin Card, and Mini wallpaper controls and previews.
+- Retained all original wallpaper data internally for compatibility; the color-only interface now exposes five Settings tabs.
 - Added Settings layout regression tests to GitHub Actions.
 - Updated Windows QA artifact naming to derive the version from the application manifest, avoiding obsolete v1.0 labels.
 
