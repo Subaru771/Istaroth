@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.1.0 — In development (not yet released)
+
+- Reworked the Settings header into a compact, image-free layout.
+- Replaced illustrated regional theme cards with accessible color swatches and responsive three-column choices.
+- Kept all seven settings sections and the independent Main, Resin Card, and Mini wallpaper controls and previews.
+- Added Settings layout regression tests to GitHub Actions.
+- Updated Windows QA artifact naming to derive the version from the application manifest, avoiding obsolete v1.0 labels.
+
+The latest published Windows installer is still **v1.0.1**. The v1.1.0 candidate requires Windows build and installation verification before release.
+
+
 ## v1.0.1 — Offline Windows packaging
 
 - Replaced the runtime-downloading Go setup with a conventional Electron-bundled NSIS installer.
