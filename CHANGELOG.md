@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.3 — Personal wallpapers return
+
+- Restored **Main wallpaper**, **Resin card wallpaper**, and **Mini wallpaper** uploads and removal controls.
+- Previously saved wallpaper files are loaded again without deleting accounts or display settings.
+- Main/Resin/Mini have independent images, darkness, blur, position and zoom settings.
+- Region selection cards remain simple color swatches; bundled landscape artwork stays disabled.
+- Live previews and the two wallpaper settings tabs are restored.
+- Maintained the responsive compact-window layout and upgraded Windows installer/shortcut protections.
+
+
 ## v1.1.2 — Windows installer and stale-app launch fix
 
 - The installer now closes running old Istaroth copies before replacing files, preventing Electron's shared single-instance lock from reopening the outdated interface.
