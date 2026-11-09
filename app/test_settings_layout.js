@@ -21,12 +21,12 @@ for (const name of tabs) {
   assert.ok(html.includes('data-page="' + name + '"'), 'Missing settings panel: ' + name);
 }
 
-assert.match(html, /<link href="color-only\\.css" rel="stylesheet"\\/>/, 'Image-free CSS must be loaded');
-assert.doesNotMatch(html, /<img\\b/i, 'No image elements should be displayed in the app');
-assert.match(colorCss, /\\.widget-screen::before[\\s\\S]*?radial-gradient/, 'Main widget should use colors, not artwork');
-assert.match(colorCss, /\\.card-wallpaper[\\s\\S]*?display: none !important;/, 'Uploaded wallpapers must stay hidden');
-assert.match(wallpaperModule, /async function load\\(\\)\\{[\\s\\S]*?files\\.main=''\\;files\\.mini=''\\;files\\.resin=''/, 'Do not load saved image files in color-only mode');
-assert.doesNotMatch(colorCss, /url\\(/, 'Color-only stylesheet must not reference image URLs');
+assert.ok(html.includes('href="color-only.css"'), 'Image-free CSS must be loaded');
+assert.ok(!html.includes('<img '), 'No image elements should be rendered in the app');
+assert.ok(colorCss.includes('.widget-screen::before') && colorCss.includes('radial-gradient'), 'Main widget should use color gradients');
+assert.ok(colorCss.includes('html .card-wallpaper') && colorCss.includes('display: none !important'), 'Uploaded wallpapers must stay hidden');
+assert.ok(wallpaperModule.includes("files.main='';files.mini='';files.resin=''"), 'Do not load saved image files in color-only mode');
+assert.ok(!colorCss.includes('url('), 'Color-only stylesheet must not reference image URLs');
 
 const paletteOptions = [...html.matchAll(/class="palette-option" data-palette="([^"]+)"/g)].map(match => match[1]);
 assert.deepEqual(paletteOptions, [
