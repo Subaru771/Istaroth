@@ -14,7 +14,11 @@ const WallpaperStudio=(()=>{
   const getPrefs=scope=>scope==='main'?state.ui.design:scope==='resin'?state.ui.resinAppearance:state.ui.miniAppearance;
   const resinKeys={get:()=>window.pulseDesktop?.wallpaperResinGet?.(),set:data=>window.pulseDesktop?.wallpaperResinSet?.(data),clear:()=>window.pulseDesktop?.wallpaperResinClear?.()};
   const store=scope=>scope==='main'?mainKeys:scope==='resin'?resinKeys:miniKeys;
-  function imageValue(_image){return 'none';} // Colors only; never render image URLs.
+  function imageValue(image){
+    // Wallpaper inputs are encoded locally as WebP. Never interpolate arbitrary URLs.
+    return typeof image==='string' && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(image)
+      ? 'url("'+image+'")' : 'none';
+  }
   function apply(){
     if(!state)return;
     const m=getPrefs('main'),n=getPrefs('mini'),r=getPrefs('resin');
@@ -27,6 +31,7 @@ const WallpaperStudio=(()=>{
     // It never reads the Main or Mini image or their transform variables.
     root.style.setProperty('--resin-wall-image',imageValue(files.resin));
     root.style.setProperty('--resin-present',files.resin?'1':'0');
+    root.dataset.resinWallpaper=files.resin?'yes':'no';
     root.style.setProperty('--resin-dim',String(r.dim/100));
     root.style.setProperty('--resin-blur',r.blur+'px');
     root.style.setProperty('--resin-zoom',String(r.zoom/100));
@@ -51,10 +56,33 @@ const WallpaperStudio=(()=>{
     refreshPreview();
   }
   async function load(){
-    // Color-only release: do not deserialize saved wallpaper images into memory.
-    // Existing files on disk/localStorage are deliberately preserved, not deleted.
-    // All three images stay inactive, including for previously customized profiles.
-    files.main='';files.mini='';files.resin='';
+    // Existing user-provided wallpaper files were deliberately preserved during
+    // the color-only release. Restore them without overwriting any preferences.
+    for(const scope of ['main','mini','resin']){
+      try{
+        const getter=store(scope).get;
+        const ipcName=scope==='main'?'wallpaperGet':scope==='resin'?'wallpaperResinGet':'wallpaperMiniGet';
+        const data=window.pulseDesktop && typeof window.pulseDesktop[ipcName]==='function'
+          ? (await getter()||'') : (localStorage.getItem(keyName[scope])||'');
+        files[scope]=typeof data==='string'&&data.startsWith('data:image/webp;base64,')?data:'';
+      }catch(error){
+        files[scope]='';
+        console.warn(scope+' wallpaper load failed',error);
+      }
+    }
+    // A pre-v1.0.1 card-only wallpaper had no independent Resin file. Migrate
+    // once, and clear the old Main slot only after persisting the Resin copy.
+    if(state.ui.design.wallpaperTarget==='card' && files.main){
+      if(!files.resin){
+        await persistFile('resin',files.main);
+        files.resin=files.main;
+        state.ui.resinAppearance=resinClean(state.ui.design);
+      }
+      await persistFile('main','',true);
+      files.main='';
+      state.ui.design.wallpaperTarget='full';
+      queueSave();
+    }
   }
   function render(){
     if(!state)return;
