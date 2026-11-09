@@ -11,7 +11,8 @@
     "check": "node --check main.js && node --check preload.js && node --check renderer.js && node --check wallpaper-v2413.js && node --check hoyolab-sync.js && node --check chronicle-sync.js && node --check chronicle-ui.js && node --check windows-startup.js && node --check resin-telemetry.js && node --check tray-icon.js && node --check update-service.js",
     "build:win": "electron-builder --win nsis zip --x64 --publish never",
     "test:startup": "node test_startup.js",
-    "test:v22": "node check-v22.js"
+    "test:v22": "node check-v22.js",
+    "test:settings": "node test_settings_layout.js"
   },
   "devDependencies": {
     "electron": "45.1.0",
@@ -58,7 +59,8 @@
       "atelier-v2411.css",
       "atelier-v2412.css",
       "wallpaper-v2417.css",
-      "done-theme-v2418.css"
+      "done-theme-v2418.css",
+      "settings-compact.css"
     ],
     "win": {
       "target": [
