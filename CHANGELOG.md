@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.1.1 — Responsive color-only layout fix
+
+- Rebalanced Main Widget typography for compact 510×680 and standard 610×770 windows, including users with older large-font settings.
+- Rebuilt the titlebar flex sizing to keep the brand separate from the control buttons.
+- Reduced the navigation rail to free room for the content and show all journal destinations.
+- Constrained resin numbers, resin caps and synchronization badges so they cannot overflow the card.
+- Kept progress, recovery details, refresh and other journal panels scrollable and readable at narrow widths.
+- Reset Electron page zoom after loading to avoid a magnified saved layout.
+- Added compact-window regression tests; retained the color-only visuals and all saved HoYoLAB data.
+
+
 ## v1.1.0 — In development (not yet released)
 
 - Switched Main, Mini, Resin, and Settings surfaces to pure color palettes and gradients; removed decorative images.
