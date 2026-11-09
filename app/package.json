@@ -13,7 +13,8 @@
     "test:startup": "node test_startup.js",
     "test:v22": "node check-v22.js",
     "test:settings": "node test_settings_layout.js",
-    "test:layout": "node test_responsive_layout.js"
+    "test:layout": "node test_responsive_layout.js",
+    "test:wallpapers": "node test_user_wallpapers.js"
   },
   "devDependencies": {
     "electron": "45.1.0",
