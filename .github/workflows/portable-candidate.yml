@@ -1,0 +1,72 @@
+name: Istaroth Windows portable candidate
+
+on:
+  push:
+    paths:
+      - .github/workflows/portable-candidate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install dependencies
+        working-directory: app
+        run: npm ci --no-audit --no-fund
+      - name: Validate application and regression tests
+        working-directory: app
+        shell: pwsh
+        run: |
+          npm run check
+          if ($LASTEXITCODE -ne 0) { throw 'Syntax checks failed' }
+          npm run test:startup
+          if ($LASTEXITCODE -ne 0) { throw 'Startup tests failed' }
+          npm run test:v22
+          if ($LASTEXITCODE -ne 0) { throw 'Resin tests failed' }
+          npm run test:settings
+          if ($LASTEXITCODE -ne 0) { throw 'Settings tests failed' }
+      - name: Build portable Windows ZIP without NSIS
+        working-directory: app
+        shell: pwsh
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: |
+          npx electron-builder --win zip --x64 --publish never
+          if ($LASTEXITCODE -ne 0) { throw 'Portable packaging failed' }
+      - name: Validate packaged executable and create checksum
+        working-directory: app
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = (Get-Content 'package.json' -Raw | ConvertFrom-Json).version
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Invalid app version' }
+          $zip = Get-ChildItem dist -File -Filter 'Istaroth-Setup-*.zip' | Select-Object -First 1
+          if (-not $zip) { throw 'Missing portable ZIP' }
+          Add-Type -AssemblyName System.IO.Compression
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($zip.FullName)
+          try {
+            $names = @($archive.Entries | ForEach-Object { $_.FullName.Replace([char]92,[char]47) })
+            if (-not ($names | Where-Object { $_ -match '(^|/)Istaroth[.]exe$' })) { throw 'Missing portable Istaroth.exe' }
+            if (-not ($names | Where-Object { $_ -match '(^|/)resources/app[.]asar$' })) { throw 'Missing app.asar' }
+          } finally { $archive.Dispose() }
+          $target = "Istaroth-v$version-Portable-Windows-x64-UNSIGNED.zip"
+          Move-Item $zip.FullName "dist/$target"
+          $hash = (Get-FileHash "dist/$target" -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -NoNewline -Encoding ascii -Path "dist/$target.sha256" -Value "$hash  $target`n"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Istaroth-Windows-Portable-v1.1.0
+          path: |
+            app/dist/Istaroth-v*-Portable-Windows-x64-UNSIGNED.zip
+            app/dist/Istaroth-v*-Portable-Windows-x64-UNSIGNED.zip.sha256
+          retention-days: 7
+          if-no-files-found: error
