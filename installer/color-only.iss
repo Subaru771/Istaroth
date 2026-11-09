@@ -1,6 +1,6 @@
 ; Istaroth color-only offline installer. Electron runtime is bundled with the app.
 #ifndef AppVersion
-  #define AppVersion "1.1.0"
+  #define AppVersion "1.1.2"
 #endif
 #ifndef AppSource
   #define AppSource "..\app\dist\win-unpacked"
@@ -35,10 +35,23 @@ Source: "{#AppSource}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs 
 
 [Icons]
 Name: "{autoprograms}\Istaroth"; Filename: "{app}\Istaroth.exe"; WorkingDir: "{app}"
-Name: "{autodesktop}\Istaroth"; Filename: "{app}\Istaroth.exe"; WorkingDir: "{app}"; Tasks: desktopicon
-
-[Tasks]
-Name: desktopicon; Description: "Create a desktop shortcut"; GroupDescription: "Additional options:"; Flags: unchecked
+Name: "{userdesktop}\Istaroth"; Filename: "{app}\Istaroth.exe"; WorkingDir: "{app}"
 
 [Run]
 Filename: "{app}\Istaroth.exe"; Description: "Launch Istaroth"; Flags: nowait postinstall skipifsilent
+
+; The older NSIS or portable Istaroth instance uses the same Electron
+; single-instance lock, so starting this new build while the old app runs
+; would silently bring the OLD interface to the front.
+; Close running copies at install time before copying the new executable.
+[Code]
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+  ExitCode: Integer;
+begin
+  Result := '';
+  Log('Closing any previous Istaroth.exe instances so the new version can launch');
+  if not Exec(ExpandConstant('{sys}\taskkill.exe'), '/IM Istaroth.exe /T /F', '',
+    SW_HIDE, ewWaitUntilTerminated, ExitCode) then
+    Log('No running Istaroth process could be closed; Windows may not have taskkill available');
+end;

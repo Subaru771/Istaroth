@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.2 — Windows installer and stale-app launch fix
+
+- The installer now closes running old Istaroth copies before replacing files, preventing Electron's shared single-instance lock from reopening the outdated interface.
+- Automatically creates or replaces the user desktop shortcut, rather than leaving the previously unchecked shortcut to an old installation.
+- Adds a visible v1.1.2 label in Settings so users can confirm which build is running.
+- Windows CI now opens the packaged and installed `app.asar` to verify the correct HTML, stylesheet and application version, and checks the desktop shortcut's target.
+- Keeps the new compact, color-only UI and existing HoYoLAB/account data intact.
+
+
 ## v1.1.1 — Responsive color-only layout fix
 
 - Rebalanced Main Widget typography for compact 510×680 and standard 610×770 windows, including users with older large-font settings.
