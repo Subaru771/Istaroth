@@ -1,6 +1,11 @@
 # Build the latest Istaroth Windows app without downloading Electron or NSIS again.
 # The only runtime source is the SHA-256-verified Istaroth v1.0.1 portable release.
 $ErrorActionPreference = 'Stop'
+$localElectron = Join-Path $env:GITHUB_WORKSPACE 'app\node_modules\electron\dist'
+if (Test-Path (Join-Path $localElectron 'electron.exe')) {
+    $runtime = $localElectron
+    Write-Host 'Using the already-installed locked Electron runtime (no extra downloads).'
+} else {
 $asset = 'Istaroth-v1.0.1-Portable-Windows-x64-UNSIGNED.zip'
 $bootstrap = Join-Path $env:RUNNER_TEMP 'istaroth-bootstrap'
 New-Item -ItemType Directory -Force -Path $bootstrap | Out-Null
@@ -33,6 +38,7 @@ Remove-Item -LiteralPath $asar -Force
 $unpackedAsar = Join-Path $runtime 'resources\app.asar.unpacked'
 if (Test-Path $unpackedAsar) { Remove-Item -LiteralPath $unpackedAsar -Force -Recurse }
 Write-Host 'Trusted Electron base obtained and verified.'
+}
 
 Push-Location (Join-Path $env:GITHUB_WORKSPACE 'app')
 try {
