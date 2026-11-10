@@ -33,6 +33,9 @@ jobs:
       - name: Resin and notification tests
         working-directory: app
         run: npm run test:v22
+      - name: Telegram friend alerts privacy and threshold tests
+        working-directory: app
+        run: npm run test:friends
       - name: Settings layout and wallpaper regression tests
         working-directory: app
         run: npm run test:settings

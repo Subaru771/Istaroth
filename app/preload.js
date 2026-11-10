@@ -27,6 +27,20 @@ contextBridge.exposeInMainWorld('pulseDesktop', Object.freeze({
   securityStatus:()=>ipcRenderer.invoke('security:status'),
   telemetryHistory:()=>ipcRenderer.invoke('telemetry:history'),
   telemetryOptions:opts=>ipcRenderer.invoke('telemetry:options',opts),
+  friendsStatus:()=>ipcRenderer.invoke('friends:status'),
+  friendsConnect:token=>ipcRenderer.invoke('friends:connect',token),
+  friendsDisconnect:()=>ipcRenderer.invoke('friends:disconnect'),
+  friendsPoll:()=>ipcRenderer.invoke('friends:poll'),
+  friendsRecipient:(id,options)=>ipcRenderer.invoke('friends:recipient',id,options),
+  friendsRemove:id=>ipcRenderer.invoke('friends:remove',id),
+  friendsTest:id=>ipcRenderer.invoke('friends:test',id),
+  friendsRotate:()=>ipcRenderer.invoke('friends:rotate'),
+  friendsCopyInvite:()=>ipcRenderer.invoke('friends:copy-invite'),
+  onFriendsStatus:callback=>{
+    const listener=(_event,status)=>callback(status);
+    ipcRenderer.on('friends:status',listener);
+    return ()=>ipcRenderer.removeListener('friends:status',listener);
+  },
   updateStatus:()=>ipcRenderer.invoke('update:status'),
   updateSettings:opts=>ipcRenderer.invoke('update:settings',opts),
   updateCheck:download=>ipcRenderer.invoke('update:check',!!download),
