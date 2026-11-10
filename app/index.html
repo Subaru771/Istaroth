@@ -259,6 +259,12 @@
     <label class="field">Private owner key<input id="cloudOwnerKey" type="password" placeholder="Owner key configured in Cloudflare" spellcheck="false" autocomplete="off"/></label>
     <div class="button-row"><button class="solid-small" id="cloudConnect" type="button">Connect cloud mode</button></div>
     <p class="field-note">You need your own Cloudflare Worker, D1 database and Telegram bot first. Read the cloud setup guide; HoYoLAB cookies, bot tokens and webhook secrets belong in Cloudflare Secrets.</p>
+    <div class="button-row">
+      <button type="button" class="small-quiet" id="cloudGuide">Cloud setup guide</button>
+      <button type="button" class="small-quiet" id="cloudCopyHoyolab">Copy HoYoLAB session (sensitive)</button>
+      <button type="button" class="small-quiet" id="cloudClearClipboard">Clear clipboard</button>
+    </div>
+    <p class="field-note">Only copy your session to paste into your private Cloudflare secret. Treat it like a password. Clear the clipboard immediately afterward.</p>
   </div>
   <div id="cloudControlPanel" class="hidden">
     <div class="button-row">
