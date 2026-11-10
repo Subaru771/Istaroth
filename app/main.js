@@ -169,7 +169,8 @@ function wallpaperBytes(data) {
 const allowedLinks = {
   hoyolab: 'https://www.hoyolab.com/',
   map: 'https://act.hoyolab.com/ys/app/interactive-map/index.html',
-  cloudGuide: 'https://github.com/Subaru771/Istaroth/blob/main/docs/CLOUD_RESIN.md'
+  cloudGuide: 'https://github.com/Subaru771/Istaroth/blob/main/docs/CLOUD_RESIN.md',
+  communityGuide: 'https://github.com/Subaru771/Istaroth/blob/main/docs/COMMUNITY_INTEGRATION.md'
 };
 
 function dataFile() { return path.join(app.getPath('userData'), 'teyvat-pulse-data.json'); }
