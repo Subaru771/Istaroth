@@ -26,6 +26,7 @@ async function run(){
  const f=new FriendAlerts(dir,storage,request);
  assert.equal(f.status().connected,false);
  await f.connect(secret);
+ await new Promise(resolve=>setImmediate(resolve)); // initial background poll may still be finishing
  assert.equal(f.status().connected,true);
  const invite=f.status().inviteUrl.split('start=')[1];
  assert.match(invite,/^join_[A-Za-z0-9_-]+$/);
