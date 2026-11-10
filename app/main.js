@@ -1,6 +1,6 @@
 'use strict';
 
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, Notification, shell, screen, session, powerMonitor, net, safeStorage, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, Notification, shell, screen, session, powerMonitor, net, safeStorage, clipboard, dialog } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const hoyo = require('./hoyolab-sync');
@@ -166,7 +166,8 @@ function wallpaperBytes(data) {
 
 const allowedLinks = {
   hoyolab: 'https://www.hoyolab.com/',
-  map: 'https://act.hoyolab.com/ys/app/interactive-map/index.html'
+  map: 'https://act.hoyolab.com/ys/app/interactive-map/index.html',
+  cloudGuide: 'https://github.com/Subaru771/Istaroth/blob/main/docs/CLOUD_RESIN.md'
 };
 
 function dataFile() { return path.join(app.getPath('userData'), 'teyvat-pulse-data.json'); }
@@ -336,6 +337,20 @@ if (!gotLock) {
     ipcMain.handle('security:status',()=>securityInfo);
     ipcMain.handle('telemetry:history',()=>telemetry.getHistory(selectedRole?.uid));
     ipcMain.handle('telemetry:options',(_event,opts)=>telemetry.options(opts));
+    ipcMain.handle('cloud:copy-hoyolab',async()=>{
+      if(!selectedRole)throw Error('Connect your HoYoLAB account in Istaroth first.');
+      const decision=await dialog.showMessageBox(mainWindow,{
+        type:'warning',title:'Sensitive HoYoLAB session',
+        message:'Copy your authenticated HoYoLAB session to the Windows clipboard?',
+        detail:'This is equivalent to an account access credential. Paste it only into your own Cloudflare Worker secret using wrangler secret put HOYOLAB_COOKIE. Never share it with friends, GitHub, screenshots, or chat messages. Clear the clipboard afterward.',
+        buttons:['Cancel','Copy sensitive session'],defaultId:0,cancelId:0,noLink:true
+      });
+      if(decision.response!==1)return false;
+      const cookie=await hoyo.getAuthHeader(hoyoSession);
+      clipboard.writeText(cookie);
+      return true;
+    });
+    ipcMain.handle('cloud:clear-clipboard',()=>{clipboard.clear();return true;});
     ipcMain.handle('cloud:status',()=>cloudResin.status());
     ipcMain.handle('cloud:configure',async(_event,url,key)=>{
       const result=await cloudResin.configure(url,key);
