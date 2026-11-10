@@ -2,7 +2,7 @@
 /* Istaroth 1.6 — readable tabs, all personal values come from HoYoLAB response.
    No HTML from HoYoLAB is ever injected into the DOM. */
 (() => {
- const panes=['resin','daily','account','explore','combat','cards','history'];
+ const panes=['resin','daily','account','explore','combat','cards','history','community'];
  const get=id=>document.getElementById(id);
  let active='resin', chronicle=null, busy=false, previousIdentity='';
  const has=val=>val!==undefined && val!==null && val!=='';
