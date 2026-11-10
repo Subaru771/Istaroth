@@ -18,7 +18,7 @@ function telegramRequest(token, method, payload) {
       protocol: 'https:', hostname: 'api.telegram.org',
       path: '/bot' + token + '/' + method, method: 'POST',
       headers: {'Content-Type':'application/json','Content-Length':data.length},
-      timeout: 26000
+      timeout: 12000
     }, res => {
       let response = '';
       res.setEncoding('utf8');
@@ -116,7 +116,7 @@ class FriendAlerts {
     this.token=token;this.username=bot.username;this.invite=crypto.randomBytes(18).toString('base64url');
     this.recipients=[];this.offset=0;this.lastError='';
     this.persist();this.changed();
-    await this.poll().catch(()=>{});
+    this.poll().catch(()=>{});
     return this.status();
   }
   disconnect() {
@@ -151,7 +151,7 @@ class FriendAlerts {
     this.polling=(async()=>{
       try {
         const updates=await this.request(this.token,'getUpdates',{
-          offset:this.offset,limit:50,timeout:20,allowed_updates:['message']
+          offset:this.offset,limit:50,timeout:5,allowed_updates:['message']
         });
         if(!Array.isArray(updates))throw Error('Unexpected Telegram updates.');
         let dirty=false;
