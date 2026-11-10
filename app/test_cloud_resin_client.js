@@ -10,7 +10,7 @@ for(const rejected of [
   'https://workers.dev.evil.example','https://evil.example',
   'https://demo.workers.dev/path','https://u:p@demo.workers.dev',
   'https://demo.workers.dev?secret=x'
-])assert.equal(safeWorkerUrl(rejected),'Blocked invalid Worker URL: '+rejected);
+])assert.equal(safeWorkerUrl(rejected),'','Blocked invalid Worker URL: '+rejected);
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'istaroth-cloud-tests-'));
 try{
   const encryption={
