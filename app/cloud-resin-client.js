@@ -99,7 +99,8 @@ class CloudResinClient{
       remove:'/api/remove',test:'/api/test',pause:'/api/pause',resume:'/api/resume'};
     if(!Object.hasOwn(routes,name))throw Error('Unsupported cloud command.');
     const body=['recipient','remove','test'].includes(name)?payload:null;
-    await requestJson(this.origin,this.key,'POST',routes[name],body);
+    const result=await requestJson(this.origin,this.key,'POST',routes[name],body);
+    if(result?.ok===false)throw Error(result.error||'Cloud operation could not complete.');
     return this.status();
   }
 }
