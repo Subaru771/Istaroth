@@ -18,7 +18,7 @@ function telegramRequest(token, method, payload) {
       protocol: 'https:', hostname: 'api.telegram.org',
       path: '/bot' + token + '/' + method, method: 'POST',
       headers: {'Content-Type':'application/json','Content-Length':data.length},
-      timeout: 12000
+      timeout: 26000
     }, res => {
       let response = '';
       res.setEncoding('utf8');
@@ -151,7 +151,7 @@ class FriendAlerts {
     this.polling=(async()=>{
       try {
         const updates=await this.request(this.token,'getUpdates',{
-          offset:this.offset,limit:50,timeout:0,allowed_updates:['message']
+          offset:this.offset,limit:50,timeout:20,allowed_updates:['message']
         });
         if(!Array.isArray(updates))throw Error('Unexpected Telegram updates.');
         let dirty=false;
@@ -180,7 +180,7 @@ class FriendAlerts {
           }
         }
         if(dirty){this.persist();this.changed();}
-        this.lastError='';
+        if(this.lastError){this.lastError='';this.changed();}
       }catch(e){
         this.lastError=e.message==='Unexpected Telegram updates.'?e.message:'Telegram connection unavailable or another app is polling this bot.';
         this.changed();
@@ -208,7 +208,7 @@ class FriendAlerts {
     return this.status();
   }
   async notify(resin,role,quiet=false,now=Date.now()) {
-    if(!this.token || quiet || !role?.uid || !resin || now-Number(resin.at)>FRESH_MS ||
+    if(!this.token || quiet || !role?.uid || !resin || !Number.isFinite(Number(resin.at)) || now-Number(resin.at)>FRESH_MS ||
       Number(resin.at)>now+60000 || !Number.isInteger(resin.amount) ||
       !Number.isInteger(resin.cap) || resin.amount<0 || resin.amount>resin.cap)return;
     if(this.sending)return this.sending;
