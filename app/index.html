@@ -5,7 +5,7 @@
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" http-equiv="Content-Security-Policy"/>
 <meta content="light" name="color-scheme"/><title>Istaroth v1.1.3 · Color Themes + Your Wallpapers</title>
-<link href="assets/icon.png" rel="icon"/><link href="styles.css" rel="stylesheet"/><link href="refined.css" rel="stylesheet"/><link href="chronicle.css" rel="stylesheet"/><link href="celestial.css" rel="stylesheet"/><link href="regional-themes.css" rel="stylesheet"/><link href="mini-widget.css" rel="stylesheet"/><link href="v22.css" rel="stylesheet"/><link href="istaroth-theme.css" rel="stylesheet"/><link href="realm-themes.css" rel="stylesheet"/><link href="atelier-v243.css" rel="stylesheet"/><link href="atelier-v244.css" rel="stylesheet"/><link href="atelier-v248.css" rel="stylesheet"/><link href="atelier-v2410.css" rel="stylesheet"/><link href="atelier-v2412.css" rel="stylesheet"/><link href="wallpaper-v2413.css" rel="stylesheet"/><link href="wallpaper-v2414.css" rel="stylesheet"/><link href="wallpaper-v2415.css" rel="stylesheet"/><link href="wallpaper-v2417.css" rel="stylesheet"/><link href="done-theme-v2418.css" rel="stylesheet"/><link href="settings-compact.css" rel="stylesheet"/><link href="color-only.css" rel="stylesheet"/><link href="layout-rescue.css" rel="stylesheet"/><link href="custom-wallpapers.css" rel="stylesheet"/><link href="friends.css" rel="stylesheet"/><link href="cloud-friends.css" rel="stylesheet"/>
+<link href="assets/icon.png" rel="icon"/><link href="styles.css" rel="stylesheet"/><link href="refined.css" rel="stylesheet"/><link href="chronicle.css" rel="stylesheet"/><link href="celestial.css" rel="stylesheet"/><link href="regional-themes.css" rel="stylesheet"/><link href="mini-widget.css" rel="stylesheet"/><link href="v22.css" rel="stylesheet"/><link href="istaroth-theme.css" rel="stylesheet"/><link href="realm-themes.css" rel="stylesheet"/><link href="atelier-v243.css" rel="stylesheet"/><link href="atelier-v244.css" rel="stylesheet"/><link href="atelier-v248.css" rel="stylesheet"/><link href="atelier-v2410.css" rel="stylesheet"/><link href="atelier-v2412.css" rel="stylesheet"/><link href="wallpaper-v2413.css" rel="stylesheet"/><link href="wallpaper-v2414.css" rel="stylesheet"/><link href="wallpaper-v2415.css" rel="stylesheet"/><link href="wallpaper-v2417.css" rel="stylesheet"/><link href="done-theme-v2418.css" rel="stylesheet"/><link href="settings-compact.css" rel="stylesheet"/><link href="color-only.css" rel="stylesheet"/><link href="layout-rescue.css" rel="stylesheet"/><link href="custom-wallpapers.css" rel="stylesheet"/><link href="friends.css" rel="stylesheet"/><link href="cloud-friends.css" rel="stylesheet"/><link href="community-integration.css" rel="stylesheet"/>
 </head>
 <body>
 <svg aria-hidden="true" class="svg-defs" xmlns="http://www.w3.org/2000/svg">
@@ -43,6 +43,7 @@
 <button aria-selected="false" class="dash-tab" data-dash="combat" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">⚔</span><span class="tab-caption">Combat</span></button>
 <button aria-selected="false" class="dash-tab" data-dash="cards" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">♢</span><span class="tab-caption">TCG</span></button>
 <button aria-selected="false" class="dash-tab" data-dash="history" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">◷</span><span class="tab-caption">History</span></button>
+<button aria-selected="false" class="dash-tab" data-dash="community" role="tab" type="button"><span aria-hidden="true" class="tab-symbol">♧</span><span class="tab-caption">Community</span></button>
 </nav>
 <div aria-label="Resin tracker" class="dash-pane active" id="pane-resin" role="tabpanel">
 <div class="headline">
@@ -82,6 +83,37 @@
 <section aria-label="Combat records" class="dash-pane hidden" id="pane-combat" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">BATTLE RECORDS · V</span><h2>Challenges</h2></div><button aria-label="Refresh challenges" class="dash-refresh" data-refresh="chronicle" type="button">↻</button></div><div class="dash-content" id="dash-combat"></div></section>
 <section aria-label="Genius Invokation" class="dash-pane hidden" id="pane-cards" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">GENIUS INVOKATION · VI</span><h2>TCG collection</h2></div><button aria-label="Refresh TCG" class="dash-refresh" data-refresh="chronicle" type="button">↻</button></div><div class="dash-content" id="dash-cards"></div></section>
 <section aria-label="Resin readings history" class="dash-pane hidden" id="pane-history" role="tabpanel"><div class="dash-head"><div><span class="dash-eyebrow">THE RESIN LEDGER · VII</span><h2>Resin history</h2></div><button aria-label="Refresh local readings" class="dash-refresh" id="historyRefresh" type="button">↻</button></div><div class="dash-content" id="dash-history"><p class="field-note">Loading local HoYoLAB readings…</p></div></section>
+<section aria-label="Istaroth Community" class="dash-pane hidden" id="pane-community" role="tabpanel">
+  <div class="community-heading"><div><span class="dash-eyebrow">ISTAROTH · RESIN TOGETHER</span><h2>Community</h2><p>Share resin alerts with selected friends. The cloud keeps working while your PC is off.</p></div>
+    <span id="communityState" class="community-state" role="status">Not connected</span>
+  </div>
+  <div id="communitySetup" class="community-setup">
+    <div class="community-setup-card">
+      <strong>Connect your Community service</strong>
+      <p>Deploy the Istaroth Community web app once. Everyone can then sign in through Telegram without installing a Worker.</p>
+      <label for="communityUrl">Cloudflare Community URL</label>
+      <input id="communityUrl" type="url" autocomplete="url" spellcheck="false" placeholder="https://istaroth-community.yourname.workers.dev"/>
+      <div class="community-actions">
+        <button class="solid-small" id="communityConnect" type="button">Connect Community</button>
+        <button class="small-quiet" id="communityGuide" type="button">Deployment guide</button>
+      </div>
+      <p id="communitySetupMessage" class="field-note" role="status">Your local HoYoLAB account stays separate. Connecting a URL never sends your credentials to it.</p>
+    </div>
+  </div>
+  <div id="communityConnected" class="community-connected hidden">
+    <div class="community-toolbar">
+      <span id="communityOrigin" class="community-origin" title="Connected Community Worker"></span>
+      <div class="community-actions">
+        <button class="small-quiet" id="communityExpand" type="button">Expand</button>
+        <button class="small-quiet" id="communityReload" type="button">Reload</button>
+        <button class="small-quiet" id="communityCopySession" type="button">Copy HoYoLAB session</button>
+        <button class="small-quiet" id="communityForget" type="button">Disconnect</button>
+      </div>
+    </div>
+    <div class="community-viewport" id="communityViewport"><div class="community-waiting">Opening Community securely…</div></div>
+    <div class="community-foot"><span>Separate Telegram login · Nothing is uploaded automatically</span><button class="community-text-btn" type="button" id="communityClearClipboard">Clear clipboard</button></div>
+  </div>
+</section>
 </main>
 <main aria-label="Mini Original Resin widget" class="mini-screen hidden" id="miniScreen"><div class="mini-wallpaper-layer" aria-hidden="true"></div>
 <div class="mini-inner">
@@ -293,4 +325,5 @@
 <script defer="" src="chronicle-ui.js"></script>
 <script defer="" src="friends-ui.js"></script>
 <script defer="" src="cloud-friends-ui.js"></script>
+<script defer="" src="community-ui.js"></script>
 </body></html>
