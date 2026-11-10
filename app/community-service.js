@@ -47,7 +47,7 @@ function probeCommunity(origin,request=https){
         try{
           const obj=JSON.parse(text);
           healthy=response.statusCode===200 && typeof obj==='object' &&
-            (obj.ok===true||obj.status==='online'||obj.status==='ok');
+            (obj.online===true||obj.ok===true||obj.status==='online'||obj.status==='ok');
         }catch{}
         resolve({online:healthy,reason:healthy?'Connected':response.statusCode===404?'App health endpoint not found':'Server did not confirm its readiness'});
       });
