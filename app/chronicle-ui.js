@@ -2,7 +2,7 @@
 /* Istaroth 1.6 — readable tabs, all personal values come from HoYoLAB response.
    No HTML from HoYoLAB is ever injected into the DOM. */
 (() => {
- const panes=['resin','daily','account','explore','combat','cards','history'];
+ const panes=['resin','daily','account','explore','combat','cards','history','community'];
  const get=id=>document.getElementById(id);
  let active='resin', chronicle=null, busy=false, previousIdentity='';
  const has=val=>val!==undefined && val!==null && val!=='';
@@ -87,6 +87,7 @@
  function activate(tab){if(!panes.includes(tab))return;active=tab;
   document.querySelectorAll('[data-dash]').forEach(b=>{const on=b.dataset.dash===tab;b.classList.toggle('active',on);b.setAttribute('aria-selected',String(on));});
   panes.forEach(key=>get('pane-'+key).classList.toggle('hidden',key!==tab));
+  window.dispatchEvent(new CustomEvent('istaroth:dashboard-tab',{detail:{tab}}));
   paint(tab);if(tab==='history')window.dispatchEvent(new Event('pulse:history'));get('widgetScreen').scrollTo?.({top:0,behavior:'instant'});
   // Never replace user-chosen design or the manually controlled resin settings.
  }
