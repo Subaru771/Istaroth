@@ -1,0 +1,15 @@
+/* First-party Istaroth Community dashboard; respects existing palette and wallpapers. */
+.community-section{display:grid;gap:14px;padding:12px 14px 25px;min-width:0}
+.community-hero{display:flex;align-items:center;gap:14px;padding:20px 16px;border-radius:16px;background:color-mix(in srgb,currentColor 6%,transparent);border:1px solid color-mix(in srgb,currentColor 15%,transparent)}
+.community-crest{width:56px;height:56px;display:grid;place-items:center;flex:none;border-radius:18px;border:1px solid currentColor;font-size:30px;opacity:.75}
+.community-hero strong{font-size:1.17rem;letter-spacing:.02em}
+.community-hero p{font-size:.86rem;line-height:1.5;margin:5px 0 0;opacity:.78}
+.community-state{font-size:.87rem;padding:10px 12px;border-left:2px solid currentColor;background:color-mix(in srgb,currentColor 5%,transparent);overflow-wrap:anywhere}
+.community-connect,.community-actions{display:grid;gap:12px;min-width:0}
+.community-connect.hidden,.community-actions.hidden{display:none!important}
+.community-connect input{width:100%;min-width:0}
+.community-connect .button-row,.community-actions .button-row{display:flex;flex-wrap:wrap;gap:8px}
+.community-features{display:flex;flex-wrap:wrap;gap:8px}
+.community-features span{font-size:.74rem;border-radius:999px;padding:7px 10px;border:1px solid color-mix(in srgb,currentColor 18%,transparent);opacity:.8}
+#communityAddress{overflow-wrap:anywhere}
+@media(max-width:490px){.community-hero{padding:13px;gap:9px}.community-crest{width:42px;height:42px;font-size:23px}.community-section{padding:8px}}

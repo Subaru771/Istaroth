@@ -31,6 +31,10 @@ The original v1.0.1 downloadable release predates these changes. Later preview r
 - **Local history and alerts** with configurable quiet hours.
 - **Optional Telegram friend alerts** with private opt-in links, per-friend 160/180/190/200 thresholds, encrypted bot-token storage, and unsubscribe. Use local mode with the PC running ([guide](docs/FRIEND_ALERTS.md)), or a **private Cloudflare Worker** for notifications with the PC completely off ([cloud setup](docs/CLOUD_RESIN.md)).
 
+## Istaroth Community — now on the Windows dashboard
+
+The new **Community** dashboard tab connects Istaroth to the shared multi-user Community app. It opens Telegram sign-in, cross-device resin alerts and friends in an isolated Istaroth window, **once the Community backend has been deployed**. The desktop version does not upload your HoYoLAB session automatically. Personal cloud alerts in Settings → Alerts remain separate. [Community deployment and integration guide](docs/COMMUNITY_INTEGRATION.md).
+
 ## Updating to the color-only build
 
 The current source is **Istaroth v1.1.3**, with seven Settings tabs, no built-in illustrated themes, and optional user-provided wallpapers. The downloadable v1.0.1 release has the old appearance.

@@ -9,6 +9,7 @@ const {createStartupService} = require('./windows-startup');
 const {ResinTelemetry, inQuiet} = require('./resin-telemetry');
 const {FriendAlerts} = require('./friend-alerts');
 const {CloudResinClient} = require('./cloud-resin-client');
+const {CommunityService} = require('./community-service');
 const {trayPng} = require('./tray-icon');
 const {UpdateService} = require('./update-service');
 
@@ -36,7 +37,7 @@ let refreshMinutes = 15;
 let autoRefresh = true;
 let refreshTimer = null;
 let startupService=null;
-let telemetry=null;let friendAlerts=null;let cloudResin=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
+let telemetry=null;let friendAlerts=null;let cloudResin=null;let community=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
 let securityInfo={partition:'isolated HoYoLAB session',encryption:'checking'};
 let chronicleState = null;
 let chronicleTask = null;
@@ -321,6 +322,7 @@ if (!gotLock) {
     auditSessionSecurity().catch(()=>{});
     telemetry=new ResinTelemetry(app.getPath('userData'));
     cloudResin=new CloudResinClient(app.getPath('userData'),safeStorage);
+    community=new CommunityService(app.getPath('userData'),{BrowserWindow,shell,session,icon:path.join(__dirname,'assets','icon.png')});
     friendAlerts=new FriendAlerts(app.getPath('userData'),safeStorage,undefined,status=>{
       if(mainWindow&&!mainWindow.isDestroyed()) mainWindow.webContents.send('friends:status',status);
     });
@@ -351,6 +353,11 @@ if (!gotLock) {
       return true;
     });
     ipcMain.handle('cloud:clear-clipboard',()=>{clipboard.clear();return true;});
+    ipcMain.handle('community:status',()=>community.status());
+    ipcMain.handle('community:configure',(_event,url)=>community.configure(url));
+    ipcMain.handle('community:disconnect',()=>community.disconnect());
+    ipcMain.handle('community:check',()=>community.check());
+    ipcMain.handle('community:open',()=>community.open());
     ipcMain.handle('cloud:status',()=>cloudResin.status());
     ipcMain.handle('cloud:configure',async(_event,url,key)=>{
       const result=await cloudResin.configure(url,key);
