@@ -1,0 +1,12 @@
+{
+  "name": "istaroth-cloud-resin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Opt-in Cloudflare Worker for automatic Genshin resin and Telegram friends alerts",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "deploy": "wrangler deploy",
+    "db:apply": "wrangler d1 migrations apply istaroth-resin --remote"
+  }
+}
