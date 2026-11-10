@@ -1,0 +1,23 @@
+name = "istaroth-cloud-resin"
+main = "src/index.js"
+compatibility_date = "2026-11-10"
+workers_dev = true
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "istaroth-resin"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+# These are public profile settings, NOT secrets. Replace UID and region.
+[vars]
+ROLE_UID = "000000000"
+ROLE_REGION = "os_asia"
+ROLE_NAME = "Traveler"
+TIMEZONE = "Asia/Baghdad"
+# Quiet hours are optional; remove both or keep these defaults.
+QUIET_START = "23:00"
+QUIET_END = "08:00"
