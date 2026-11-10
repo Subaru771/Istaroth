@@ -9,6 +9,8 @@ const {createStartupService} = require('./windows-startup');
 const {ResinTelemetry, inQuiet} = require('./resin-telemetry');
 const {FriendAlerts} = require('./friend-alerts');
 const {CloudResinClient} = require('./cloud-resin-client');
+const {CommunityLink} = require('./community-integration');
+const {CommunityView} = require('./community-view');
 const {trayPng} = require('./tray-icon');
 const {UpdateService} = require('./update-service');
 
@@ -36,7 +38,7 @@ let refreshMinutes = 15;
 let autoRefresh = true;
 let refreshTimer = null;
 let startupService=null;
-let telemetry=null;let friendAlerts=null;let cloudResin=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
+let telemetry=null;let friendAlerts=null;let cloudResin=null;let communityLink=null;let communityView=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
 let securityInfo={partition:'isolated HoYoLAB session',encryption:'checking'};
 let chronicleState = null;
 let chronicleTask = null;
@@ -300,7 +302,7 @@ function createWindow() {
     if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.setZoomFactor(1);
   });
   mainWindow.once('ready-to-show', () => mainWindow?.show());
-  mainWindow.on('closed', () => { mainWindow = null; });
+  mainWindow.on('closed', () => { communityView?.destroy(); mainWindow = null; });
   mainWindow.on('close', (event) => {
     if (!allowQuit && closeToTray && tray && !tray.isDestroyed()) { event.preventDefault(); mainWindow.hide(); }
   });
@@ -321,6 +323,10 @@ if (!gotLock) {
     auditSessionSecurity().catch(()=>{});
     telemetry=new ResinTelemetry(app.getPath('userData'));
     cloudResin=new CloudResinClient(app.getPath('userData'),safeStorage);
+    communityLink=new CommunityLink(app.getPath('userData'));
+    communityView=new CommunityView(()=>mainWindow,status=>{
+      if(mainWindow&&!mainWindow.isDestroyed())mainWindow.webContents.send('community:state',status);
+    });
     friendAlerts=new FriendAlerts(app.getPath('userData'),safeStorage,undefined,status=>{
       if(mainWindow&&!mainWindow.isDestroyed()) mainWindow.webContents.send('friends:status',status);
     });
@@ -337,6 +343,52 @@ if (!gotLock) {
     ipcMain.handle('security:status',()=>securityInfo);
     ipcMain.handle('telemetry:history',()=>telemetry.getHistory(selectedRole?.uid));
     ipcMain.handle('telemetry:options',(_event,opts)=>telemetry.options(opts));
+    // Community is a separate hosted multi-user app, not the single-user cloud
+    // Worker. Its view has an isolated Chromium partition and no Node preload.
+    const requireLocalSender=event=>{
+      if(!mainWindow||mainWindow.isDestroyed()||event.sender!==mainWindow.webContents)
+        throw Error('This operation is restricted to the local Istaroth window.');
+    };
+    ipcMain.handle('community:status',event=>{
+      requireLocalSender(event);return communityLink.status();
+    });
+    ipcMain.handle('community:connect',async(event,url)=>{
+      requireLocalSender(event);
+      const previous=communityLink.url;
+      // Strict URL validation runs before destroying any existing login.
+      const valid=require('./community-integration').safeCommunityUrl(url);
+      if(!valid)throw Error('Use your deployed Istaroth Community workers.dev URL.');
+      if(previous&&previous!==valid)await communityView.disconnect();
+      return communityLink.connect(url);
+    });
+    ipcMain.handle('community:show',(event,active,rect)=>{
+      requireLocalSender(event);
+      return active===true?communityView.show(communityLink.url,rect):(communityView.hide(),true);
+    });
+    ipcMain.handle('community:reload',event=>{
+      requireLocalSender(event);return communityView.reload();
+    });
+    ipcMain.handle('community:disconnect',async event=>{
+      requireLocalSender(event);
+      await communityView.disconnect();
+      return communityLink.disconnect();
+    });
+    ipcMain.handle('community:copy-hoyolab',async event=>{
+      requireLocalSender(event);
+      if(!selectedRole)throw Error('Connect your own HoYoLAB account to Istaroth first.');
+      const decision=await dialog.showMessageBox(mainWindow,{
+        type:'warning',title:'Sensitive HoYoLAB session · Community',
+        message:'Copy your authenticated HoYoLAB session to the clipboard?',
+        detail:'The Community cloud service operator can decrypt this session once you paste it there. Only do this for a server you own or fully trust. Istaroth will NOT upload the credential automatically. Clear your clipboard after pasting.',
+        buttons:['Cancel','Copy session (sensitive)'],defaultId:0,cancelId:0,noLink:true
+      });
+      if(decision.response!==1)return false;
+      clipboard.writeText(await hoyo.getAuthHeader(hoyoSession));
+      return true;
+    });
+    ipcMain.handle('community:clear-clipboard',event=>{
+      requireLocalSender(event);clipboard.clear();return true;
+    });
     ipcMain.handle('cloud:copy-hoyolab',async()=>{
       if(!selectedRole)throw Error('Connect your HoYoLAB account in Istaroth first.');
       const decision=await dialog.showMessageBox(mainWindow,{
@@ -490,7 +542,7 @@ if (!gotLock) {
     });
     ipcMain.handle('window:size', (_event, mode) => {
       if (!mainWindow || mainWindow.isDestroyed()) return false;
-      const sizes = { mini: [360, 296], floating: [360, 248], compact: [510, 680], standard: [610, 770], settings: [1060, 970] };
+      const sizes = { mini: [360, 296], floating: [360, 248], compact: [510, 680], standard: [610, 770], settings: [1060, 970], community: [1000, 870] };
       const desired = sizes[mode];
       if (!desired) return false;
       const display = screen.getDisplayMatching(mainWindow.getBounds());
@@ -538,7 +590,7 @@ if (!gotLock) {
     });
     try { createTray(); } catch (err) { console.error('Tray unavailable', err); }
     createWindow();
-    friendAlerts.start();
+    if(!cloudResin.isConfigured())friendAlerts.start();
     // Updates run even while hidden, with backoff on API failures.
     latestOnline=net.isOnline();
     powerMonitor.on('resume',()=>{setTimeout(()=>reconnectSync('wake'),3500);});
@@ -555,7 +607,7 @@ if (!gotLock) {
     if (selectedRole && autoRefresh) setTimeout(() => refreshLive().catch(() => {}), 3500);
   });
   app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
-  app.on('before-quit', () => { allowQuit = true; clearInterval(refreshTimer); friendAlerts?.stop(); });
+  app.on('before-quit', () => { allowQuit = true; clearInterval(refreshTimer); friendAlerts?.stop(); communityView?.destroy(); });
   app.on('activate', () => {
     if (!mainWindow) createWindow();
     else showWindow();
