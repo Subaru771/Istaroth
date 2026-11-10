@@ -1,0 +1,14 @@
+/* Optional Cloudflare hosted alerts; preserve all existing theme/wallpaper rules. */
+.settings-screen #cloudControlPanel { display:grid; gap:12px; min-width:0; }
+.settings-screen #cloudControlPanel.hidden,
+.settings-screen #cloudConnectPanel.hidden { display:none !important; }
+.settings-screen #friendsSetup.cloud-connected #friendConnectPanel,
+.settings-screen #friendsSetup.cloud-connected #friendInvitePanel,
+.settings-screen #friendsSetup.cloud-connected #friendHelp { display:none !important; }
+.settings-screen #cloudControlPanel .button-row { display:flex; flex-wrap:wrap; gap:8px; }
+.settings-screen #cloudControlPanel .field,
+.settings-screen #cloudConnectPanel .field { min-width:0; max-width:100%; }
+.settings-screen #cloudControlPanel input,
+.settings-screen #cloudConnectPanel input { width:100%; min-width:0; max-width:100%; }
+.settings-screen #cloudControlPanel #cloudDetail { overflow-wrap:anywhere; }
+.settings-screen #cloudControlPanel #cloudPeople { display:grid; gap:8px; }
