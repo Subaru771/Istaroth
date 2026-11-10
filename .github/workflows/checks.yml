@@ -43,6 +43,9 @@ jobs:
       - name: Validate encrypted desktop Cloudflare connection
         working-directory: app
         run: npm run test:cloud
+      - name: Community URL, sandbox, IPC and original UI regression tests
+        working-directory: app
+        run: npm run test:community
       - name: Settings layout and wallpaper regression tests
         working-directory: app
         run: npm run test:settings
