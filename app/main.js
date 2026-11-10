@@ -1,12 +1,13 @@
 'use strict';
 
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, Notification, shell, screen, session, powerMonitor, net, safeStorage } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, Notification, shell, screen, session, powerMonitor, net, safeStorage, clipboard } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const hoyo = require('./hoyolab-sync');
 const chronicleApi = require('./chronicle-sync');
 const {createStartupService} = require('./windows-startup');
-const {ResinTelemetry} = require('./resin-telemetry');
+const {ResinTelemetry, inQuiet} = require('./resin-telemetry');
+const {FriendAlerts} = require('./friend-alerts');
 const {trayPng} = require('./tray-icon');
 const {UpdateService} = require('./update-service');
 
@@ -34,7 +35,7 @@ let refreshMinutes = 15;
 let autoRefresh = true;
 let refreshTimer = null;
 let startupService=null;
-let telemetry=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
+let telemetry=null;let friendAlerts=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
 let securityInfo={partition:'isolated HoYoLAB session',encryption:'checking'};
 let chronicleState = null;
 let chronicleTask = null;
@@ -212,6 +213,11 @@ function tickTelemetry() {
   if(!liveNotes||!selectedRole||!telemetry)return;
   const alert=telemetry.shouldAlert(liveNotes,selectedRole.uid);
   if(alert&&Notification.isSupported())new Notification({...alert,icon:path.join(__dirname,'assets','icon.png')}).show();
+  if(friendAlerts){
+    const estimated=estimatedResin();
+    const quiet=inQuiet(Date.now(),telemetry.options());
+    friendAlerts.notify(estimated,selectedRole,quiet).catch(()=>{});
+  }
 }
 async function reconnectSync(reason='network') {
   if(!selectedRole||!autoRefresh||refreshInFlight||!net.isOnline()||Date.now()<nextRetryAt)return false;
@@ -312,6 +318,9 @@ if (!gotLock) {
     // Authentication cookies remain in Chromium's dedicated persisted session; never saved in JS settings.
     auditSessionSecurity().catch(()=>{});
     telemetry=new ResinTelemetry(app.getPath('userData'));
+    friendAlerts=new FriendAlerts(app.getPath('userData'),safeStorage,undefined,status=>{
+      if(mainWindow&&!mainWindow.isDestroyed()) mainWindow.webContents.send('friends:status',status);
+    });
     updates=new UpdateService(app.getPath('userData'),app.getVersion());
     loadAccountConfig();
     startupService=createStartupService(app,{env:process.env,execPath:process.execPath,isPackaged:app.isPackaged,appPath:app.getAppPath(),isBundled:fs.existsSync(path.join(path.dirname(process.execPath),'resources','app','package.json'))},path.join(app.getPath('userData'),'startup-preference.json'));
@@ -325,6 +334,20 @@ if (!gotLock) {
     ipcMain.handle('security:status',()=>securityInfo);
     ipcMain.handle('telemetry:history',()=>telemetry.getHistory(selectedRole?.uid));
     ipcMain.handle('telemetry:options',(_event,opts)=>telemetry.options(opts));
+    ipcMain.handle('friends:status',()=>friendAlerts.status());
+    ipcMain.handle('friends:connect',(_event,token)=>friendAlerts.connect(token));
+    ipcMain.handle('friends:disconnect',()=>friendAlerts.disconnect());
+    ipcMain.handle('friends:poll',()=>friendAlerts.poll());
+    ipcMain.handle('friends:recipient',(_event,id,changes)=>friendAlerts.setRecipient(id,changes));
+    ipcMain.handle('friends:remove',(_event,id)=>friendAlerts.removeRecipient(id));
+    ipcMain.handle('friends:test',(_event,id)=>friendAlerts.test(id));
+    ipcMain.handle('friends:rotate',()=>friendAlerts.rotateInvite());
+    ipcMain.handle('friends:copy-invite',()=>{
+      const value=friendAlerts.status().inviteUrl;
+      if(!value)return false;
+      clipboard.writeText(value);
+      return true;
+    });
     ipcMain.handle('update:status',()=>updates.status());
     ipcMain.handle('update:settings',(_event,opts)=>updates.settings(opts));
     ipcMain.handle('update:check',(_event,download)=>updates.check(!!download));
@@ -478,6 +501,7 @@ if (!gotLock) {
     });
     try { createTray(); } catch (err) { console.error('Tray unavailable', err); }
     createWindow();
+    friendAlerts.start();
     // Updates run even while hidden, with backoff on API failures.
     latestOnline=net.isOnline();
     powerMonitor.on('resume',()=>{setTimeout(()=>reconnectSync('wake'),3500);});
@@ -494,7 +518,7 @@ if (!gotLock) {
     if (selectedRole && autoRefresh) setTimeout(() => refreshLive().catch(() => {}), 3500);
   });
   app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
-  app.on('before-quit', () => { allowQuit = true; clearInterval(refreshTimer); });
+  app.on('before-quit', () => { allowQuit = true; clearInterval(refreshTimer); friendAlerts?.stop(); });
   app.on('activate', () => {
     if (!mainWindow) createWindow();
     else showWindow();
