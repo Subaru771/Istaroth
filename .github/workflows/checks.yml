@@ -36,6 +36,13 @@ jobs:
       - name: Telegram friend alerts privacy and threshold tests
         working-directory: app
         run: npm run test:friends
+      - name: Validate cloud-hosted resin API, privacy, deduplication and Telegram opt-in
+        run: |
+          cd cloud
+          npm test
+      - name: Validate encrypted desktop Cloudflare connection
+        working-directory: app
+        run: npm run test:cloud
       - name: Settings layout and wallpaper regression tests
         working-directory: app
         run: npm run test:settings
