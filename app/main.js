@@ -359,6 +359,15 @@ if (!gotLock) {
       // Strict URL validation runs before destroying any existing login.
       const valid=require('./community-integration').safeCommunityUrl(url);
       if(!valid)throw Error('Use your deployed Istaroth Community workers.dev URL.');
+      if(previous!==valid){
+        const decision=await dialog.showMessageBox(mainWindow,{
+          type:'warning',title:'Trust your Community server',
+          message:'Connect Istaroth to this Community service?',
+          detail:valid+'\n\nThis address can be owned by anyone with a Cloudflare account. Connecting does not share credentials, but a future HoYoLAB session you manually enter into the hosted page can be accessed by that server operator. Only proceed if you operate or trust this service.',
+          buttons:['Cancel','Connect to trusted service'],defaultId:0,cancelId:0,noLink:true
+        });
+        if(decision.response!==1)throw Error('Community connection cancelled.');
+      }
       if(previous&&previous!==valid)await communityView.disconnect();
       return communityLink.connect(url);
     });
