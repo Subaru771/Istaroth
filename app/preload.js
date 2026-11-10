@@ -27,6 +27,8 @@ contextBridge.exposeInMainWorld('pulseDesktop', Object.freeze({
   securityStatus:()=>ipcRenderer.invoke('security:status'),
   telemetryHistory:()=>ipcRenderer.invoke('telemetry:history'),
   telemetryOptions:opts=>ipcRenderer.invoke('telemetry:options',opts),
+  cloudCopyHoyolab:()=>ipcRenderer.invoke('cloud:copy-hoyolab'),
+  cloudClearClipboard:()=>ipcRenderer.invoke('cloud:clear-clipboard'),
   cloudStatus:()=>ipcRenderer.invoke('cloud:status'),
   cloudConfigure:(url,key)=>ipcRenderer.invoke('cloud:configure',url,key),
   cloudDisconnect:()=>ipcRenderer.invoke('cloud:disconnect'),
