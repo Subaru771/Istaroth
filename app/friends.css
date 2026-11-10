@@ -1,0 +1,66 @@
+/* Istaroth shared-resin alerts: compact, image-free, local styling. */
+.settings-screen .friends-setup {
+  display: grid;
+  gap: 12px;
+  padding: 6px 0 16px;
+}
+.settings-screen .friends-setup .field-note { margin: 0; line-height: 1.5; }
+.settings-screen .friends-setup .connection-state { margin: 0; }
+.settings-screen .friends-connect { display: grid; gap: 10px; }
+.settings-screen .friends-connect .field,
+.settings-screen #friendInvitePanel .field { min-width: 0; }
+.settings-screen .friends-setup input {
+  max-width: 100%;
+  min-width: 0;
+  font-size: 14px;
+}
+.settings-screen #friendInvitePanel { display: grid; gap: 12px; min-width: 0; }
+.settings-screen #friendInvitePanel.hidden,
+.settings-screen #friendConnectPanel.hidden { display: none !important; }
+.settings-screen .friends-heading { display: grid; gap: 3px; margin-top: 4px; }
+.settings-screen .friends-heading strong { font-size: 15px; }
+.settings-screen .friends-heading small { font-size: 12px; opacity: .7; }
+.settings-screen .friend-people { display: grid; gap: 8px; }
+.settings-screen .friend-person {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(115px, 140px) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid rgba(116,137,151,.25);
+  border-radius: 13px;
+  background: rgba(255,255,255,.035);
+}
+.settings-screen .friend-person-details { display: grid; gap: 3px; min-width: 0; }
+.settings-screen .friend-person-details strong { overflow-wrap: anywhere; font-size: 14px; }
+.settings-screen .friend-person-details small { opacity: .7; font-size: 11px; }
+.settings-screen .friend-person select {
+  width: 100%;
+  min-width: 0;
+  font: inherit;
+  font-size: 13px;
+  padding: 7px;
+  border-radius: 9px;
+}
+.settings-screen .friend-person-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.settings-screen .friend-person-actions button {
+  min-height: 32px;
+  padding: 6px 9px;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .settings-screen .friend-person { grid-template-columns: 1fr minmax(110px, 135px); }
+  .settings-screen .friend-person-actions { grid-column: 1 / -1; justify-content: flex-start; }
+}
+@media (max-width: 500px) {
+  .settings-screen .friend-person { grid-template-columns: 1fr; }
+  .settings-screen .friend-person-actions { grid-column: auto; }
+  .settings-screen .friend-person select { max-width: 180px; }
+}
