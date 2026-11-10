@@ -5,7 +5,7 @@
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" http-equiv="Content-Security-Policy"/>
 <meta content="light" name="color-scheme"/><title>Istaroth v1.1.3 · Color Themes + Your Wallpapers</title>
-<link href="assets/icon.png" rel="icon"/><link href="styles.css" rel="stylesheet"/><link href="refined.css" rel="stylesheet"/><link href="chronicle.css" rel="stylesheet"/><link href="celestial.css" rel="stylesheet"/><link href="regional-themes.css" rel="stylesheet"/><link href="mini-widget.css" rel="stylesheet"/><link href="v22.css" rel="stylesheet"/><link href="istaroth-theme.css" rel="stylesheet"/><link href="realm-themes.css" rel="stylesheet"/><link href="atelier-v243.css" rel="stylesheet"/><link href="atelier-v244.css" rel="stylesheet"/><link href="atelier-v248.css" rel="stylesheet"/><link href="atelier-v2410.css" rel="stylesheet"/><link href="atelier-v2412.css" rel="stylesheet"/><link href="wallpaper-v2413.css" rel="stylesheet"/><link href="wallpaper-v2414.css" rel="stylesheet"/><link href="wallpaper-v2415.css" rel="stylesheet"/><link href="wallpaper-v2417.css" rel="stylesheet"/><link href="done-theme-v2418.css" rel="stylesheet"/><link href="settings-compact.css" rel="stylesheet"/><link href="color-only.css" rel="stylesheet"/><link href="layout-rescue.css" rel="stylesheet"/><link href="custom-wallpapers.css" rel="stylesheet"/><link href="friends.css" rel="stylesheet"/>
+<link href="assets/icon.png" rel="icon"/><link href="styles.css" rel="stylesheet"/><link href="refined.css" rel="stylesheet"/><link href="chronicle.css" rel="stylesheet"/><link href="celestial.css" rel="stylesheet"/><link href="regional-themes.css" rel="stylesheet"/><link href="mini-widget.css" rel="stylesheet"/><link href="v22.css" rel="stylesheet"/><link href="istaroth-theme.css" rel="stylesheet"/><link href="realm-themes.css" rel="stylesheet"/><link href="atelier-v243.css" rel="stylesheet"/><link href="atelier-v244.css" rel="stylesheet"/><link href="atelier-v248.css" rel="stylesheet"/><link href="atelier-v2410.css" rel="stylesheet"/><link href="atelier-v2412.css" rel="stylesheet"/><link href="wallpaper-v2413.css" rel="stylesheet"/><link href="wallpaper-v2414.css" rel="stylesheet"/><link href="wallpaper-v2415.css" rel="stylesheet"/><link href="wallpaper-v2417.css" rel="stylesheet"/><link href="done-theme-v2418.css" rel="stylesheet"/><link href="settings-compact.css" rel="stylesheet"/><link href="color-only.css" rel="stylesheet"/><link href="layout-rescue.css" rel="stylesheet"/><link href="custom-wallpapers.css" rel="stylesheet"/><link href="friends.css" rel="stylesheet"/><link href="cloud-friends.css" rel="stylesheet"/>
 </head>
 <body>
 <svg aria-hidden="true" class="svg-defs" xmlns="http://www.w3.org/2000/svg">
@@ -250,6 +250,38 @@
     <div id="friendPeople" class="friend-people" aria-live="polite"></div>
   </div>
   <p class="field-note" id="friendHelp" role="status">Friends may unsubscribe anytime by sending /stop to your bot. Quiet hours above also apply to shared alerts.</p>
+
+  <div class="section-label spaced">04 / CLOUD ALERTS · PC CAN BE OFF</div>
+  <p class="field-note">A private Cloudflare Worker refreshes HoYoLAB and sends Telegram alerts every five minutes without running Windows. Set up the Worker once, then connect here. Your cloud credentials are never uploaded automatically.</p>
+  <div class="connection-state" id="cloudStatus" role="status">Checking cloud connection…</div>
+  <div id="cloudConnectPanel" class="friends-connect">
+    <label class="field">Cloudflare Worker address<input id="cloudWorkerUrl" type="url" placeholder="https://istaroth-cloud-resin.yourname.workers.dev" spellcheck="false" autocomplete="off"/></label>
+    <label class="field">Private owner key<input id="cloudOwnerKey" type="password" placeholder="Owner key configured in Cloudflare" spellcheck="false" autocomplete="off"/></label>
+    <div class="button-row"><button class="solid-small" id="cloudConnect" type="button">Connect cloud mode</button></div>
+    <p class="field-note">You need your own Cloudflare Worker, D1 database and Telegram bot first. Read the cloud setup guide; HoYoLAB cookies, bot tokens and webhook secrets belong in Cloudflare Secrets.</p>
+    <div class="button-row">
+      <button type="button" class="small-quiet" id="cloudGuide">Cloud setup guide</button>
+      <button type="button" class="small-quiet" id="cloudCopyHoyolab">Copy HoYoLAB session (sensitive)</button>
+      <button type="button" class="small-quiet" id="cloudClearClipboard">Clear clipboard</button>
+    </div>
+    <p class="field-note">Only copy your session to paste into your private Cloudflare secret. Treat it like a password. Clear the clipboard immediately afterward.</p>
+  </div>
+  <div id="cloudControlPanel" class="hidden">
+    <div class="button-row">
+      <button class="solid-small" id="cloudBootstrap" type="button">Activate Telegram bot</button>
+      <button class="small-quiet" id="cloudRefresh" type="button">Refresh cloud status</button>
+      <button class="small-quiet" id="cloudSync" type="button">Test HoYoLAB sync</button>
+      <button class="small-quiet" id="cloudPause" type="button">Pause cloud alerts</button>
+      <button class="small-quiet" id="cloudDisconnect" type="button">Disconnect this PC</button>
+    </div>
+    <label class="field">Cloud invitation link<input id="cloudInvite" type="text" readonly spellcheck="false"/></label>
+    <div class="button-row"><button id="cloudCopyInvite" type="button" class="solid-small">Copy cloud invite</button></div>
+    <p id="cloudDetail" class="field-note">Worker status will appear here.</p>
+    <div class="friends-heading"><strong>Cloud recipients</strong><small>Friends are paused until explicitly enabled.</small></div>
+    <div id="cloudPeople" class="friend-people"></div>
+    <p class="field-note">Disconnecting this PC does not stop the cloud Worker. Use Pause cloud alerts first if you want to stop sending notifications.</p>
+  </div>
+  <p id="cloudHelp" class="field-note" role="status">Cloud mode requires an authenticated HoYoLAB session stored as a Cloudflare secret. Never share that secret with friends or commit it to GitHub.</p>
 </div>
 </section></div>
 <div class="settings-footer"><span id="statusText" role="status">Ready.</span><button class="solid-small" id="doneButton" type="button"><span id="doneLabel">Done</span> <svg><use href="#ic-check"></use></svg></button></div>
@@ -260,4 +292,5 @@
 <script defer="" src="renderer.js"></script>
 <script defer="" src="chronicle-ui.js"></script>
 <script defer="" src="friends-ui.js"></script>
+<script defer="" src="cloud-friends-ui.js"></script>
 </body></html>

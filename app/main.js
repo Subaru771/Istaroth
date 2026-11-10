@@ -1,6 +1,6 @@
 'use strict';
 
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, Notification, shell, screen, session, powerMonitor, net, safeStorage, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, Notification, shell, screen, session, powerMonitor, net, safeStorage, clipboard, dialog } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const hoyo = require('./hoyolab-sync');
@@ -8,6 +8,7 @@ const chronicleApi = require('./chronicle-sync');
 const {createStartupService} = require('./windows-startup');
 const {ResinTelemetry, inQuiet} = require('./resin-telemetry');
 const {FriendAlerts} = require('./friend-alerts');
+const {CloudResinClient} = require('./cloud-resin-client');
 const {trayPng} = require('./tray-icon');
 const {UpdateService} = require('./update-service');
 
@@ -35,7 +36,7 @@ let refreshMinutes = 15;
 let autoRefresh = true;
 let refreshTimer = null;
 let startupService=null;
-let telemetry=null;let friendAlerts=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
+let telemetry=null;let friendAlerts=null;let cloudResin=null;let updates=null;let latestOnline=true;let retries=0;let nextRetryAt=0;let lastTrayAmount='';
 let securityInfo={partition:'isolated HoYoLAB session',encryption:'checking'};
 let chronicleState = null;
 let chronicleTask = null;
@@ -165,7 +166,8 @@ function wallpaperBytes(data) {
 
 const allowedLinks = {
   hoyolab: 'https://www.hoyolab.com/',
-  map: 'https://act.hoyolab.com/ys/app/interactive-map/index.html'
+  map: 'https://act.hoyolab.com/ys/app/interactive-map/index.html',
+  cloudGuide: 'https://github.com/Subaru771/Istaroth/blob/main/docs/CLOUD_RESIN.md'
 };
 
 function dataFile() { return path.join(app.getPath('userData'), 'teyvat-pulse-data.json'); }
@@ -318,6 +320,7 @@ if (!gotLock) {
     // Authentication cookies remain in Chromium's dedicated persisted session; never saved in JS settings.
     auditSessionSecurity().catch(()=>{});
     telemetry=new ResinTelemetry(app.getPath('userData'));
+    cloudResin=new CloudResinClient(app.getPath('userData'),safeStorage);
     friendAlerts=new FriendAlerts(app.getPath('userData'),safeStorage,undefined,status=>{
       if(mainWindow&&!mainWindow.isDestroyed()) mainWindow.webContents.send('friends:status',status);
     });
@@ -334,6 +337,40 @@ if (!gotLock) {
     ipcMain.handle('security:status',()=>securityInfo);
     ipcMain.handle('telemetry:history',()=>telemetry.getHistory(selectedRole?.uid));
     ipcMain.handle('telemetry:options',(_event,opts)=>telemetry.options(opts));
+    ipcMain.handle('cloud:copy-hoyolab',async()=>{
+      if(!selectedRole)throw Error('Connect your HoYoLAB account in Istaroth first.');
+      const decision=await dialog.showMessageBox(mainWindow,{
+        type:'warning',title:'Sensitive HoYoLAB session',
+        message:'Copy your authenticated HoYoLAB session to the Windows clipboard?',
+        detail:'This is equivalent to an account access credential. Paste it only into your own Cloudflare Worker secret using wrangler secret put HOYOLAB_COOKIE. Never share it with friends, GitHub, screenshots, or chat messages. Clear the clipboard afterward.',
+        buttons:['Cancel','Copy sensitive session'],defaultId:0,cancelId:0,noLink:true
+      });
+      if(decision.response!==1)return false;
+      const cookie=await hoyo.getAuthHeader(hoyoSession);
+      clipboard.writeText(cookie);
+      return true;
+    });
+    ipcMain.handle('cloud:clear-clipboard',()=>{clipboard.clear();return true;});
+    ipcMain.handle('cloud:status',()=>cloudResin.status());
+    ipcMain.handle('cloud:configure',async(_event,url,key)=>{
+      const result=await cloudResin.configure(url,key);
+      // Hosted webhook must be the only consumer of this Telegram bot's updates.
+      friendAlerts.stop();
+      if(friendAlerts.status().connected)friendAlerts.disconnect();
+      return result;
+    });
+    ipcMain.handle('cloud:disconnect',()=>{
+      const result=cloudResin.disconnect();
+      if(!cloudResin.isConfigured())friendAlerts.start();
+      return result;
+    });
+    ipcMain.handle('cloud:action',(_event,name,options)=>cloudResin.action(name,options));
+    ipcMain.handle('cloud:copy-invite',async()=>{
+      const status=await cloudResin.status();
+      const value=status.remote?.inviteUrl;
+      if(!value)return false;
+      clipboard.writeText(value);return true;
+    });
     ipcMain.handle('friends:status',()=>friendAlerts.status());
     ipcMain.handle('friends:connect',(_event,token)=>friendAlerts.connect(token));
     ipcMain.handle('friends:disconnect',()=>friendAlerts.disconnect());

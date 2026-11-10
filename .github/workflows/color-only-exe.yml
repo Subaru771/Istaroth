@@ -34,7 +34,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($test in @('check','test:startup','test:v22','test:settings','test:layout','test:wallpapers','test:friends')) {
+          foreach ($test in @('check','test:startup','test:v22','test:settings','test:layout','test:wallpapers','test:friends','test:cloud')) {
             npm run $test
             if ($LASTEXITCODE -ne 0) { throw "Test failed: $test" }
           }

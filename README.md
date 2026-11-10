@@ -29,7 +29,7 @@ The original v1.0.1 downloadable release predates these changes. Later preview r
 - **Nine regional color themes**, personal wallpapers for Main/Resin/Mini, customizable accents, layouts and typography.
 - **Daily information** including commissions, expeditions, Realm currency and other available HoYoLAB panels.
 - **Local history and alerts** with configurable quiet hours.
-- **Optional Telegram friend alerts** with private opt-in links, per-friend 160/180/190/200 thresholds, encrypted bot-token storage, and unsubscribe. Requires Istaroth to remain running on Windows. [Setup guide](docs/FRIEND_ALERTS.md).
+- **Optional Telegram friend alerts** with private opt-in links, per-friend 160/180/190/200 thresholds, encrypted bot-token storage, and unsubscribe. Use local mode with the PC running ([guide](docs/FRIEND_ALERTS.md)), or a **private Cloudflare Worker** for notifications with the PC completely off ([cloud setup](docs/CLOUD_RESIN.md)).
 
 ## Updating to the color-only build
 
