@@ -80,6 +80,16 @@
     people(remote.recipients);
   }
   async function refresh(){if(bridge?.cloudStatus)await action(()=>bridge.cloudStatus());}
+  $('cloudGuide').addEventListener('click',()=>action(async()=>{
+    if(!await bridge.open('cloudGuide'))throw Error('Could not open the setup guide.');
+  }));
+  $('cloudCopyHoyolab').addEventListener('click',()=>action(async()=>{
+    const copied=await bridge.cloudCopyHoyolab();
+    if(!copied)throw Error('Session copy was cancelled.');
+  },'Session copied to clipboard. Paste only into your private Cloudflare secret and clear clipboard afterward.'));
+  $('cloudClearClipboard').addEventListener('click',()=>action(async()=>{
+    await bridge.cloudClearClipboard();
+  },'Clipboard cleared.'));
   $('cloudConnect').addEventListener('click',async()=>{
     const button=$('cloudConnect');button.disabled=true;
     await action(()=>bridge.cloudConfigure($('cloudWorkerUrl').value,$('cloudOwnerKey').value),
