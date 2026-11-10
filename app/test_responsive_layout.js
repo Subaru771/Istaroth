@@ -8,6 +8,7 @@ const html=read('index.html');
 const css=read('layout-rescue.css');
 const color=read('color-only.css');
 const pkg=require('./package.json');
+const communityCss=read('community.css');
 
 assert.ok(html.includes('href="color-only.css"'), 'Color-only theme must be active');
 assert.ok(html.includes('href="layout-rescue.css"'), 'Layout fix stylesheet must be loaded');
@@ -25,6 +26,8 @@ for(const id of ['frame','widgetScreen','dashboardTabs','pane-resin','mainTitle'
 }
 assert.equal((html.match(/class="dash-tab(?: active)?"/g)||[]).length,8,
   'Seven existing journal sections and the new Community section must be accessible');
+assert.match(communityCss,/\.dash-tab\[data-dash="community"\] \.tab-caption\s*\{[^}]*white-space: nowrap !important;/s,
+  'Community caption must remain on one line in the compact dashboard rail');
 
 // Screenshot reported large letter spacing, titlebar overlap, and clipped resin reading.
 // Test that final CSS addresses these specific causes in a narrow Windows window.
