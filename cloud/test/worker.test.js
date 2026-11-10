@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import worker,{estimated,inQuiet,fetchNotes,sync,secureEqual} from '../src/index.js';
+import worker,{estimated,inQuiet,fetchNotes,sync,secureEqual,handleWebhook} from '../src/index.js';
 
 const now=Date.now();
 function env(){
@@ -122,7 +122,7 @@ test('Telegram opt-in and cloud alert are one per threshold and reset on spendin
     method:'POST',headers:{'x-telegram-bot-api-secret-token':e.TELEGRAM_WEBHOOK_SECRET,'Content-Type':'application/json'},
     body:JSON.stringify({message:{chat:{type:'private',id:1234},from:{first_name:'Alex'},text:'/start join_'+e.INVITE_CODE}})
   });
-  const goodResult=await worker.fetch(good,e);
+  const goodResult=await handleWebhook(good,e,f.fetcher);
   assert.equal(goodResult.status,200);
   const r=e.DB.rows.get('1234');assert.equal(r.enabled,0);
   r.enabled=1;
