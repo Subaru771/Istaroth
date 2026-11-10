@@ -40,6 +40,9 @@ jobs:
         run: |
           cd cloud
           npm test
+      - name: Validate Istaroth Community integration
+        working-directory: app
+        run: npm run test:community
       - name: Validate encrypted desktop Cloudflare connection
         working-directory: app
         run: npm run test:cloud
