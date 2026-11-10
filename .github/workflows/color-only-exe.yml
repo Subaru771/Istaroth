@@ -34,7 +34,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($test in @('check','test:startup','test:v22','test:settings','test:layout','test:wallpapers','test:friends','test:cloud')) {
+          foreach ($test in @('check','test:startup','test:v22','test:settings','test:layout','test:wallpapers','test:friends','test:cloud','test:community')) {
             npm run $test
             if ($LASTEXITCODE -ne 0) { throw "Test failed: $test" }
           }
@@ -47,12 +47,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: ./scripts/build-color-only-exe.ps1
 
-      - name: Label this build as the Friends preview
+      - name: Label this build as the Community preview
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $old = 'app/dist/Istaroth-v1.1.3-Wallpapers-Setup-Windows-x64-UNSIGNED.exe'
-          $new = 'app/dist/Istaroth-v1.1.3-Friends-Setup-Windows-x64-UNSIGNED.exe'
+          $new = 'app/dist/Istaroth-v1.1.3-Community-Setup-Windows-x64-UNSIGNED.exe'
           Move-Item -LiteralPath $old -Destination $new
           Remove-Item -LiteralPath "$old.sha256" -ErrorAction SilentlyContinue
           $hash = (Get-FileHash -LiteralPath $new -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -61,10 +61,10 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Istaroth-v1.1.3-Friends-Windows-EXE
+          name: Istaroth-v1.1.3-Community-Windows-EXE
           path: |
-            app/dist/Istaroth-v1.1.3-Friends-Setup-Windows-x64-UNSIGNED.exe
-            app/dist/Istaroth-v1.1.3-Friends-Setup-Windows-x64-UNSIGNED.exe.sha256
+            app/dist/Istaroth-v1.1.3-Community-Setup-Windows-x64-UNSIGNED.exe
+            app/dist/Istaroth-v1.1.3-Community-Setup-Windows-x64-UNSIGNED.exe.sha256
           retention-days: 14
           if-no-files-found: error
 
@@ -74,9 +74,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
-          $exe = 'app\dist\Istaroth-v1.1.3-Friends-Setup-Windows-x64-UNSIGNED.exe'
-          $tag = 'v1.1.3-friends-preview'
-          $notes = 'Istaroth Windows friends preview. Opt-in Telegram resin notifications for selected friends with individual 160/180/190/200 thresholds, private invites, encrypted local bot-token storage, and unsubscribe via /stop. Istaroth must remain running on an online PC, and each sender must connect their own BotFather bot. Existing color-only region themes, separate Main/Resin/Mini user wallpapers, HoYoLAB tracking, and settings remain. Tests and installer smoke checks passed. UNSIGNED preview. Live Telegram delivery needs a real bot and consenting recipient; see docs/FRIEND_ALERTS.md.'
+          $exe = 'app\dist\Istaroth-v1.1.3-Community-Setup-Windows-x64-UNSIGNED.exe'
+          $tag = 'v1.1.3-community-preview'
+          $notes = 'Istaroth Windows Community preview. Adds Community journal tab with secure isolated Telegram web sign-in, optional multi-user cloud service connection, friend approvals, resin alerts while PC is off when the Community Worker is deployed, safe opt-in HoYoLAB session copy, and local cloud disconnection. The seven existing dashboard tabs, local resin readings, personal Telegram alerts, color-only themes and Main/Resin/Mini wallpapers remain. No Community server is predeployed; each operator must first deploy the separate Community web backend. No credentials are transmitted automatically. Unsigned installer. See docs/COMMUNITY_INTEGRATION.md.'
           gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
           if ($LASTEXITCODE -eq 0) {
             gh release upload $tag $exe "$exe.sha256" --repo $env:GITHUB_REPOSITORY --clobber

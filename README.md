@@ -22,6 +22,14 @@ If you previously uploaded an image, the application restores its saved file fro
 
 The original v1.0.1 downloadable release predates these changes. Later preview releases are listed on the [Releases page](https://github.com/Subaru771/Istaroth/releases).
 
+## Community inside Istaroth (latest Windows preview)
+
+The original Windows app now has a **Community** tab inside its journal. The tab embeds a separately deployed **Istaroth Community multi-user PWA** in a sandboxed, isolated Telegram login session. Once a trusted Community backend is deployed, different users can connect their own Genshin account, approve friends and get cloud Telegram resin alerts **even with their PCs switched off**.
+
+The Community service is **not publicly deployed by this repository**; the operator must deploy the separate Istaroth Community backend once and paste its HTTPS workers.dev URL in the tab. The desktop app never uploads HoYoLAB credentials automatically. See the [integration and security guide](docs/COMMUNITY_INTEGRATION.md).
+
+The original local resin tracker, nine color-only themes, separate optional Main/Resin/Mini wallpapers, local friend notifications and optional single-user Cloud mode remain intact.
+
 ## Features
 
 - **Live Resin tracking** using your own HoYoLAB session, with recovery estimates and reminders.

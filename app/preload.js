@@ -27,6 +27,18 @@ contextBridge.exposeInMainWorld('pulseDesktop', Object.freeze({
   securityStatus:()=>ipcRenderer.invoke('security:status'),
   telemetryHistory:()=>ipcRenderer.invoke('telemetry:history'),
   telemetryOptions:opts=>ipcRenderer.invoke('telemetry:options',opts),
+  communityStatus:()=>ipcRenderer.invoke('community:status'),
+  communityConnect:url=>ipcRenderer.invoke('community:connect',url),
+  communityShow:(active,bounds)=>ipcRenderer.invoke('community:show',!!active,bounds),
+  communityReload:()=>ipcRenderer.invoke('community:reload'),
+  communityDisconnect:()=>ipcRenderer.invoke('community:disconnect'),
+  communityCopyHoyolab:()=>ipcRenderer.invoke('community:copy-hoyolab'),
+  communityClearClipboard:()=>ipcRenderer.invoke('community:clear-clipboard'),
+  onCommunityState:callback=>{
+    const listener=(_event,state)=>callback(state);
+    ipcRenderer.on('community:state',listener);
+    return ()=>ipcRenderer.removeListener('community:state',listener);
+  },
   cloudCopyHoyolab:()=>ipcRenderer.invoke('cloud:copy-hoyolab'),
   cloudClearClipboard:()=>ipcRenderer.invoke('cloud:clear-clipboard'),
   cloudStatus:()=>ipcRenderer.invoke('cloud:status'),

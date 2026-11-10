@@ -230,6 +230,7 @@ async function setMiniMode(enabled,{navigate=true}={}){
 async function finishSettings(){ await switchView('widget'); }
 async function switchView(where,section='style'){currentView=where==='widget' && state.ui.miniMode?'mini':where;document.documentElement.dataset.screen=currentView;$('toast').classList.add('hidden');clearTimeout(toastTimer);
   $('widgetScreen').classList.toggle('hidden',currentView!=='widget');$('miniScreen').classList.toggle('hidden',currentView!=='mini');$('settingsScreen').classList.toggle('hidden',currentView!=='settings');
+  window.dispatchEvent(new CustomEvent('istaroth:screen-view',{detail:{view:currentView}}));
   if(where==='settings'){tab(section);renderForm();}await resizeWindow();}
 function applySync(info){if(!info||typeof info!=='object')return;syncInfo=info;
   const note=info.notes,at=Number(note?.fetchedAt);

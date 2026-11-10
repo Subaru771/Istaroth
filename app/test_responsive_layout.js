@@ -23,8 +23,8 @@ for(const id of ['frame','widgetScreen','dashboardTabs','pane-resin','mainTitle'
   if(id==='recovery-row')assert.ok(html.includes('class="recovery-row"'));
   else assert.ok(html.includes('id="'+id+'"'), 'Missing functional control: '+id);
 }
-assert.equal((html.match(/class="dash-tab(?: active)?"/g)||[]).length,7,
-  'All seven journal sections must still be accessible');
+assert.equal((html.match(/class="dash-tab(?: active)?"/g)||[]).length,8,
+  'The original seven journal sections and Community must remain accessible');
 
 // Screenshot reported large letter spacing, titlebar overlap, and clipped resin reading.
 // Test that final CSS addresses these specific causes in a narrow Windows window.
