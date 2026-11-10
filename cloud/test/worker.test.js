@@ -41,7 +41,7 @@ class FakeDB {
       async run(){
         const v=this.values;
         if(query.startsWith('INSERT INTO resin_state')){
-          if(query.includes('last_error) VALUES')){
+          if(query.includes('VALUES(1,?)')){
             db.state??={};db.state.lastError=v[0];return {meta:{changes:1}};
           }
           db.state={at:v[0],value:v[1],cap:v[2],fullAt:v[3],lastError:null};
