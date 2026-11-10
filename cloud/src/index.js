@@ -135,6 +135,8 @@ async function setError(env,message){
 }
 async function sync(env,fetcher=fetch,now=Date.now()){
   if(!validEnv(env))throw Error('Cloud service is not configured.');
+  const state=await env.DB.prepare('SELECT value FROM settings WHERE key=?').bind('cloud_enabled').first();
+  if(state?.value==='0')return {ok:true,paused:true,delivered:0};
   let note;
   try{
     note=await fetchNotes(env,now,fetcher);
@@ -219,6 +221,7 @@ async function api(request,env,fetcher=fetch){
     return json({mode:'cloud',active:true,autoSync:!!env.HOYOLAB_COOKIE,role:{uid:env.ROLE_UID,region:env.ROLE_REGION,nickname:nickname(env.ROLE_NAME)},
       botUsername:bot?.value||'',inviteUrl:bot?.value?'https://t.me/'+bot.value+'?start=join_'+env.INVITE_CODE:'',
       notes:value,updatedAt:saved?.at||null,error:saved?.lastError||envProblem(env)||'',
+      paused:(await env.DB.prepare('SELECT value FROM settings WHERE key=?').bind('cloud_enabled').first())?.value==='0',
       recipients:await recipients(env),quiet:{start:env.QUIET_START||'',end:env.QUIET_END||'',timeZone:env.TIMEZONE||'Asia/Baghdad'}});
   }
   if(method==='POST'&&u.pathname==='/api/bootstrap'){
@@ -231,12 +234,18 @@ async function api(request,env,fetcher=fetch){
     return json({ok:true,username:me.username,inviteUrl:'https://t.me/'+me.username+'?start=join_'+env.INVITE_CODE});
   }
   if(method==='POST'&&u.pathname==='/api/sync')return json(await sync(env,fetcher,Date.now()));
+  if(method==='POST'&&(u.pathname==='/api/pause'||u.pathname==='/api/resume')){
+    const next=u.pathname==='/api/pause'?'0':'1';
+    await env.DB.prepare('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value')
+      .bind('cloud_enabled',next).run();
+    return json({ok:true,paused:next==='0'});
+  }
   if(method==='POST'&&u.pathname==='/api/recipient'){
     const body=await request.json();
     const id=String(body?.id||''),threshold=Number(body?.threshold),enabled=body?.enabled;
     if(!/^\d{1,20}$/.test(id)||!THRESHOLDS.includes(threshold)||typeof enabled!=='boolean')return json({error:'Invalid recipient settings'},400);
-    const result=await env.DB.prepare('UPDATE recipients SET enabled=?,threshold=?,last_threshold=NULL WHERE chat_id=?')
-      .bind(enabled?1:0,threshold,id).run();
+    const result=await env.DB.prepare('UPDATE recipients SET enabled=?,threshold=?,last_threshold=CASE WHEN threshold!=? OR enabled=0 THEN NULL ELSE last_threshold END WHERE chat_id=?')
+      .bind(enabled?1:0,threshold,threshold,id).run();
     return json({ok:true,updated:(result.meta?.changes||0)>0});
   }
   if(method==='POST'&&u.pathname==='/api/remove'){
