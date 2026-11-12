@@ -59,3 +59,9 @@ The tests substitute a fake HoYoLAB login result to verify that only verified ac
 - Do not share or paste HoYoLAB passwords, verification codes or cookies into ChatGPT or GitHub.
 - When a test login is finished, revoke the session or change credentials if you distrust the host or believe they were exposed.
 - Review HoYoverse terms and account safety warnings before expanding to users.
+
+## Windows private-repository publisher (v1.0.1)
+
+Double-click `PUBLISH-PRIVATE-GITHUB.cmd`. If Git or GitHub CLI is missing, the script attempts installation through Microsoft's Windows Package Manager (`winget`), then asks you to sign in via your browser before creating a **private** repository. You may need to approve the installation. If your Windows PC does not have winget, the script explains the prerequisite rather than uploading source anywhere.
+
+This only publishes source code. You still need to connect a private Render service, and the gateway has **not** been live-tested against a HoYoLAB account or approved for use with other people's passwords.
