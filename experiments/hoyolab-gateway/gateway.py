@@ -71,7 +71,7 @@ async def secure_headers(request: Request, call_next):
     # GATEWAY_PUBLIC_PAIRING is deliberately NOT an authorization bypass.
     # Do not enable public credential collection without an independent audit.
     # /health remains public for Render's health check only.
-    if request.url.path != '/health' and os.getenv('GATEWAY_PUBLIC_PAIRING') != '1':
+    if request.url.path != '/health':
         expected = os.getenv('GATEWAY_ACCESS_PASSWORD', '')
         authorized = False
         header = request.headers.get('authorization', '')
@@ -233,17 +233,12 @@ async def start(payload: StartLogin, request: Request):
         raise HTTPException(status_code=429, detail='Too many attempts. Try in an hour.')
     # In public mode, verify the Telegram-issued Community code BEFORE processing
     # credentials. Never trust a code solely because its syntax looks valid.
-    if os.getenv('GATEWAY_PUBLIC_PAIRING') == '1':
-        try:
-            verified = await json_from_community('/api/link/check', {'code': payload.code})
-            if verified.get('ok') is not True:
-                raise ValueError('Invalid Community pairing code.')
-        except Exception:
-            raise HTTPException(status_code=403, detail='Generate a fresh pairing code in Community and try again.') from None
     attempts[ip] = recent+[now]
     # Verify the Community-issued code BEFORE accepting HoYoLAB credentials.
     try:
-        await json_from_community('/api/link/check', {'code':payload.code})
+        verified = await json_from_community('/api/link/check', {'code':payload.code})
+        if verified.get('ok') is not True:
+            raise ValueError('Invalid Community pairing code.')
     except ValueError:
         raise HTTPException(status_code=403, detail='Community pairing code is invalid or expired. Generate a new code.') from None
     job=LoginJob(id=secrets.token_urlsafe(20),session=session,pairing_code=payload.code,created=now,client_ip=ip)
