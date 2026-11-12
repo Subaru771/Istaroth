@@ -151,6 +151,6 @@ async def test_invalid_community_code_stops_before_password_login(monkeypatch):
     monkeypatch.setattr(gateway,'json_from_community',deny)
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
         await client.get('/')
-        with pytest.raises(ValueError,match='Pairing code'):
-            await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'test'})
+        response = await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'test'})
+        assert response.status_code == 403
         assert not gateway.jobs
