@@ -48,6 +48,7 @@ class LoginJob:
     captcha_future: asyncio.Future | None = None
     task: asyncio.Task | None = None
     failed_attempts: int = 0
+    client_ip: str = ''
 
 jobs: dict[str, LoginJob] = {}
 attempts: dict[str, list[float]] = {}
@@ -66,7 +67,9 @@ class ApproveLink(BaseModel):
 
 @app.middleware('http')
 async def secure_headers(request: Request, call_next):
-    # Fail closed: no browser/API access until a private access password is configured.
+    # Fail closed: this experimental credential-handling service remains private.
+    # GATEWAY_PUBLIC_PAIRING is deliberately NOT an authorization bypass.
+    # Do not enable public credential collection without an independent audit.
     # /health remains public for Render's health check only.
     if request.url.path != '/health' and os.getenv('GATEWAY_PUBLIC_PAIRING') != '1':
         expected = os.getenv('GATEWAY_ACCESS_PASSWORD', '')
@@ -103,7 +106,7 @@ async def secure_headers(request: Request, call_next):
 
 @app.get('/health')
 async def health():
-    return {'online': True, 'mode': 'real-hoyolab-login', 'credentialsStoredOnDisk': False}
+    return {'online': True, 'mode': 'private-test', 'credentialsStoredOnDisk': False}
 
 @app.get('/', response_class=HTMLResponse)
 async def index(request: Request):
@@ -238,7 +241,9 @@ async def start(payload: StartLogin, request: Request):
         except Exception:
             raise HTTPException(status_code=403, detail='Generate a fresh pairing code in Community and try again.') from None
     attempts[ip] = recent+[now]
-    job=LoginJob(id=secrets.token_urlsafe(20),session=session,pairing_code=payload.code,created=now)
+    # Verify the Community-issued code BEFORE accepting HoYoLAB credentials.
+    await json_from_community('/api/link/preview', {'code':payload.code})
+    job=LoginJob(id=secrets.token_urlsafe(20),session=session,pairing_code=payload.code,created=now,client_ip=ip)
     jobs[job.id] = job
     # Don't log password or save it. The task keeps it in RAM only until login completes.
     job.task = asyncio.create_task(perform_login(job,payload.account,payload.password))
