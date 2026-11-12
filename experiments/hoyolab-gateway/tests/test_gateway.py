@@ -127,3 +127,16 @@ async def test_gateway_rejects_unauthenticated_access(monkeypatch):
     monkeypatch.delenv('GATEWAY_ACCESS_PASSWORD')
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
         assert (await client.get('/')).status_code == 401
+
+@pytest.mark.asyncio
+async def test_public_mode_requires_valid_community_code(monkeypatch):
+    monkeypatch.setenv('GATEWAY_PUBLIC_PAIRING', '1')
+    async def reject(endpoint,payload):
+        assert endpoint == '/api/link/check'
+        raise ValueError('Code expired')
+    monkeypatch.setattr(gateway, 'json_from_community', reject)
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
+        await client.get('/')
+        result=await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'not-sent'})
+        assert result.status_code == 403
+        assert not gateway.jobs
