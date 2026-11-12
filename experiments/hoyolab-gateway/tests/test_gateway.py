@@ -68,6 +68,8 @@ async def test_real_backend_login_flow_with_mocked_hoyolab(monkeypatch):
         monkeypatch.setitem(sys.modules,name,mod)
     async def simulate(endpoint,payload):
         assert payload['code']=='A'*24
+        if endpoint=='/api/link/check':
+            return {'ok':True}
         if endpoint=='/api/link/preview':
             assert 'ltoken_v2=secret-token-123' in payload['cookie']
             return {'accounts':[{'uid':'801234567','region':'os_asia','nickname':'Lumine'}]}
@@ -139,4 +141,16 @@ async def test_public_mode_requires_valid_community_code(monkeypatch):
         await client.get('/')
         result=await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'not-sent'})
         assert result.status_code == 403
+        assert not gateway.jobs
+
+@pytest.mark.asyncio
+async def test_invalid_community_code_stops_before_password_login(monkeypatch):
+    async def deny(endpoint,payload):
+        assert endpoint == '/api/link/check'
+        raise ValueError('Pairing code expired or invalid.')
+    monkeypatch.setattr(gateway,'json_from_community',deny)
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
+        await client.get('/')
+        with pytest.raises(ValueError,match='Pairing code'):
+            await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'test'})
         assert not gateway.jobs
