@@ -242,7 +242,7 @@ async def start(payload: StartLogin, request: Request):
             raise HTTPException(status_code=403, detail='Generate a fresh pairing code in Community and try again.') from None
     attempts[ip] = recent+[now]
     # Verify the Community-issued code BEFORE accepting HoYoLAB credentials.
-    await json_from_community('/api/link/preview', {'code':payload.code})
+    await json_from_community('/api/link/check', {'code':payload.code})
     job=LoginJob(id=secrets.token_urlsafe(20),session=session,pairing_code=payload.code,created=now,client_ip=ip)
     jobs[job.id] = job
     # Don't log password or save it. The task keeps it in RAM only until login completes.
