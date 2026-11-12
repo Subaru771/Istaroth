@@ -11,7 +11,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import gateway
 
 @pytest.fixture(autouse=True)
-def reset():
+def reset(monkeypatch):
+    monkeypatch.setenv('GATEWAY_ACCESS_PASSWORD', 'test-private-access-password')
     for job in list(gateway.jobs.values()):
         if job.task and not job.task.done(): job.task.cancel()
     gateway.jobs.clear()
@@ -20,7 +21,7 @@ def reset():
 
 @pytest.mark.asyncio
 async def test_health_and_static_page():
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
         response=await client.get('/health')
         assert response.json()['online'] is True
         response=await client.get('/')
@@ -31,7 +32,7 @@ async def test_health_and_static_page():
 
 @pytest.mark.asyncio
 async def test_invalid_pairing_code_rejected():
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
         await client.get('/')
         resp=await client.post('/api/start',json={'code':'123','account':'user@example.com','password':'1234567'})
         assert resp.status_code==422
@@ -39,7 +40,7 @@ async def test_invalid_pairing_code_rejected():
 
 @pytest.mark.asyncio
 async def test_csrf_cross_site_rejected():
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
         await client.get('/')
         resp=await client.post('/api/start',headers={'origin':'https://evil.example'},json={})
         assert resp.status_code==403
@@ -74,7 +75,7 @@ async def test_real_backend_login_flow_with_mocked_hoyolab(monkeypatch):
         assert payload['uid']=='801234567'
         return {'ok':True}
     monkeypatch.setattr(gateway,'json_from_community',simulate)
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
         await client.get('/')
         resp=await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'never-store-me'})
         assert resp.status_code==200
@@ -98,7 +99,7 @@ async def test_real_backend_login_flow_with_mocked_hoyolab(monkeypatch):
 async def test_account_selection_must_match_authenticated_hoyolab():
     job=gateway.LoginJob(id='job',session='x'*43,pairing_code='y'*24,created=__import__('time').monotonic(),status='ready',cookie='ltoken_v2=secret',accounts=[{'uid':'801234567','region':'os_asia','nickname':'A'}])
     gateway.jobs['job']=job
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',cookies={'istaroth_gateway_session':'x'*43}) as client:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password'),cookies={'istaroth_gateway_session':'x'*43}) as client:
         resp=await client.post('/api/approve/job',json={'uid':'999999999','region':'os_euro'})
         assert resp.status_code==403
         assert job.cookie=='ltoken_v2=secret'
@@ -107,10 +108,22 @@ async def test_account_selection_must_match_authenticated_hoyolab():
 async def test_session_isolation_and_expiry():
     job=gateway.LoginJob(id='job',session='x'*43,pairing_code='y'*24,created=__import__('time').monotonic(),status='ready',cookie='secret')
     gateway.jobs['job']=job
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',cookies={'istaroth_gateway_session':'z'*43}) as client:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password'),cookies={'istaroth_gateway_session':'z'*43}) as client:
         resp=await client.get('/api/status/job')
         assert resp.status_code==404
     job.created-=1000
     gateway.cleanup()
     assert 'job' not in gateway.jobs
     assert job.cookie is None
+
+@pytest.mark.asyncio
+async def test_gateway_rejects_unauthenticated_access(monkeypatch):
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
+        assert (await client.get('/health')).status_code == 200
+        assert (await client.get('/')).status_code == 401
+        assert (await client.get('/static/app.js')).status_code == 401
+        assert (await client.post('/api/start',json={})).status_code == 401
+        assert (await client.get('/',auth=('owner','wrong-password'))).status_code == 401
+    monkeypatch.delenv('GATEWAY_ACCESS_PASSWORD')
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
+        assert (await client.get('/')).status_code == 401
