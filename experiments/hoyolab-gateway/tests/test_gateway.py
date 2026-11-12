@@ -138,9 +138,9 @@ async def test_public_mode_requires_valid_community_code(monkeypatch):
         raise ValueError('Code expired')
     monkeypatch.setattr(gateway, 'json_from_community', reject)
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
-        await client.get('/')
+        assert (await client.get('/')).status_code == 401
         result=await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'not-sent'})
-        assert result.status_code == 403
+        assert result.status_code == 401
         assert not gateway.jobs
 
 @pytest.mark.asyncio
@@ -153,4 +153,16 @@ async def test_invalid_community_code_stops_before_password_login(monkeypatch):
         await client.get('/')
         response = await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'test'})
         assert response.status_code == 403
+        assert not gateway.jobs
+
+@pytest.mark.asyncio
+async def test_community_check_must_explicitly_return_ok(monkeypatch):
+    async def ambiguous(endpoint, payload):
+        assert endpoint == '/api/link/check'
+        return {'message': 'unexpected response'}
+    monkeypatch.setattr(gateway, 'json_from_community', ambiguous)
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
+        await client.get('/')
+        result=await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'not-sent'})
+        assert result.status_code == 403
         assert not gateway.jobs
