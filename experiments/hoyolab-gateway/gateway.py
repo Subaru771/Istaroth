@@ -68,7 +68,7 @@ class ApproveLink(BaseModel):
 async def secure_headers(request: Request, call_next):
     # Fail closed: no browser/API access until a private access password is configured.
     # /health remains public for Render's health check only.
-    if request.url.path != '/health':
+    if request.url.path != '/health' and os.getenv('GATEWAY_PUBLIC_PAIRING') != '1':
         expected = os.getenv('GATEWAY_ACCESS_PASSWORD', '')
         authorized = False
         header = request.headers.get('authorization', '')
@@ -228,6 +228,15 @@ async def start(payload: StartLogin, request: Request):
     recent = [t for t in attempts.get(ip, []) if now-t<3600]
     if len(recent) >= 5:
         raise HTTPException(status_code=429, detail='Too many attempts. Try in an hour.')
+    # In public mode, verify the Telegram-issued Community code BEFORE processing
+    # credentials. Never trust a code solely because its syntax looks valid.
+    if os.getenv('GATEWAY_PUBLIC_PAIRING') == '1':
+        try:
+            verified = await json_from_community('/api/link/check', {'code': payload.code})
+            if verified.get('ok') is not True:
+                raise ValueError('Invalid Community pairing code.')
+        except Exception:
+            raise HTTPException(status_code=403, detail='Generate a fresh pairing code in Community and try again.') from None
     attempts[ip] = recent+[now]
     job=LoginJob(id=secrets.token_urlsafe(20),session=session,pairing_code=payload.code,created=now)
     jobs[job.id] = job
