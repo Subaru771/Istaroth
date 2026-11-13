@@ -1,8 +1,14 @@
-Istaroth Community v0.10.1 GitHub helper pairing update.
+ISTAROTH COMMUNITY 0.11.0 RC1 — PRIVATE DEVELOPMENT SNAPSHOT
 
-Istaroth Community v0.10.0 — WEBSITE HoYoLAB connection
+This is NOT ready for public deployment or public HoYoLAB password collection.
 
-Run UPDATE-EXISTING-COMMUNITY.cmd in this folder.
-Then open https://istaroth-community.gxcccgx123.workers.dev and connect on the website using your own HoYoLAB session, without installing an app.
-This uses session cookies (not password). Normal browsers cannot automatically retrieve them from HoYoLAB; see README.
-Existing D1 database, DATA_KEY, bot and webhook are preserved.
+The website offers Telegram sign-in, mobile gateway pairing, optional legacy connection,
+custom resin and friend alerts, quiet hours, account deletion, and sign-out-all-devices.
+
+Gateway source and Community source must be deployed as a tested matching pair.
+Do NOT run the cloud updater until gateway/Cloudflare compatibility and security
+review are complete. Back up existing D1 before applying additive migrations.
+Never rotate or reset DATA_KEY, BOT_TOKEN or WEBHOOK_SECRET for this update.
+
+Read README.md and experiments/hoyolab-gateway/SECURITY-RELEASE-GATE.md on GitHub.
+To run local Community tests: npm run check && npm test (Node 22+).
