@@ -232,10 +232,35 @@ async def perform_login(job: LoginJob, account: str, password: str):
     finally:
         password = ''
 
+@app.post('/api/pairing/claim')
+async def claim_login(payload: ClaimLogin, request: Request):
+    # Password-free preflight: reserve the Telegram user's code atomically in D1.
+    session = get_session(request)
+    cleanup()
+    ip = request.client.host if request.client else 'unknown'
+    current = time.monotonic()
+    recent = [t for t in attempts.get(ip, []) if current-t < 3600]
+    if len(recent) >= 5:
+        raise HTTPException(status_code=429, detail='Too many pairing attempts. Try later.')
+    attempts[ip] = recent+[current]
+    proof = secrets.token_urlsafe(32)
+    try:
+        result = await json_from_community('/api/link/claim', {'code':payload.code,'proof':proof})
+        if result.get('ok') is not True:
+            raise ValueError('Pairing could not be verified.')
+    except (ValueError, httpx.HTTPError):
+        raise HTTPException(status_code=403,detail='Community code expired or already used. Generate a new one.') from None
+    nonce = secrets.token_urlsafe(32)
+    reservations[nonce] = PairReservation(code=payload.code,proof=proof,session=session,created=current)
+    return {'ok':True,'claimToken':nonce}
+
 @app.post('/api/start')
 async def start(payload: StartLogin, request: Request):
     session = get_session(request)
     cleanup()
+    claim = reservations.pop(payload.claim_token, None)
+    if not claim or not hmac.compare_digest(claim.session,session) or claim.code != payload.code or time.monotonic()-claim.created > TTL_SECONDS:
+        raise HTTPException(status_code=403,detail='Pairing claim expired or already used.')
     if len(jobs) >= MAX_JOBS:
         raise HTTPException(status_code=503, detail='Too many active connections. Try again later.')
     ip = request.client.host if request.client else 'unknown'
