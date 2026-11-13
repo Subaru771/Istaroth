@@ -4,7 +4,7 @@
 
 ## Recommended deployment (Render)
 
-1. Create your own PRIVATE GitHub repository for this relay. Upload `server.mjs` and `package.json` from this `relay` folder. A ready-to-upload standalone ZIP is provided separately.
+1. Use the existing PRIVATE `Subaru771/Istaroth` repository and choose the `work/istaroth-cloud-security-integration` branch (or a separately tested release branch). Set Root Directory to `experiments/community-cloud/relay`. Do not expose secrets in repository source.
 2. In Render, create a **Web Service** from that repository. Runtime **Node**, build command `npm install --omit=dev`, start command `npm start`. Choose a plan suited to your needed responsiveness; free services can sleep.
 3. Set environment variable `BOT_TOKEN` to your current `@Istaroth771_bot` token from BotFather. This secret belongs ONLY in Render's secret environment settings, not source code.
 4. Generate a strong random `RELAY_KEY` containing 32+ letters/digits (a private shared secret) and set it as a second Render environment variable. Save it securely because the same value is required in Cloudflare.
