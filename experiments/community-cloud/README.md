@@ -18,6 +18,7 @@ This is a **development snapshot, not a production-approved release**. The sourc
 - One-time D1 gateway code claim with opaque 32-byte proof, checked on account preview and completion. Existing unclaimed Windows codes retain compatibility.
 - Per-recipient quiet hours (IANA timezone, configurable start/end); muted resin alerts are **skipped**, not backlogged.
 - Concurrent Telegram login attempt counter verification.
+- Account security control to revoke all Community sessions associated with the Telegram user.
 - New additive migrations `0007_notification_quiet_hours.sql` and `0008_gateway_claim.sql`.
 
 ## Safe Cloudflare deployment
