@@ -265,19 +265,7 @@ async def start(payload: StartLogin, request: Request):
         raise HTTPException(status_code=503, detail='Too many active connections. Try again later.')
     ip = request.client.host if request.client else 'unknown'
     now=time.monotonic()
-    recent = [t for t in attempts.get(ip, []) if now-t<3600]
-    if len(recent) >= 5:
-        raise HTTPException(status_code=429, detail='Too many attempts. Try in an hour.')
-    # In public mode, verify the Telegram-issued Community code BEFORE processing
-    # credentials. Never trust a code solely because its syntax looks valid.
-    attempts[ip] = recent+[now]
-    # Verify the Community-issued code BEFORE accepting HoYoLAB credentials.
-    try:
-        verified = await json_from_community('/api/link/check', {'code':payload.code})
-        if verified.get('ok') is not True:
-            raise ValueError('Invalid Community pairing code.')
-    except ValueError:
-        raise HTTPException(status_code=403, detail='Community pairing code is invalid or expired. Generate a new code.') from None
+    # Pairing was verified and atomically reserved before password submission.
     job=LoginJob(id=secrets.token_urlsafe(20),session=session,pairing_code=payload.code,created=now,client_ip=ip,proof=claim.proof)
     jobs[job.id] = job
     # Don't log password or save it. The task keeps it in RAM only until login completes.
