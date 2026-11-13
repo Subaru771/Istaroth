@@ -3,8 +3,9 @@ on:
   push:
     branches:
       - fix/gateway-render-targeted-20261113
-    paths:
-      - '.github/workflows/repair-gateway-syntax.yml'
+  pull_request:
+    branches:
+      - experimental/private-hoyolab-gateway-v1
   workflow_dispatch:
 permissions:
   contents: write
@@ -15,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
+          ref: fix/gateway-render-targeted-20261113
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
