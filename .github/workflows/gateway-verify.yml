@@ -3,62 +3,23 @@ on:
   push:
     branches:
       - fix/gateway-render-targeted-20261113
+      - experimental/private-hoyolab-gateway-v1
   pull_request:
     branches:
       - experimental/private-hoyolab-gateway-v1
 permissions:
-  contents: write
+  contents: read
 jobs:
   gateway-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: fix/gateway-render-targeted-20261113
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Repair pairing request models
-        shell: python
-        run: |
-          from pathlib import Path
-          p = Path('experiments/hoyolab-gateway/gateway.py')
-          s = p.read_text(encoding='utf-8')
-          start = s.index('class ClaimLogin(BaseModel):')
-          end = s.index('class CaptchaAnswer(BaseModel):', start)
-          if 'class StartLogin(BaseModel):' in s:
-              assert 'claim_token: str' in s
-              raise SystemExit(0)
-          old = s[start:end]
-          lines = old.splitlines()
-          assert len(lines) == 5 and 'account:' in lines[2] and 'password:' in lines[3]
-          new = '\n'.join([lines[0], lines[1], '', 'class StartLogin(BaseModel):', lines[1], '    claim_token: str = Field(min_length=43, max_length=43)', lines[2], lines[3], ''])
-          fixed = s[:start] + new + s[end:]
-          compile(fixed, str(p), 'exec')
-          p.write_text(fixed, encoding='utf-8')
-      - name: Align stale mock endpoints with the claim API
-        shell: python
-        run: |
-          from pathlib import Path
-          p = Path('experiments/hoyolab-gateway/tests/test_gateway.py')
-          s = p.read_text(encoding='utf-8')
-          old = "assert endpoint == '/api/link/check'"
-          s = s.replace(old, "assert endpoint == '/api/link/claim'")
-          assert old not in s
-          p.write_text(s, encoding='utf-8')
-      - name: Verify gateway source syntax
+      - name: Verify Gateway syntax
         run: python -m py_compile experiments/hoyolab-gateway/gateway.py
-      - name: Install dependencies
+      - name: Install test dependencies
         run: python -m pip install -r experiments/hoyolab-gateway/requirements.txt pytest pytest-asyncio
       - name: Run Gateway tests
         run: python -m pytest experiments/hoyolab-gateway -q
-      - name: Commit verified repair
-        if: github.event_name == 'push'
-        run: |
-          git diff --check
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add experiments/hoyolab-gateway/gateway.py experiments/hoyolab-gateway/tests/test_gateway.py
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "fix(gateway): separate claim and login models"
-          git push origin HEAD:fix/gateway-render-targeted-20261113
