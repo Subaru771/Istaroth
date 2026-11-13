@@ -31,7 +31,7 @@ const server=http.createServer(async(req,res)=>{
     }
     const reply=await fetch('https://api.telegram.org/bot'+bot+'/'+method,{
       method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload),
-      redirect:'error',signal:AbortSignal.timeout(15000)});
+      redirect:'manual',signal:AbortSignal.timeout(15000)});
     if(!reply.ok)return send(res,502,{ok:false});
     const data=await reply.json();
     if(!data?.ok)return send(res,502,{ok:false});
