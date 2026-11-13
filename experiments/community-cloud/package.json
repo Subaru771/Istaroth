@@ -1,0 +1,13 @@
+{
+  "name": "istaroth-community",
+  "version": "0.11.0-rc.1",
+  "description": "Istaroth Community cloud resin tracker with Telegram, quiet hours and reserved one-time gateway pairing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check": "node --check src/reminders.js && node --check src/lib.js && node --check src/worker.js && node --check public/app.js && node --check public/sw.js",
+    "deploy": "wrangler deploy",
+    "db:setup": "wrangler d1 migrations apply istaroth-community --remote"
+  }
+}
