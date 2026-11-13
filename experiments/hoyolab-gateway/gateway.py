@@ -10,6 +10,7 @@ import asyncio
 import base64
 import binascii
 import hmac
+import hashlib
 import html
 import os
 import re
@@ -27,6 +28,11 @@ from pydantic import BaseModel, Field
 COMMUNITY = os.getenv('COMMUNITY_ORIGIN', 'https://istaroth-community.gxcccgx123.workers.dev').rstrip('/')
 if not COMMUNITY.startswith('https://') or not re.fullmatch(r'https://[a-zA-Z0-9.-]+', COMMUNITY):
     raise RuntimeError('COMMUNITY_ORIGIN must be one HTTPS host with no path.')
+
+CSRF_SECRET = secrets.token_bytes(32)
+
+def csrf_for_session(session: str) -> str:
+    return hmac.new(CSRF_SECRET,session.encode('utf-8'),hashlib.sha256).hexdigest()
 
 MAX_JOBS = 50
 TTL_SECONDS = 300
@@ -102,6 +108,10 @@ async def secure_headers(request: Request, call_next):
             return JSONResponse({'error': 'Unexpected origin.'}, status_code=403)
         if request.headers.get('sec-fetch-site') == 'cross-site':
             return JSONResponse({'error': 'Cross-site requests are not accepted.'}, status_code=403)
+        session=request.cookies.get('istaroth_gateway_session','')
+        supplied=request.headers.get('x-istaroth-csrf','')
+        if not re.fullmatch(r'[A-Za-z0-9_-]{35,65}',session) or not hmac.compare_digest(csrf_for_session(session),supplied):
+            return JSONResponse({'error': 'Invalid session verification. Reload the gateway.'},status_code=403)
     response = await call_next(request)
     response.headers['Cache-Control'] = 'no-store'
     response.headers['Referrer-Policy'] = 'no-referrer'
@@ -120,9 +130,16 @@ async def health():
 @app.get('/', response_class=HTMLResponse)
 async def index(request: Request):
     page = open(os.path.join(os.path.dirname(__file__), 'static', 'index.html'), encoding='utf-8').read()
+    session=request.cookies.get('istaroth_gateway_session') or ''
+    if not re.fullmatch(r'[A-Za-z0-9_-]{35,65}',session):
+        session=secrets.token_urlsafe(32)
+        is_new=True
+    else:
+        is_new=False
+    page=page.replace('</head>','<meta name="istaroth-csrf" content="'+csrf_for_session(session)+'"></head>',1)
     response = HTMLResponse(page)
-    if not request.cookies.get('istaroth_gateway_session'):
-        response.set_cookie('istaroth_gateway_session', secrets.token_urlsafe(32), max_age=7200,
+    if is_new:
+        response.set_cookie('istaroth_gateway_session', session, max_age=7200,
                             httponly=True, secure=True, samesite='strict', path='/')
     return response
 
@@ -284,7 +301,8 @@ async def captcha(job_id: str, request: Request):
     if job.status!='captcha' or not job.challenge:
         raise HTTPException(status_code=409,detail='No CAPTCHA pending.')
     page=open(os.path.join(os.path.dirname(__file__),'static','captcha.html'),encoding='utf-8').read()
-    response=HTMLResponse(page.replace('__JOB_ID__',job.id))
+    page=page.replace('__JOB_ID__',job.id).replace('</head>','<meta name="istaroth-csrf" content="'+csrf_for_session(job.session)+'"></head>',1)
+    response=HTMLResponse(page)
     response.headers['Content-Security-Policy'] = (
         "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' https://static.geetest.com https://*.geetest.com; "
         "style-src 'self' 'unsafe-inline' https:; connect-src 'self' https:; img-src 'self' https: data: blob:; "
