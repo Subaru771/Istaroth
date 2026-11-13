@@ -34,8 +34,12 @@ jobs:
           for before, after in fixes:
               assert repaired.count(before) == 1, 'Expected exact malformed declaration once'
               repaired = repaired.replace(before, after)
-          assert repaired.count('\n') == original.count('\n'), 'Unexpected line count change'
+          assert repaired.count('\n') == original.count('\n'), 'Unexpected line count change before removing duplicate sections'
           assert len(repaired) < len(original) and len(original) < 100000, 'Unexpected file size'
+          marker = "\n)\n\nclass StartLogin(BaseModel):"
+          assert repaired.count(marker) == 1, 'Unexpected duplicate-section boundary'
+          repaired = repaired.split(marker, 1)[0] + '\n'
+          assert 300 <= repaired.count('\n') <= 400, 'Unexpected Gateway module length'
           compile(repaired, str(p), 'exec')
           p.write_text(repaired, encoding='utf-8')
       - name: Verify minimal diff and commit only repaired file
