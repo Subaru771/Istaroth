@@ -1,0 +1,7 @@
+v0.9.9 CLOUD + TELEGRAM ONLY
+Removed the unsupported native-phone-connector requirement.
+Added phone-only estimated resin tracking directly in the Community web dashboard and /resin AMOUNT /status commands in Telegram.
+Existing live HoYoLAB-connected accounts remain unchanged.
+Estimates are not verified/live game data; update after spending resin.
+Telegram cloud outbound delivery still requires a working network path/relay.
+Migration 0006 is additive. No secret rotation, webhook activation or D1 recreation.

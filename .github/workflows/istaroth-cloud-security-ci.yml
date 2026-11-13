@@ -1,0 +1,46 @@
+name: Istaroth Gateway + Community security tests
+on:
+  push:
+    branches:
+      - work/istaroth-cloud-security-integration
+    paths:
+      - 'experiments/hoyolab-gateway/**'
+      - 'experiments/community-cloud/**'
+      - '.github/workflows/istaroth-cloud-security-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gateway:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: experiments/hoyolab-gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install runtime and test dependencies
+        run: python -m pip install -r requirements.txt pytest pytest-asyncio
+      - name: Python syntax
+        run: python -m compileall -q .
+      - name: Gateway regression tests (mocked HoYoLAB)
+        run: python -m pytest -q
+
+  community:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: experiments/community-cloud
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Cloudflare Worker syntax
+        run: npm run check
+      - name: Community regression tests (mocked Telegram/HoYoLAB)
+        run: npm test

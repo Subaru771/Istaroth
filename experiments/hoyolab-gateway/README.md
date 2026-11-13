@@ -1,3 +1,5 @@
+> **PRIVATE TEST ONLY — experimental branch.** Do not enable public sign-in or collect ordinary users' HoYoLAB passwords. The feature branch `work/istaroth-cloud-security-integration` adds a two-stage claim flow and CSRF protection; it has not been deployed to Render or verified end-to-end. See [SECURITY-RELEASE-GATE.md](SECURITY-RELEASE-GATE.md).
+
 # Istaroth HoYoLAB Gateway — real international login integration (private testing)
 
 This code implements a **real** HoYoLAB international email/password login using [`genshin.py`](https://github.com/seriaati/genshin.py) (pinned `genshin[auth]==1.7.31`). It is **not** a mock account provider. When HoYoLAB accepts a login, the gateway attempts to verify the session with your deployed Community's actual API and links a selected game character to the Telegram-authenticated Community account.

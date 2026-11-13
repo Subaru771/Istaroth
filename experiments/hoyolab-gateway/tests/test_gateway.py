@@ -10,12 +10,20 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import gateway
 
+async def initialize(client):
+    response=await client.get('/')
+    session=client.cookies.get('istaroth_gateway_session')
+    assert session
+    client.headers['x-istaroth-csrf']=gateway.csrf_for_session(session)
+    return response
+
 @pytest.fixture(autouse=True)
 def reset(monkeypatch):
     monkeypatch.setenv('GATEWAY_ACCESS_PASSWORD', 'test-private-access-password')
     for job in list(gateway.jobs.values()):
         if job.task and not job.task.done(): job.task.cancel()
     gateway.jobs.clear()
+    gateway.reservations.clear()
     gateway.attempts.clear()
     yield
 
@@ -33,7 +41,7 @@ async def test_health_and_static_page():
 @pytest.mark.asyncio
 async def test_invalid_pairing_code_rejected():
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
-        await client.get('/')
+        await initialize(client)
         resp=await client.post('/api/start',json={'code':'123','account':'user@example.com','password':'1234567'})
         assert resp.status_code==422
         assert len(gateway.jobs)==0
@@ -41,7 +49,7 @@ async def test_invalid_pairing_code_rejected():
 @pytest.mark.asyncio
 async def test_csrf_cross_site_rejected():
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
-        await client.get('/')
+        await initialize(client)
         resp=await client.post('/api/start',headers={'origin':'https://evil.example'},json={})
         assert resp.status_code==403
         assert not gateway.jobs
@@ -68,18 +76,22 @@ async def test_real_backend_login_flow_with_mocked_hoyolab(monkeypatch):
         monkeypatch.setitem(sys.modules,name,mod)
     async def simulate(endpoint,payload):
         assert payload['code']=='A'*24
-        if endpoint=='/api/link/check':
+        if endpoint=='/api/link/claim':
             return {'ok':True}
         if endpoint=='/api/link/preview':
             assert 'ltoken_v2=secret-token-123' in payload['cookie']
+            assert len(payload['proof']) == 43
             return {'accounts':[{'uid':'801234567','region':'os_asia','nickname':'Lumine'}]}
         assert endpoint=='/api/link/complete'
         assert payload['uid']=='801234567'
+        assert len(payload['proof']) == 43
         return {'ok':True}
     monkeypatch.setattr(gateway,'json_from_community',simulate)
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
-        await client.get('/')
-        resp=await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'never-store-me'})
+        await initialize(client)
+        preflight=await client.post('/api/pairing/claim',json={'code':'A'*24})
+        assert preflight.status_code==200
+        resp=await client.post('/api/start',json={'code':'A'*24,'claim_token':preflight.json()['claimToken'],'account':'user@example.com','password':'never-store-me'})
         assert resp.status_code==200
         job_id=resp.json()['id']
         for _ in range(100):
@@ -102,6 +114,7 @@ async def test_account_selection_must_match_authenticated_hoyolab():
     job=gateway.LoginJob(id='job',session='x'*43,pairing_code='y'*24,created=__import__('time').monotonic(),status='ready',cookie='ltoken_v2=secret',accounts=[{'uid':'801234567','region':'os_asia','nickname':'A'}])
     gateway.jobs['job']=job
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password'),cookies={'istaroth_gateway_session':'x'*43}) as client:
+        client.headers['x-istaroth-csrf']=gateway.csrf_for_session('x'*43)
         resp=await client.post('/api/approve/job',json={'uid':'999999999','region':'os_euro'})
         assert resp.status_code==403
         assert job.cookie=='ltoken_v2=secret'
@@ -134,7 +147,7 @@ async def test_gateway_rejects_unauthenticated_access(monkeypatch):
 async def test_public_mode_requires_valid_community_code(monkeypatch):
     monkeypatch.setenv('GATEWAY_PUBLIC_PAIRING', '1')
     async def reject(endpoint,payload):
-        assert endpoint == '/api/link/check'
+        assert endpoint == '/api/link/claim'
         raise ValueError('Code expired')
     monkeypatch.setattr(gateway, 'json_from_community', reject)
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
@@ -150,8 +163,8 @@ async def test_invalid_community_code_stops_before_password_login(monkeypatch):
         raise ValueError('Pairing code expired or invalid.')
     monkeypatch.setattr(gateway,'json_from_community',deny)
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
-        await client.get('/')
-        response = await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'test'})
+        await initialize(client)
+        response = await client.post('/api/pairing/claim',json={'code':'A'*24})
         assert response.status_code == 403
         assert not gateway.jobs
 
@@ -162,7 +175,39 @@ async def test_community_check_must_explicitly_return_ok(monkeypatch):
         return {'message': 'unexpected response'}
     monkeypatch.setattr(gateway, 'json_from_community', ambiguous)
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
-        await client.get('/')
-        result=await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'not-sent'})
+        await initialize(client)
+        result=await client.post('/api/pairing/claim',json={'code':'A'*24})
         assert result.status_code == 403
         assert not gateway.jobs
+
+@pytest.mark.asyncio
+async def test_pairing_claim_cannot_be_replayed_or_used_by_another_browser(monkeypatch):
+    async def mock_community(endpoint,payload):
+        assert endpoint == '/api/link/claim'
+        assert len(payload['proof']) == 43
+        return {'ok':True}
+    async def fake_login(job,account,password):
+        job.status='failed'
+    monkeypatch.setattr(gateway,'json_from_community',mock_community)
+    monkeypatch.setattr(gateway,'perform_login',fake_login)
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as first:
+        await initialize(first)
+        claim=await first.post('/api/pairing/claim',json={'code':'A'*24})
+        assert claim.status_code==200
+        ticket=claim.json()['claimToken']
+        fields={'code':'A'*24,'claim_token':ticket,'account':'user@example.com','password':'test'}
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as second:
+            await initialize(second)
+            assert (await second.post('/api/start',json=fields)).status_code==403
+        assert (await first.post('/api/start',json=fields)).status_code==200
+        assert (await first.post('/api/start',json=fields)).status_code==403
+
+@pytest.mark.asyncio
+async def test_csrf_required_even_with_valid_http_basic_and_session():
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
+        page=await client.get('/')
+        assert page.status_code==200
+        assert 'istaroth-csrf' in page.text
+        result=await client.post('/api/pairing/claim',json={'code':'A'*24})
+        assert result.status_code==403
+        assert not gateway.reservations

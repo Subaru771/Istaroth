@@ -1,0 +1,12 @@
+Istaroth Community v0.10.0 — WEB PAIRING ONLY
+
+Open the Community website, sign in with Telegram, and use the new website HoYoLAB connection panel.
+Users provide their OWN HoYoLAB session cookie header to this website (no password entry).
+The Worker checks the session, detects linked Genshin accounts, and asks for explicit consent before encrypted storage.
+No Windows Istaroth, Android connector, iOS connector, or standalone mobile app is required for the connection interface.
+
+Important limitation: HoYoLAB does not offer an official third-party OAuth flow for resin.
+Normal browsers cannot read HoYoLAB cookies from another website. Obtaining the required session on phones may be difficult, especially on iOS Safari; simply signing in in another tab is NOT enough. Never enter a HoYoLAB password or verification code into the Community website.
+
+Existing Windows-connected and phone-estimate account records are retained. Existing database, encryption key, and Telegram settings stay untouched by the updater.
+Telegram outbound delivery is still separate and must be tested on the live Cloudflare installation.
