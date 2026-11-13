@@ -772,6 +772,10 @@ async function route(request,env){
   if(route==='/api/notifications/quiet-hours'&&request.method==='POST')return setQuietPreference(request,env,user);
   if(route==='/api/link/start'&&request.method==='POST')return beginPairing(request,env,user);
   if(route==='/api/link/status'&&request.method==='GET')return pairingStatus(env,user);
+  if(route==='/api/auth/logout-all'&&request.method==='POST'){
+    await q(env,'DELETE FROM sessions WHERE user_id=?',user.id).run();
+    return json({ok:true},200,{'Set-Cookie':sessionCookie('',0)});
+  }
   if(route==='/api/auth/logout'&&request.method==='POST'){
     const raw=parseSession(request);if(raw)await q(env,'DELETE FROM sessions WHERE token_hash=?',hash(raw)).run();
     return json({ok:true},200,{'Set-Cookie':sessionCookie('',0)});
