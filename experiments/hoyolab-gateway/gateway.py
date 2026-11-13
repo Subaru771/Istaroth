@@ -69,7 +69,7 @@ reservations: dict[str, PairReservation] = {}
 attempts: dict[str, list[float]] = {}
 
 class ClaimLogin(BaseModel):
-    code: str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}
+    code: str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}$')
     account: str = Field(min_length=3, max_length=180)
     password: str = Field(min_length=1, max_length=512)
 
@@ -374,7 +374,7 @@ async def cancel(job_id: str,request:Request):
 )
 
 class StartLogin(BaseModel):
-    claim_token: str = Field(min_length=43, max_length=43, pattern=r'^[A-Za-z0-9_-]{43} str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}$')
+    claim_token: str = Field(min_length=43, max_length=43, pattern=r'^[A-Za-z0-9_-]{43}$')
     account: str = Field(min_length=3, max_length=180)
     password: str = Field(min_length=1, max_length=512)
 
@@ -1224,7 +1224,7 @@ async def cancel(job_id: str,request:Request):
 )
 
 class StartLogin(BaseModel):
-    claim_token: str = Field(min_length=43, max_length=43, pattern=r'^[A-Za-z0-9_-]{43} str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}$')
+    claim_token: str = Field(min_length=43, max_length=43, pattern=r'^[A-Za-z0-9_-]{43}$')
     account: str = Field(min_length=3, max_length=180)
     password: str = Field(min_length=1, max_length=512)
 
