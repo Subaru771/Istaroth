@@ -1,0 +1,8 @@
+Istaroth Community v0.10.1 GitHub helper pairing update.
+
+Istaroth Community v0.10.0 — WEBSITE HoYoLAB connection
+
+Run UPDATE-EXISTING-COMMUNITY.cmd in this folder.
+Then open https://istaroth-community.gxcccgx123.workers.dev and connect on the website using your own HoYoLAB session, without installing an app.
+This uses session cookies (not password). Normal browsers cannot automatically retrieve them from HoYoLAB; see README.
+Existing D1 database, DATA_KEY, bot and webhook are preserved.
