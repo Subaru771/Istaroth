@@ -3,7 +3,7 @@ services:
     name: istaroth-telegram-relay
     env: node
     plan: free
-    rootDir: relay
+    rootDir: experiments/community-cloud/relay
     buildCommand: npm install --omit=dev
     startCommand: node server.mjs
     envVars:
