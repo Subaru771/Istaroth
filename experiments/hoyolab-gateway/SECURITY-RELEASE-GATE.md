@@ -1,17 +1,41 @@
-# Gateway release gate
+# Istaroth Gateway security release gate
 
-**Status: PRIVATE TEST ONLY. Do not enable `GATEWAY_PUBLIC_PAIRING=1` in production.**
+**Status: PRIVATE DEVELOPMENT — NOT CLEARED FOR PUBLIC USE.**
 
-The current public-pairing mode bypasses HTTP Basic authentication for all non-health endpoints. A valid pairing code is checked but not reserved atomically at `/api/start`. It must not be treated as a substitute for a Telegram-authenticated, single-use handoff.
+## Implemented in feature branch
 
-Before public access:
+- Default-deny HTTP Basic access for all non-health endpoints; `GATEWAY_PUBLIC_PAIRING=1` is NOT a bypass.
+- D1-atomic five-minute pairing reservation with a separate 32-byte opaque proof.
+- Password-free `POST /api/pairing/claim` before `POST /api/start`.
+- One-time, browser-session-bound claim token (not consumed by a different browser).
+- Gateway CSRF token bound to the HttpOnly browser session, required for writes and CAPTCHA.
+- Session-scoped job status, CAPTCHA, account selection, approval and cancellation.
+- No deliberate disk storage of credentials or raw session cookie responses.
+- Clear notice that authentication is unofficial and password-handling.
 
-1. Introduce a Community-signed short-lived authorization ticket bound to Telegram user, browser state, audience, and a unique nonce; verify and consume the nonce atomically in D1.
-2. Require authorization on every sensitive gateway endpoint, including job status, CAPTCHA and approval; enforce CSRF tokens for state-changing operations.
-3. Enforce shared rate limits and bounded concurrency; verify trusted proxy client addresses.
-4. Add explicit user consent and deletion/revocation flows; never log passwords, cookies, pairing codes or tokens.
-5. Audit Community D1 encryption, ownership, `/api/link/check`, `/api/link/preview`, `/api/link/complete`, Telegram login verification, cron scheduling and Telegram outbound errors.
-6. Run negative tests for replay, concurrent redemption, cross-account linking, CSRF, forged cookies, and expiry; test real provider login privately.
-7. Confirm Render deployment revision and Cloudflare Worker revision separately; never interpret `/health` as proof of authentication or Telegram delivery.
+## Remaining public-release blockers
 
-Preserve existing D1 database, encryption keys, accounts, and Telegram settings. No schema migration or key rotation should be performed without a tested backup and rollback plan.
+1. **Password risk:** This gateway receives plaintext HoYoLAB passwords and authenticated cookies. HoYoLAB does not offer this project documented OAuth. A third-party password collection service must not be presented as a secure official sign-in flow.
+2. **Security review:** Obtain independent review of dependencies, CSRF, CSP, logging, host configuration, password memory, abuse controls, captcha handling, and full data deletion.
+3. **Persistent shared rate limits:** Current rate limiting and claim token state are in memory, tied to one Render process. Multi-worker or restart behavior is fail-closed but not production hardened.
+4. **OTP and CAPTCHAs:** Provider-specific challenges, device verification and production account safety remain unverified.
+5. **Community review:** Verify live D1 migration and historical users, credential decryption, correct pairing ownership, account deletion, and appropriate retention of events and failed notification attempts.
+6. **Delivery:** Investigate Cloudflare-to-Telegram HTTP 502 or deploy a private outbound relay under controlled keys. Verify notifications while PCs are completely off.
+7. **Testing:** GitHub Actions jobs are currently failing before reporting individual steps; investigate runner/permission or billing restrictions. Do not claim GitHub CI passing.
+8. **Deployment:** The Render service tracks `experimental/private-hoyolab-gateway-v1`, NOT the new feature branch. Live services have not been upgraded with this work.
+
+## Intended API contract
+
+- Authenticated Community browser: `POST /api/link/start` -> 24-character code.
+- Gateway: `POST /api/pairing/claim` (only code, no HoYoLAB password) -> Community `POST /api/link/claim` reserves D1 code; gateway returns browser-bound one-time claim token.
+- Gateway browser `POST /api/start` accepts code + claim token + user credentials, after successful claim.
+- Gateway previews authenticated roles with `/api/link/preview` including gateway proof; approval uses `/api/link/complete` including proof. Community consumes code atomically.
+- The browser's gateway URL uses a fragment (`#code=...`) rather than a query parameter.
+
+## Secrets and migration
+
+Do not commit BOT_TOKEN, DATA_KEY, WEBHOOK_SECRET, ADMIN_SETUP_KEY, GATEWAY_ACCESS_PASSWORD or live HoYoLAB credentials. Cloudflare `0007` and `0008` migrations are additive. Preserve existing D1 database, DATA_KEY and user records. Back up D1 before any live update. Never switch on public access simply by setting an environment flag.
+
+## Real-device acceptance tests
+
+Test fresh Telegram account, wrong/expired/replayed code, concurrent claim, wrong browser, CAPTCHA, multiple Genshin accounts, explicit approval, credentials redaction, account deletion, resin reminders, quiet hours, friend approvals, Cloudflare/Render restarts, Telegram outage/recovery, and PC-off delivery.
