@@ -320,6 +320,7 @@
  $('sync-notes').addEventListener('click',()=>task(async()=>{await api('/api/account/sync',{});await refresh();},'Resin updated.'));
  $('copy-invite').addEventListener('click',()=>task(async()=>{await navigator.clipboard.writeText($('invite-link').value);},'Invitation copied.'));
  $('rotate-invite').addEventListener('click',()=>task(async()=>{if(!confirm('Old invitation links will stop working. Continue?'))return;await api('/api/invite/rotate',{});await refresh();},'Invitation link refreshed.'));
+ $('logout-all').addEventListener('click',()=>task(async()=>{if(!confirm('Sign out every Community session, including this one?'))return;await api('/api/auth/logout-all',{});stopPairing();resetWebPair();state.data=null;showApp(false);},'All devices signed out.'));
  $('remove-hoyolab').addEventListener('click',()=>task(async()=>{if(!confirm('Disconnect resin tracking? Cloud alerts will stop.'))return;await api('/api/account/remove',{});await refresh();},'HoYoLAB disconnected.'));
  $('delete-account').addEventListener('click',()=>task(async()=>{if(prompt('Type DELETE to erase your Istaroth Community data.')!=='DELETE')return;await api('/api/account/delete-all',{confirm:'DELETE'});state.data=null;showApp(false);},'Community data deleted.'));
  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
