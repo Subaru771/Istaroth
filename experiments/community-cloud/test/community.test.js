@@ -659,3 +659,20 @@ async function qMockEstimate(envv,userId,resin,ts){
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`)
     .bind(userId,'','','','','',resin,cap,ts+(cap-resin)*480000,ts,ts,null,'estimate',1,180).run();
 }
+
+
+test('sign out all devices invalidates every session belonging to the Telegram user',async()=>{
+  const f=harness(),e=env();
+  try{
+    const first=sessionHeaders(await signIn(e,f,'912344'));
+    const second=sessionHeaders(await signIn(e,f,'912344'));
+    const another=sessionHeaders(await signIn(e,f,'912345'));
+    for(const headers of [first,second,another])
+      assert.equal((await worker.fetch(request('/api/me','GET',undefined,headers),e)).status,200);
+    const result=await worker.fetch(request('/api/auth/logout-all','POST',{},first),e);
+    assert.equal(result.status,200);
+    for(const headers of [first,second])
+      assert.equal((await worker.fetch(request('/api/me','GET',undefined,headers),e)).status,401);
+    assert.equal((await worker.fetch(request('/api/me','GET',undefined,another),e)).status,200);
+  }finally{f.restore();}
+});
