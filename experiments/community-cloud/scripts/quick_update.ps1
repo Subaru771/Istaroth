@@ -1,4 +1,4 @@
-﻿# Istaroth Community v0.10.1 - existing deployment update only.
+﻿# Istaroth Community v0.11.0 RC1 - existing deployment update only.
 # Safe existing-deployment updater. Does not change credentials or activate Telegram.
 $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path (Join-Path $PSScriptRoot '..'))
