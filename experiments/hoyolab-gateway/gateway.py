@@ -275,9 +275,11 @@ async def claim_login(payload: ClaimLogin, request: Request):
 async def start(payload: StartLogin, request: Request):
     session = get_session(request)
     cleanup()
-    claim = reservations.pop(payload.claim_token, None)
+    claim = reservations.get(payload.claim_token)
     if not claim or not hmac.compare_digest(claim.session,session) or claim.code != payload.code or time.monotonic()-claim.created > TTL_SECONDS:
         raise HTTPException(status_code=403,detail='Pairing claim expired or already used.')
+    # Consume only after proving ownership; a different browser cannot burn the token.
+    reservations.pop(payload.claim_token,None)
     if len(jobs) >= MAX_JOBS:
         raise HTTPException(status_code=503, detail='Too many active connections. Try again later.')
     ip = request.client.host if request.client else 'unknown'
