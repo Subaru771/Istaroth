@@ -6,4 +6,5 @@
 - Improve Telegram login counter to stop concurrent excess guesses.
 - Preserve current accounts, Telegram sessions, DATA_KEY and D1 ID using additive migrations.
 - Keep unofficial credential-handling gateway restricted until security validation.
-- Regression coverage: 48 local Community tests.
+- Add one-click sign out of all Community sessions, without affecting other users.
+- Regression coverage: 49 local Community tests, plus Worker JavaScript syntax check.
