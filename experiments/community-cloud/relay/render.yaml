@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: istaroth-telegram-relay
+    env: node
+    plan: free
+    rootDir: relay
+    buildCommand: npm install --omit=dev
+    startCommand: node server.mjs
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: RELAY_KEY
+        generateValue: true
