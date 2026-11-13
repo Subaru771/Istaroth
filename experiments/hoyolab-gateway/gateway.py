@@ -212,7 +212,7 @@ async def perform_login(job: LoginJob, account: str, password: str):
         if typename in known:
             job.message = 'HoYoLAB rejected the login ('+typename+'). Check credentials or required verification.'
         elif isinstance(e, ValueError):
-            job.message = str(e)[:200]
+            job.message = 'The connection could not be verified. Check your pairing code and retry.'
         elif isinstance(e, asyncio.TimeoutError):
             job.message = 'HoYoLAB login timed out. Please try again.'
         else:
@@ -313,7 +313,7 @@ async def approve(job_id: str,payload: ApproveLink,request: Request):
         job.accounts=[]
         return {'ok':True,'linked':True}
     except Exception as e:
-        job.status='failed'; job.message='Community could not save the account: '+str(e)[:170]
+        job.status='failed'; job.message='Community could not save the account. Please reconnect and try again.'
         raise HTTPException(status_code=502,detail=job.message) from None
     finally:
         cookie=''
