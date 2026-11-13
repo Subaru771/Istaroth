@@ -159,7 +159,7 @@ async def test_public_mode_requires_valid_community_code(monkeypatch):
 @pytest.mark.asyncio
 async def test_invalid_community_code_stops_before_password_login(monkeypatch):
     async def deny(endpoint,payload):
-        assert endpoint == '/api/link/check'
+        assert endpoint == '/api/link/claim'
         raise ValueError('Pairing code expired or invalid.')
     monkeypatch.setattr(gateway,'json_from_community',deny)
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:
@@ -171,7 +171,7 @@ async def test_invalid_community_code_stops_before_password_login(monkeypatch):
 @pytest.mark.asyncio
 async def test_community_check_must_explicitly_return_ok(monkeypatch):
     async def ambiguous(endpoint, payload):
-        assert endpoint == '/api/link/check'
+        assert endpoint == '/api/link/claim'
         return {'message': 'unexpected response'}
     monkeypatch.setattr(gateway, 'json_from_community', ambiguous)
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example',auth=('owner','test-private-access-password')) as client:

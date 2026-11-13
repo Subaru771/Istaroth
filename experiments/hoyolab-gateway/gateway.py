@@ -70,9 +70,12 @@ attempts: dict[str, list[float]] = {}
 
 class ClaimLogin(BaseModel):
     code: str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}$')
+
+class StartLogin(BaseModel):
+    code: str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}$')
+    claim_token: str = Field(min_length=43, max_length=43)
     account: str = Field(min_length=3, max_length=180)
     password: str = Field(min_length=1, max_length=512)
-
 class CaptchaAnswer(BaseModel):
     value: dict[str, Any]
 
