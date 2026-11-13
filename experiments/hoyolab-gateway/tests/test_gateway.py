@@ -132,29 +132,21 @@ async def test_session_isolation_and_expiry():
     assert job.cookie is None
 
 @pytest.mark.asyncio
-async def test_gateway_rejects_unauthenticated_access(monkeypatch):
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
-        assert (await client.get('/health')).status_code == 200
-        assert (await client.get('/')).status_code == 401
-        assert (await client.get('/static/app.js')).status_code == 401
-        assert (await client.post('/api/start',json={})).status_code == 401
-        assert (await client.get('/',auth=('owner','wrong-password'))).status_code == 401
-    monkeypatch.delenv('GATEWAY_ACCESS_PASSWORD')
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
-        assert (await client.get('/')).status_code == 401
-
-@pytest.mark.asyncio
-async def test_public_mode_requires_valid_community_code(monkeypatch):
-    monkeypatch.setenv('GATEWAY_PUBLIC_PAIRING', '1')
-    async def reject(endpoint,payload):
+async def test_gateway_public_page_but_pairing_required(monkeypatch):
+    async def reject(endpoint, payload):
         assert endpoint == '/api/link/claim'
         raise ValueError('Code expired')
     monkeypatch.setattr(gateway, 'json_from_community', reject)
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app),base_url='https://gateway.example') as client:
-        assert (await client.get('/')).status_code == 401
-        result=await client.post('/api/start',json={'code':'A'*24,'account':'user@example.com','password':'not-sent'})
-        assert result.status_code == 401
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=gateway.app), base_url='https://gateway.example') as client:
+        assert (await client.get('/health')).status_code == 200
+        assert (await client.get('/')).status_code == 200
+        assert (await client.get('/static/app.js')).status_code == 200
+        assert (await client.post('/api/start', json={})).status_code == 403
+        await initialize(client)
+        assert (await client.post('/api/start', json={'code':'A'*24,'claim_token':'x'*43,'account':'user@example.com','password':'not-sent'})).status_code == 403
+        assert (await client.post('/api/pairing/claim', json={'code':'A'*24})).status_code == 403
         assert not gateway.jobs
+        assert not gateway.reservations
 
 @pytest.mark.asyncio
 async def test_invalid_community_code_stops_before_password_login(monkeypatch):
