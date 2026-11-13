@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: fix/gateway-render-targeted-20261113
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -22,49 +24,28 @@ jobs:
           from pathlib import Path
           p = Path('experiments/hoyolab-gateway/gateway.py')
           s = p.read_text(encoding='utf-8')
-          old = "class ClaimLogin(BaseModel):\\n    code: str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}
-        run: python -m py_compile experiments/hoyolab-gateway/gateway.py
-      - name: Install Gateway dependencies and pytest
-        run: python -m pip install -r experiments/hoyolab-gateway/requirements.txt pytest pytest-asyncio
-      - name: Run Gateway tests
-        run: python -m pytest experiments/hoyolab-gateway -q
-)\\n    account: str = Field(min_length=3, max_length=180)\\n    password: str = Field(min_length=1, max_length=512)"
-          new = "class ClaimLogin(BaseModel):\\n    code: str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}
-        run: python -m py_compile experiments/hoyolab-gateway/gateway.py
-      - name: Install Gateway dependencies and pytest
-        run: python -m pip install -r experiments/hoyolab-gateway/requirements.txt pytest pytest-asyncio
-      - name: Run Gateway tests
-        run: python -m pytest experiments/hoyolab-gateway -q
-)\\n\\nclass StartLogin(BaseModel):\\n    code: str = Field(min_length=24, max_length=24, pattern=r'^[A-Za-z0-9_-]{24}
-        run: python -m py_compile experiments/hoyolab-gateway/gateway.py
-      - name: Install Gateway dependencies and pytest
-        run: python -m pip install -r experiments/hoyolab-gateway/requirements.txt pytest pytest-asyncio
-      - name: Run Gateway tests
-        run: python -m pytest experiments/hoyolab-gateway -q
-)\\n    claim_token: str = Field(min_length=43, max_length=43, pattern=r'^[A-Za-z0-9_-]{43}
-        run: python -m py_compile experiments/hoyolab-gateway/gateway.py
-      - name: Install Gateway dependencies and pytest
-        run: python -m pip install -r experiments/hoyolab-gateway/requirements.txt pytest pytest-asyncio
-      - name: Run Gateway tests
-        run: python -m pytest experiments/hoyolab-gateway -q
-)\\n    account: str = Field(min_length=3, max_length=180)\\n    password: str = Field(min_length=1, max_length=512)"
-          assert s.count(old) == 1, 'Expected one legacy ClaimLogin model'
-          assert 'class StartLogin(BaseModel)' not in s
-          fixed = s.replace(old, new)
+          start = s.index('class ClaimLogin(BaseModel):')
+          end = s.index('class CaptchaAnswer(BaseModel):', start)
+          assert 'class StartLogin(BaseModel):' not in s
+          old = s[start:end]
+          lines = old.splitlines()
+          assert len(lines) == 5 and 'account:' in lines[2] and 'password:' in lines[3]
+          new = '\n'.join([lines[0], lines[1], '', 'class StartLogin(BaseModel):', lines[1], '    claim_token: str = Field(min_length=43, max_length=43)', lines[2], lines[3], ''])
+          fixed = s[:start] + new + s[end:]
           compile(fixed, str(p), 'exec')
           p.write_text(fixed, encoding='utf-8')
       - name: Verify gateway source syntax
         run: python -m py_compile experiments/hoyolab-gateway/gateway.py
-      - name: Install Gateway dependencies and pytest
+      - name: Install dependencies
         run: python -m pip install -r experiments/hoyolab-gateway/requirements.txt pytest pytest-asyncio
       - name: Run Gateway tests
         run: python -m pytest experiments/hoyolab-gateway -q
-      - name: Commit verified model repair
+      - name: Commit verified repair
         if: github.event_name == 'push'
         run: |
           git diff --check
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add experiments/hoyolab-gateway/gateway.py
-          git commit -m "fix(gateway): separate pairing claim and login models"
+          git commit -m "fix(gateway): separate claim and login models"
           git push origin HEAD:fix/gateway-render-targeted-20261113
