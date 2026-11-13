@@ -223,14 +223,10 @@
  $('reset-login').addEventListener('click',()=>{state.ticket=null;$('auth-begin').classList.remove('hidden');$('auth-code').classList.add('hidden');message('');});
  for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>tab(button.dataset.tab));
  $('refresh-all').addEventListener('click',()=>task(refresh,'Up to date.'));$('logout').addEventListener('click',()=>task(async()=>{await api('/api/auth/logout',{});stopPairing();resetWebPair();state.data=null;showApp(false);}));
- $('gateway-start').addEventListener('click',()=>task(async()=>{
-   const response=await api('/api/link/start',{});
-   const link=$('gateway-link');
-   // Fragment isn't transmitted in the initial HTTP request or Referer.
-   link.href='https://istaroth-hoyolab-gateway.onrender.com/#code='+encodeURIComponent(response.code);
-   $('gateway-ready').classList.remove('hidden');
-   notify('Your 5-minute connection is ready. Open the gateway tab.');
- }));
+ async function startGatewayPair(prefix){const response=await api('/api/link/start',{});$(''+prefix+'-code').textContent=response.code;$(''+prefix+'-link').href='https://istaroth-hoyolab-gateway.onrender.com/#code='+encodeURIComponent(response.code);$(''+prefix+'-ready').classList.remove('hidden');notify('Pairing code generated. Expires in five minutes.');}
+ $('phone-start').addEventListener('click',()=>task(()=>startGatewayPair('phone')));
+ for(const prefix of ['gateway','phone'])$(prefix+'-copy').addEventListener('click',()=>task(async()=>{const code=$(prefix+'-code').textContent;if(!/^[A-Za-z0-9_-]{24}$/.test(code))throw Error('Generate a code first.');await navigator.clipboard.writeText(code);},'Pairing code copied.'));
+ $('gateway-start').addEventListener('click',()=>task(()=>startGatewayPair('gateway')));
  $('save-quiet').addEventListener('click',()=>task(async()=>{
    const data={enabled:$('quiet-enabled').checked,start:$('quiet-start').value,end:$('quiet-end').value,timezone:$('quiet-timezone').value};
    await api('/api/notifications/quiet-hours',data);await refresh();
