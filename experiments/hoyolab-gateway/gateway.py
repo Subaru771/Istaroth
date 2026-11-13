@@ -85,26 +85,10 @@ class ApproveLink(BaseModel):
 
 @app.middleware('http')
 async def secure_headers(request: Request, call_next):
-    # Fail closed: this experimental credential-handling service remains private.
-    # GATEWAY_PUBLIC_PAIRING is deliberately NOT an authorization bypass.
-    # Do not enable public credential collection without an independent audit.
-    # /health remains public for Render's health check only.
-    if request.url.path != '/health':
-        expected = os.getenv('GATEWAY_ACCESS_PASSWORD', '')
-        authorized = False
-        header = request.headers.get('authorization', '')
-        if expected and len(expected) >= 16 and header.startswith('Basic '):
-            try:
-                raw = base64.b64decode(header[6:], validate=True).decode('utf-8')
-                username, supplied = raw.split(':', 1)
-                authorized = (hmac.compare_digest(username, 'owner')
-                              and hmac.compare_digest(supplied, expected))
-            except (ValueError, UnicodeError, binascii.Error):
-                pass
-        if not authorized:
-            return Response('Private gateway: authentication required.', status_code=401,
-                            headers={'WWW-Authenticate': 'Basic realm="Istaroth Private Gateway"',
-                                     'Cache-Control': 'no-store'})
+    # The public landing page is not credential authorization. Sensitive endpoints
+    # independently require an atomically claimed, short-lived Community pairing
+    # code tied to the browser's HttpOnly session cookie.
+    # Keep CSRF and same-origin validation on all mutating requests.
     if request.method in {'POST', 'PUT', 'PATCH', 'DELETE'}:
         origin = request.headers.get('origin')
         if origin and origin != ('https://' + request.headers.get('host', '')) and origin != ('http://' + request.headers.get('host', '') if request.headers.get('host','').startswith(('localhost','127.0.0.1')) else ''):
