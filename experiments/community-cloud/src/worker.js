@@ -715,7 +715,17 @@ async function webhook(request,env){
     await q(env,`UPDATE notification_events SET status='cancelled',updated_at=? WHERE recipient_id=? AND status='pending'`,now(),id).run();
     return webhookReply(id,'Notifications stopped. You can turn your own alerts back on inside Istaroth.');
   }else if(first==='/help'||first==='/start'){
-    return webhookReply(id,'Istaroth Community: Open the website to sign in. No PC? Start estimated resin reminders with /resin 75 (replace with your current amount). Update after spending. Set alerts with /remind 80 or /remind every 10. /status shows tracking. /stop disables alerts.');
+    if(first==='/start'){
+      // Show the welcome only once per day. /help always remains available.
+      const key=hash('telegram-welcome|'+id+'|'+env.DATA_KEY);
+      const ts=now(),cutoff=ts-24*60*60*1000;
+      const previous=await q(env,'SELECT window_start FROM rate_limits WHERE key=?',key).first();
+      if(previous&&Number(previous.window_start)>cutoff)return json({ok:true});
+      await q(env,`INSERT INTO rate_limits(key,window_start,count) VALUES(?,?,1)
+        ON CONFLICT(key) DO UPDATE SET window_start=excluded.window_start,count=1`,key,ts).run();
+      return webhookReply(id,'✦ Welcome to Istaroth Community!\\nConnect your Genshin account: https://istaroth-community.gxcccgx123.workers.dev\\nSend /help to see commands.');
+    }
+    return webhookReply(id,'Istaroth commands:\\n/status — Resin and alert status\\n/remind 80 — Alert at 80 resin\\n/remind every 10 — Alert every 10 resin\\n/resin 75 — Set estimated resin manually\\n/stop — Disable alerts');
   }else if(first==='/status'){
     const row=await q(env,'SELECT COUNT(*) AS total FROM subscriptions WHERE subscriber_id=? AND enabled=1',id).first();
     const a=await q(env,'SELECT self_enabled,resin,cap,full_at,last_sync_at,tracking_mode FROM accounts WHERE user_id=?',id).first();
