@@ -729,6 +729,19 @@ async function webhook(request,env){
 async function route(request,env){
   const url=new URL(request.url),route=url.pathname;
   if(route==='/health'&&request.method==='GET')return json({service:'Istaroth Community',online:true});
+  if(route==='/api/gateway/ready'&&request.method==='GET'){
+    // Wake Render before issuing a short-lived pairing code. Never proxy credentials.
+    try{
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),8000);
+      try{
+        const response=await fetch('https://istaroth-hoyolab-gateway.onrender.com/health',{signal:controller.signal,headers:{accept:'application/json'},redirect:'error',cache:'no-store'});
+        const body=await response.json().catch(()=>null);
+        return json({ready:response.ok&&body?.online===true});
+      }finally{clearTimeout(timeout);}
+    }catch{return json({ready:false});}
+  }
+
   if(route==='/'&&request.method==='GET')return env.ASSETS.fetch(request);
   if(route==='/telegram'&&request.method==='POST')return webhook(request,env);
   if(!route.startsWith('/api/'))return env.ASSETS.fetch(request);
