@@ -17,7 +17,7 @@ $('verify-code').onclick=async()=>{
     CLAIM_TOKEN=result.claimToken;
     $('pair-step').hidden=true;
     $('credential-step').hidden=false;
-    $('password-notice').textContent='Your Community account is verified. This unofficial gateway receives your HoYoLAB password. Use a dedicated test account.';
+    $('password-notice').textContent='Pairing verified. This is an unofficial HoYoLAB connection.';
   }catch(e){alert(e.message)}finally{button.disabled=false}
 };
 LOGIN.onsubmit=async e=>{e.preventDefault();$('begin').disabled=true;try{const form=new FormData(LOGIN);if(!CLAIM_TOKEN)throw Error('Verify your Community pairing code first.');const result=await api('/api/start','POST',{code:form.get('code').toString().trim(),claim_token:CLAIM_TOKEN,account:form.get('account').toString().trim(),password:form.get('password').toString()});CLAIM_TOKEN='';LOGIN.querySelector('[name=password]').value='';LOGIN.reset();JOB=result.id;LOGIN.hidden=true;$('work').hidden=false;timer=setInterval(update,1300);await update();}catch(err){alert(err.message);}finally{$('begin').disabled=false}};
