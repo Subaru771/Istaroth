@@ -223,7 +223,30 @@
  $('reset-login').addEventListener('click',()=>{state.ticket=null;$('auth-begin').classList.remove('hidden');$('auth-code').classList.add('hidden');message('');});
  for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>tab(button.dataset.tab));
  $('refresh-all').addEventListener('click',()=>task(refresh,'Up to date.'));$('logout').addEventListener('click',()=>task(async()=>{await api('/api/auth/logout',{});stopPairing();resetWebPair();state.data=null;showApp(false);}));
- async function startGatewayPair(prefix){const response=await api('/api/link/start',{});$(''+prefix+'-code').textContent=response.code;$(''+prefix+'-link').href='https://istaroth-hoyolab-gateway.onrender.com/#code='+encodeURIComponent(response.code);$(''+prefix+'-ready').classList.remove('hidden');notify('Pairing code generated. Expires in five minutes.');}
+ async function startGatewayPair(prefix){
+   const button=$(prefix+'-start');
+   const originalLabel=button.textContent;
+   button.disabled=true;
+   try{
+     // A Render free instance may be asleep. Wake it before starting the code TTL.
+     button.textContent='Preparing secure connection…';
+     let ready=false;
+     for(let attempt=0;attempt<12;attempt++){
+       try{ready=(await api('/api/gateway/ready')).ready===true;}catch{}
+       if(ready)break;
+       if(attempt<11)await new Promise(resolve=>setTimeout(resolve,3000));
+     }
+     if(!ready){
+       notify('Gateway is taking longer than expected. You can still continue.',true);
+     }
+     button.textContent='Generating pairing code…';
+     const response=await api('/api/link/start',{});
+     $(prefix+'-code').textContent=response.code;
+     $(prefix+'-link').href='https://istaroth-hoyolab-gateway.onrender.com/#code='+encodeURIComponent(response.code);
+     $(prefix+'-ready').classList.remove('hidden');
+     notify(ready?'Gateway ready. Continue to connect.':'Code ready. Gateway may still be waking up.');
+   }finally{button.disabled=false;button.textContent=originalLabel;}
+ }
  $('phone-start').addEventListener('click',()=>task(()=>startGatewayPair('phone')));
  for(const prefix of ['gateway','phone'])$(prefix+'-copy').addEventListener('click',()=>task(async()=>{const code=$(prefix+'-code').textContent;if(!/^[A-Za-z0-9_-]{24}$/.test(code))throw Error('Generate a code first.');await navigator.clipboard.writeText(code);},'Pairing code copied.'));
  $('gateway-start').addEventListener('click',()=>task(()=>startGatewayPair('gateway')));
