@@ -647,7 +647,7 @@ async function scheduled(env){
     await q(env,`DELETE FROM notification_events WHERE created_at<?`,ts-14*24*3600*1000).run();
   }
 }
-async function webhook(request,env){
+async function webhook(request,env,ctx){
   if(!secureEqual(request.headers.get('x-telegram-bot-api-secret-token')||'',env.WEBHOOK_SECRET))return err('Unauthorized',401);
   const data=await bodyJson(request),m=data?.message;
   if(m?.chat?.type!=='private'||!isTelegramId(m.chat.id))return json({ok:true});
@@ -671,6 +671,8 @@ async function webhook(request,env){
     return webhookReply(id,'✅ You subscribed to '+safeString(owner.name)+'. Notifications start only after they approve you. Send /stop to unsubscribe anytime.');
   }
   if(first==='/start'){
+    // Trigger Render wake-up immediately without delaying the Telegram reply.
+    ctx?.waitUntil(fetch('https://istaroth-hoyolab-gateway.onrender.com/health',{redirect:'manual',cache:'no-store'}).catch(()=>{}));
     await ensureUser(env,id,name,username);
     // Remove previous unused direct codes for this user.
     await q(env,"DELETE FROM logins WHERE telegram_id=? AND code_hash='direct'",id).run();
@@ -687,7 +689,7 @@ async function webhook(request,env){
   }
   return json({ok:true});
 }
-async function route(request,env){
+async function route(request,env,ctx){
   const url=new URL(request.url),route=url.pathname;
   if(route==='/health'&&request.method==='GET')return json({service:'Istaroth Community',online:true});
   if(route==='/api/gateway/ready'&&request.method==='GET'){
@@ -704,7 +706,7 @@ async function route(request,env){
   }
 
   if(route==='/'&&request.method==='GET')return env.ASSETS.fetch(request);
-  if(route==='/telegram'&&request.method==='POST')return webhook(request,env);
+  if(route==='/telegram'&&request.method==='POST')return webhook(request,env,ctx);
   if(!route.startsWith('/api/'))return env.ASSETS.fetch(request);
   if(configuration(env))return err(configuration(env),503);
   // Extension background scripts have their own origin. Allow them ONLY on
@@ -800,8 +802,8 @@ async function route(request,env){
   return err('Route not found.',404);
 }
 export default {
-  async fetch(request,env){
-    try{return await route(request,env);}
+  async fetch(request,env,ctx){
+    try{return await route(request,env,ctx);}
     catch(e){
       if(e instanceof SyntaxError)return err('Invalid JSON.',400);
       // Never return or log credentials, tokens, stack traces, Telegram URLs or raw requests.
