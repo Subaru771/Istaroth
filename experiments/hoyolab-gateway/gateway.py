@@ -210,7 +210,7 @@ async def perform_login(job: LoginJob, account: str, password: str):
         accounts = result.get('accounts') or []
         if not accounts: raise ValueError('No linked Genshin accounts were returned.')
         job.accounts = [
-            {'uid': str(a.get('uid','')), 'region': str(a.get('region','')), 'nickname': (str(a.get('nickname') or '').strip() or ('UID '+str(a.get('uid',''))))[:80]}
+            {'uid': str(a.get('uid','')), 'region': str(a.get('region','')), 'nickname': (str(a.get('nickname') or a.get('name') or '').strip() or ('UID '+str(a.get('uid',''))))[:80]}
             for a in accounts
         ]
         job.status='ready'; job.message='Choose the account you want to connect.'
@@ -295,7 +295,7 @@ async def captcha(job_id: str, request: Request):
     response.headers['Content-Security-Policy'] = (
         "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' https://static.geetest.com https://*.geetest.com; "
         "style-src 'self' 'unsafe-inline' https:; connect-src 'self' https:; img-src 'self' https: data: blob:; "
-        "frame-src https:; frame-ancestors 'none'; base-uri 'none'"
+        "frame-src https:; frame-ancestors 'self'; base-uri 'none'"
     )
     return response
 
