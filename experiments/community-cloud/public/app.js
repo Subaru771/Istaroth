@@ -151,9 +151,9 @@
    $('resin-number').textContent=current===null?'—':String(current);$('resin-denominator').textContent='/ '+cap;
    $('resin-ring').style.setProperty('--pct',(current!==null?Math.min(100,Math.round(current/cap*100)):0)+'%');
    $('resin-heading').textContent=current===null?'Time is on your side.':current>=cap?'Resin is full!':'Keep the journey going.';
-   $('resin-caption').textContent=current===null?(ready?'Waiting for resin data.':'Connect HoYoLAB on this website for live resin tracking.'):
+   $('resin-caption').textContent=current===null?(ready?(account.lastError?'Connected, but resin sync failed. '+account.lastError:'Waiting for resin data.'):'Connect HoYoLAB on this website for live resin tracking.'):
      (account?.trackingMode==='estimate'?'Estimated · ':'')+(current>=cap?'Ready to spend.':(cap-current)+' resin until full.')+(account?.trackingMode==='estimate'?' Update after using resin.':'');
-   $('resin-sync').textContent=ready?(account.trackingMode==='estimate'?'Estimated':'HoYoLAB · '+lastSynced(account.lastSyncAt)):'Not connected';
+   $('resin-sync').textContent=ready?(account.trackingMode==='estimate'?'Estimated':account.lastError?'HoYoLAB · Sync pending':'HoYoLAB · '+lastSynced(account.lastSyncAt)):'Not connected';
    $('estimate-editor').classList.toggle('hidden',account?.trackingMode!=='estimate');
    $('sync-notes').classList.toggle('hidden',account?.trackingMode==='estimate');
    $('credential-status').textContent=account?.trackingMode==='estimate'?'No HoYoLAB credentials stored':'Encrypted in the cloud';
