@@ -194,13 +194,15 @@
    }catch(e){if(e.message.includes('Please sign in')){state.data=null;state.delivery=null;showApp(false);}else message(e.message,true);}
  }
  async function startLogin(){
-   const response=await api('/api/auth/start',{});state.ticket=response.ticket;state.expiresAt=response.expiresAt;
-   $('auth-begin').classList.add('hidden');$('auth-code').classList.remove('hidden');$('telegram-login').href=response.botLink;$('login-code').value='';
+   state.ticket=null;state.expiresAt=null;
+   $('auth-begin').classList.add('hidden');$('auth-code').classList.remove('hidden');
+   $('telegram-login').href='https://t.me/Istaroth771_bot';
+   $('login-code').value='';
  }
  async function finishLogin(){
-   if(!state.ticket||Date.now()>state.expiresAt)throw Error('Login expired. Start again.');
-   const code=$('login-code').value.trim();if(!/^\d{6}$/.test(code))throw Error('Enter the six-digit Telegram code.');
-   await api('/api/auth/complete',{ticket:state.ticket,code});state.ticket=null;await refresh();notify('Welcome to Istaroth.');
+   const code=$('login-code').value.trim();
+   if(!/^\d{6}$/.test(code))throw Error('Enter the six-digit code from Telegram.');
+   await api('/api/auth/direct',{code});await refresh();notify('Welcome to Istaroth.');
  }
  function stopPairing(){clearInterval(state.pairTimer);state.pairTimer=null;state.pairCode=null;$('pair-area').classList.add('hidden');$('launch-istaroth').classList.add('hidden');}
  async function createPairing(mode='windows'){
