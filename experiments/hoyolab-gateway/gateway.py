@@ -210,7 +210,7 @@ async def perform_login(job: LoginJob, account: str, password: str):
         accounts = result.get('accounts') or []
         if not accounts: raise ValueError('No linked Genshin accounts were returned.')
         job.accounts = [
-            {'uid': str(a.get('uid','')), 'region': str(a.get('region','')), 'nickname': str(a.get('nickname','Traveler'))[:80]}
+            {'uid': str(a.get('uid','')), 'region': str(a.get('region','')), 'nickname': (str(a.get('nickname') or '').strip() or ('UID '+str(a.get('uid',''))))[:80]}
             for a in accounts
         ]
         job.status='ready'; job.message='Choose the account you want to connect.'
