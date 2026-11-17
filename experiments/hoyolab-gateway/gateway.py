@@ -103,7 +103,7 @@ async def secure_headers(request: Request, call_next):
     response.headers['Cache-Control'] = 'no-store'
     response.headers['Referrer-Policy'] = 'no-referrer'
     response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN' if request.url.path.startswith('/api/captcha/') else 'DENY'
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     # CAPTCHA has dynamic GeeTest content and a separately scoped CSP.
     if '/captcha' not in request.url.path:
