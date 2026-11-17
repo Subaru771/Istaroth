@@ -190,7 +190,7 @@
  async function refresh(){
    try{
      const [data,delivery]=await Promise.all([api('/api/me'),api('/api/notifications/status').catch(()=>null)]);
-     state.delivery=delivery;redraw(data);showDelivery(delivery);
+     state.delivery=delivery;redraw(data);
    }catch(e){if(e.message.includes('Please sign in')){state.data=null;state.delivery=null;showApp(false);}else message(e.message,true);}
  }
  async function startLogin(){
@@ -337,7 +337,7 @@
    if(rule.mode==='every'&&rule.step===1&&!confirm('This can send roughly 180 or more Telegram alerts per day, potentially hitting rate limits. Enable every 1 resin?'))return;
    await api('/api/account/preferences',{enabled:$('self-enabled').checked,...rule});await refresh();
  },'Reminder saved. Future resin increases will trigger your alerts.'));
- $('test-alert').addEventListener('click',()=>task(async()=>{let failure=null;try{await api('/api/notifications/test',{});}catch(e){failure=e;}await refresh();if(failure)throw failure;},'Telegram confirms test notification sent.'));
+
  $('sync-notes').addEventListener('click',()=>task(async()=>{await api('/api/account/sync',{});await refresh();},'Resin updated.'));
  $('copy-invite').addEventListener('click',()=>task(async()=>{await navigator.clipboard.writeText($('invite-link').value);},'Invitation copied.'));
  $('rotate-invite').addEventListener('click',()=>task(async()=>{if(!confirm('Old invitation links will stop working. Continue?'))return;await api('/api/invite/rotate',{});await refresh();},'Invitation link refreshed.'));
