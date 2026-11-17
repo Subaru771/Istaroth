@@ -107,7 +107,7 @@ async def secure_headers(request: Request, call_next):
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     # CAPTCHA has dynamic GeeTest content and a separately scoped CSP.
     if '/captcha' not in request.url.path:
-        response.headers['Content-Security-Policy'] = "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
+        response.headers['Content-Security-Policy'] = "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
     return response
 
 @app.get('/health')
