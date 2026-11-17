@@ -233,20 +233,22 @@
    try{
      // A Render free instance may be asleep. Wake it before starting the code TTL.
      button.textContent='Preparing secure connection…';
-     // Gateway readiness is advisory: Cloudflare-to-Render health checks can fail
-     // even while the Gateway is reachable in the user's browser.
+     // Do not issue a short-lived code or open the Gateway until its health endpoint responds.
      let ready=false;
-     for(let attempt=0;attempt<3;attempt++){
+     const deadline=Date.now()+90000;
+     while(Date.now()<deadline){
        try{ready=(await api('/api/gateway/ready')).ready===true;}catch{}
        if(ready)break;
-       if(attempt<2)await new Promise(resolve=>setTimeout(resolve,1500));
+       button.textContent='Waking Gateway… Please wait';
+       await new Promise(resolve=>setTimeout(resolve,2500));
      }
+     if(!ready)throw Error('Gateway is still waking up. Please retry in a moment. No pairing code was created.');
      button.textContent='Generating pairing code…';
      const response=await api('/api/link/start',{});
      $(prefix+'-code').textContent=response.code;
      $(prefix+'-link').href='https://istaroth-hoyolab-gateway.onrender.com/#code='+encodeURIComponent(response.code);
      $(prefix+'-ready').classList.remove('hidden');
-     notify(ready?'Gateway ready. Continue to connect.':'Pairing code ready. If the Gateway is waking up, wait for it to load before continuing.');
+     notify('Gateway ready. Continue to connect.');
    }finally{button.disabled=false;button.textContent=originalLabel;}
  }
  $('phone-start').addEventListener('click',()=>task(()=>startGatewayPair('phone')));
