@@ -88,6 +88,21 @@ async function authComplete(request,env){
     hash(sessionToken),row.telegram_id,ts+SESSION_TTL,ts).run();
   return json({ok:true},200,{'Set-Cookie':sessionCookie(sessionToken)});
 }
+// Direct Telegram-first sign-in. Codes are short-lived, single-use and rate-limited.
+async function authDirect(request,env){
+  if(!await limitByIp(env,request,'direct-login',5,10*60*1000))return err('Too many attempts. Try again in 10 minutes.',429);
+  const {code}=await bodyJson(request);
+  if(!/^[0-9]{6}$/.test(String(code||'')))return err('Enter your six-digit Telegram code.',400);
+  const key=hash('direct-login|'+code+'|'+env.DATA_KEY);
+  const row=await q(env,'SELECT telegram_id FROM logins WHERE token_hash=? AND expires_at>?',key,now()).first();
+  if(!row?.telegram_id)return err('Code invalid or expired. Send /start to the bot for a new code.',401);
+  const used=await q(env,'DELETE FROM logins WHERE token_hash=? AND telegram_id=? AND expires_at>?',key,row.telegram_id,now()).run();
+  if(used.meta?.changes!==1)return err('Code already used or expired.',409);
+  const sessionToken=token(32),ts=now();
+  await q(env,'INSERT INTO sessions(token_hash,user_id,expires_at,created_at) VALUES(?,?,?,?)',
+    hash(sessionToken),row.telegram_id,ts+SESSION_TTL,ts).run();
+  return json({ok:true},200,{'Set-Cookie':sessionCookie(sessionToken)});
+}
 function validateTime(value){return typeof value==='string'&&/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);}
 function toMinute(value){return Number(value.slice(0,2))*60+Number(value.slice(3));}
 function fromMinute(value){return String(Math.floor(value/60)).padStart(2,'0')+':'+String(value%60).padStart(2,'0');}
@@ -667,72 +682,20 @@ async function webhook(request,env){
       owner.id,id,now()).run();
     return webhookReply(id,'✅ You subscribed to '+safeString(owner.name)+'. Notifications start only after they approve you. Send /stop to unsubscribe anytime.');
   }
-  if(first==='/resin'){
-    const raw=input.split(/\s+/)[1];
-    if(!raw||!/^(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|200)$/.test(raw))
-      return webhookReply(id,'To track resin without a PC, send /resin 75 (replace 75 with your current 0-200 resin). Repeat after spending. This is an estimate, not live HoYoLAB sync.');
+  if(first==='/start'){
     await ensureUser(env,id,name,username);
-    try{
-      const value=await setEstimatedResin(env,id,Number(raw));
-      return webhookReply(id,'Resin estimate set to '+value.resin+'/200. Cloud tracking runs without a PC. Telegram alerts require a working cloud delivery route. Update after spending with /resin AMOUNT.');
-    }catch(e){return webhookReply(id,errorMessage(e));}
-  }
-  if(first==='/remind'){
-    const account=await q(env,'SELECT resin,cap,full_at,last_sync_at,tracking_mode FROM accounts WHERE user_id=?',id).first();
-    if(!account)return webhookReply(id,'Start by sending /resin 75 with your current Genshin resin, or connect HoYoLAB on the website.');
-    const raw=input.slice(first.length).trim().toLowerCase();
-    if(raw==='off'){
-      await q(env,'UPDATE accounts SET self_enabled=0 WHERE user_id=?',id).run();
-      await q(env,'DELETE FROM delivery_queue WHERE owner_id=? AND recipient_id=?',id,id).run();
-      return webhookReply(id,'Your own resin reminders are off. Send /remind 80 to turn them back on at 80 resin.');
+    // Remove previous unused direct codes for this user.
+    await q(env,"DELETE FROM logins WHERE telegram_id=? AND code_hash='direct'",id).run();
+    for(let attempt=0;attempt<12;attempt++){
+      const code=String(randomInt(0,1000000)).padStart(6,'0');
+      const key=hash('direct-login|'+code+'|'+env.DATA_KEY);
+      try{
+        await q(env,'INSERT INTO logins(token_hash,telegram_id,code_hash,expires_at) VALUES(?,?,?,?)',
+          key,id,'direct',now()+10*60*1000).run();
+        return webhookReply(id,'🔐 Istaroth sign-in code: '+code+'\\nEnter it on the Istaroth Community website. Expires in 10 minutes.');
+      }catch{}
     }
-    let rule;
-    try{
-      if(raw.startsWith('every '))rule=parseReminderInput({mode:'every',step:Number(raw.slice(6).trim())});
-      else if(raw.includes(','))rule=parseReminderInput({mode:'multiple',thresholds:raw.split(',').map(v=>Number(v.trim()))});
-      else rule=parseReminderInput({mode:'single',threshold:Number(raw)});
-    }catch{return webhookReply(id,'Examples: /remind 80, /remind 20,40,80, /remind every 10, /remind off. Amounts must be within 1–200.');}
-    if(rule.mode!=='every'&&rule.thresholds.some(n=>n>Number(account.cap||200)))
-      return webhookReply(id,'Reminder amount exceeds your resin capacity.');
-    const current=(account.tracking_mode==='estimate'?projectedResin:estimatedResin)(account)?.resin??null;
-    await q(env,`INSERT INTO self_reminder_rules(user_id,mode,thresholds,step,last_resin,updated_at)
-       VALUES(?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET
-       mode=excluded.mode,thresholds=excluded.thresholds,step=excluded.step,
-       last_resin=excluded.last_resin,updated_at=excluded.updated_at`,
-       id,rule.mode,JSON.stringify(rule.thresholds),rule.step,current,now()).run();
-    await q(env,'UPDATE accounts SET self_enabled=1 WHERE user_id=?',id).run();
-    await q(env,'DELETE FROM alert_state WHERE owner_id=? AND recipient_id=?',id,id).run();
-    await q(env,'DELETE FROM delivery_queue WHERE owner_id=? AND recipient_id=?',id,id).run();
-    const display=rule.mode==='every'?'every '+rule.step:rule.thresholds.join(', ');
-    return webhookReply(id,'Resin reminder saved: '+display+'. The cloud checks for future increases. This is '+
-      (account.tracking_mode==='estimate'?'an estimate, not live data. Update with /resin AMOUNT after spending.':'based on HoYoLAB data.')+
-      ' Telegram delivery must be working for scheduled alerts.');
-  }
-  if(first==='/stop'){
-    await q(env,'DELETE FROM subscriptions WHERE subscriber_id=?',id).run();
-    await q(env,'UPDATE accounts SET self_enabled=0 WHERE user_id=?',id).run();
-    await q(env,'DELETE FROM delivery_queue WHERE recipient_id=?',id).run();
-    await q(env,`UPDATE notification_events SET status='cancelled',updated_at=? WHERE recipient_id=? AND status='pending'`,now(),id).run();
-    return webhookReply(id,'Notifications stopped. You can turn your own alerts back on inside Istaroth.');
-  }else if(first==='/help'||first==='/start'){
-    if(first==='/start'){
-      // Show the welcome only once per day. /help always remains available.
-      const key=hash('telegram-welcome|'+id+'|'+env.DATA_KEY);
-      const ts=now(),cutoff=ts-24*60*60*1000;
-      const previous=await q(env,'SELECT window_start FROM rate_limits WHERE key=?',key).first();
-      if(previous&&Number(previous.window_start)>cutoff)return json({ok:true});
-      await q(env,`INSERT INTO rate_limits(key,window_start,count) VALUES(?,?,1)
-        ON CONFLICT(key) DO UPDATE SET window_start=excluded.window_start,count=1`,key,ts).run();
-      return webhookReply(id,'✦ Welcome to Istaroth Community!\\nConnect your Genshin account: https://istaroth-community.gxcccgx123.workers.dev\\nSend /help to see commands.');
-    }
-    return webhookReply(id,'Istaroth commands:\\n/status — Resin and alert status\\n/remind 80 — Alert at 80 resin\\n/remind every 10 — Alert every 10 resin\\n/resin 75 — Set estimated resin manually\\n/stop — Disable alerts');
-  }else if(first==='/status'){
-    const row=await q(env,'SELECT COUNT(*) AS total FROM subscriptions WHERE subscriber_id=? AND enabled=1',id).first();
-    const a=await q(env,'SELECT self_enabled,resin,cap,full_at,last_sync_at,tracking_mode FROM accounts WHERE user_id=?',id).first();
-    const projection=a?(a.tracking_mode==='estimate'?projectedResin(a):estimatedResin(a)):null;
-    const resinInfo=projection?' Resin '+projection.resin+'/'+projection.cap+(a.tracking_mode==='estimate'?' (estimate).':' (HoYoLAB).'):'';
-    return webhookReply(id,'Istaroth: '+(a?.self_enabled?'Your resin alerts are enabled. ':'Your own resin alerts are off. ')+
-      (+row.total)+' friend subscriptions enabled.'+resinInfo+' /resin AMOUNT updates estimates. /stop disables alerts.');
+    return json({ok:true});
   }
   return json({ok:true});
 }
@@ -765,6 +728,7 @@ async function route(request,env){
   if(request.method!=='GET'&&!sameOrigin(request)&&!(extensionPair&&isExtension))
     return err('Invalid request origin.',403);
   if(route==='/api/public'&&request.method==='GET')return json({botUsername:env.BOT_USERNAME,app:'Istaroth Community',installed:true});
+  if(route==='/api/auth/direct'&&request.method==='POST')return authDirect(request,env);
   if(route==='/api/auth/start'&&request.method==='POST')return authBegin(request,env);
   if(route==='/api/auth/complete'&&request.method==='POST')return authComplete(request,env);
   if(route==='/api/link/check'&&request.method==='POST')return checkPairing(request,env);
