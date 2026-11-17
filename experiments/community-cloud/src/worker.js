@@ -181,22 +181,28 @@ async function connectAccount(request,env,user){
   const roles=await getRoles(cookie);
   const selected=roles.find(r=>r.uid===uid&&r.region===region);
   if(!selected)return err('The selected Genshin UID is not linked to this HoYoLAB session.',403);
-  const note=await getNotes(cookie,uid,region);
+  // Linking and Daily Note availability are separate operations. Persist a verified
+  // account even when HoYoLAB's resin endpoint is temporarily unavailable.
+  let note=null,initialError=null;
+  try{note=await getNotes(cookie,uid,region);}
+  catch(e){initialError='Resin sync unavailable: '+errorMessage(e);}
   const encrypted=await encryptCookie(env,user.id,cookie);
   await q(env,`INSERT INTO accounts(user_id,genshin_uid,region,nickname,credential_iv,credential_ciphertext,
-      resin,cap,full_at,last_sync_at,next_sync_at,last_error)
-    VALUES(?,?,?,?,?,?,?,?,?,?,?,NULL)
+      resin,cap,full_at,last_sync_at,next_sync_at,last_error,tracking_mode)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?, 'hoyolab')
     ON CONFLICT(user_id) DO UPDATE SET
       genshin_uid=excluded.genshin_uid,region=excluded.region,nickname=excluded.nickname,
       credential_iv=excluded.credential_iv,credential_ciphertext=excluded.credential_ciphertext,
       resin=excluded.resin,cap=excluded.cap,full_at=excluded.full_at,tracking_mode='hoyolab',
-      last_sync_at=excluded.last_sync_at,next_sync_at=excluded.next_sync_at,last_error=NULL`,
-    user.id,uid,region,selected.name,encrypted.iv,encrypted.ciphertext,note.resin,note.cap,note.full_at,note.last_sync_at,now()+5*60*1000).run();
+      last_sync_at=excluded.last_sync_at,next_sync_at=excluded.next_sync_at,last_error=excluded.last_error`,
+    user.id,uid,region,selected.name,encrypted.iv,encrypted.ciphertext,
+    note?.resin??null,note?.cap??200,note?.full_at??null,note?.last_sync_at??null,
+    now()+(note?5*60*1000:60*1000),initialError).run();
   await q(env,'UPDATE self_reminder_rules SET last_resin=NULL WHERE user_id=?',user.id).run();
   await q(env,'UPDATE friend_reminder_rules SET last_resin=NULL WHERE owner_id=?',user.id).run();
   await q(env,'DELETE FROM alert_state WHERE owner_id=?',user.id).run();
   await q(env,'DELETE FROM delivery_queue WHERE owner_id=?',user.id).run();
-  return json({ok:true,account:{uid,nickname:selected.name,region,resin:note.resin,cap:note.cap}});
+  return json({ok:true,account:{uid,nickname:selected.name,region,resin:note?.resin??null,cap:note?.cap??200},syncPending:!note,syncError:initialError});
 }
 
 // Website + Telegram-only resin tracking, with no password, cookie or native app.
