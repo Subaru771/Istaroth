@@ -179,12 +179,13 @@
    }else if(recent?.status==='sent'){
      summary='Telegram test delivered successfully.';el.dataset.status='ok';
    }else{
-     summary='Notification delivery status pending. You can send a notification to check delivery.';el.dataset.status='unknown';
+     summary='';el.dataset.status='unknown';
    }
    if(!issue&&(health.deliveries||[]).some(d=>d.last_error==='Muted by recipient quiet hours.'))summary+=' A previous resin alert was muted by quiet hours.';
    if(health.resinPending||health.approvalPending)summary+=' Queued: '+health.resinPending+' resin, '+health.approvalPending+' approval.';
    if(health.syncError)summary+=' HoYoLAB sync error: '+health.syncError;
    el.textContent=summary;
+   el.classList.toggle('hidden',!summary);
  }
  async function refresh(){
    try{
