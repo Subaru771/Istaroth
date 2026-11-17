@@ -672,7 +672,27 @@ async function webhook(request,env,ctx){
   }
   if(first==='/start'){
     // Trigger Render wake-up immediately without delaying the Telegram reply.
-    ctx?.waitUntil(fetch('https://istaroth-hoyolab-gateway.onrender.com/health',{redirect:'manual',cache:'no-store'}).catch(()=>{}));
+    ctx?.waitUntil((async()=>{
+      // Render can require multiple probes during cold start; keep the Worker alive
+      // while the Telegram response is returned immediately.
+      for(let attempt=0;attempt<8;attempt++){
+        try{
+          const controller=new AbortController();
+          const timeout=setTimeout(()=>controller.abort(),12000);
+          try{
+            const response=await fetch('https://istaroth-hoyolab-gateway.onrender.com/health?wake='+attempt,{
+              signal:controller.signal,redirect:'manual',cache:'no-store',
+              headers:{accept:'application/json'}
+            });
+            if(response.ok){
+              const data=await response.json().catch(()=>null);
+              if(data?.online===true)return;
+            }
+          }finally{clearTimeout(timeout);}
+        }catch{}
+        await new Promise(resolve=>setTimeout(resolve,2500));
+      }
+    })());
     await ensureUser(env,id,name,username);
     // Remove previous unused direct codes for this user.
     await q(env,"DELETE FROM logins WHERE telegram_id=? AND code_hash='direct'",id).run();
