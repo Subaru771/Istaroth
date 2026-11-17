@@ -696,7 +696,7 @@ async function route(request,env){
       const controller=new AbortController();
       const timeout=setTimeout(()=>controller.abort(),8000);
       try{
-        const response=await fetch('https://istaroth-hoyolab-gateway.onrender.com/health',{signal:controller.signal,headers:{accept:'application/json'},redirect:'error',cache:'no-store'});
+        const response=await fetch('https://istaroth-hoyolab-gateway.onrender.com/health',{signal:controller.signal,headers:{accept:'application/json'},redirect:'manual',cache:'no-store'});
         const body=await response.json().catch(()=>null);
         return json({ready:response.ok&&body?.online===true});
       }finally{clearTimeout(timeout);}
