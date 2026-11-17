@@ -680,7 +680,7 @@ async function webhook(request,env){
       try{
         await q(env,'INSERT INTO logins(token_hash,telegram_id,code_hash,expires_at) VALUES(?,?,?,?)',
           key,id,'direct',now()+10*60*1000).run();
-        return webhookReply(id,'🔐 Istaroth sign-in code: '+code+'\\nEnter it on the Istaroth Community website. Expires in 10 minutes.');
+        return json({method:'sendMessage',chat_id:id,text:'🔐 Istaroth sign-in code: '+code+'\nExpires in 10 minutes. Tap below to sign in.',reply_markup:{inline_keyboard:[[{text:'🌐 Open Istaroth Community',url:'https://istaroth-community.gxcccgx123.workers.dev/'}]]}});
       }catch{}
     }
     return json({ok:true});
