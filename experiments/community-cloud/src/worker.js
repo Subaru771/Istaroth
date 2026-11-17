@@ -655,18 +655,6 @@ async function webhook(request,env){
   const first=input.split(/\s+/)[0].split('@')[0];
   const name=safeString([m.from?.first_name,m.from?.last_name].filter(Boolean).join(' ')||m.from?.username||'Traveler',55);
   const username=safeString(m.from?.username,40);
-  if(first==='/start'&&input.split(/\s+/)[1]?.startsWith('login_')){
-    const ticket=input.split(/\s+/)[1].slice(6);
-    if(!/^[A-Za-z0-9_-]{24}$/.test(ticket))return json({ok:true});
-    const login=await q(env,'SELECT telegram_id,expires_at FROM logins WHERE token_hash=?',hash(ticket)).first();
-    if(!login||login.telegram_id||login.expires_at<now())return json({ok:true});
-    await ensureUser(env,id,name,username);
-    const code=String(randomInt(0,1_000_000)).padStart(6,'0');
-    const changed=await q(env,'UPDATE logins SET telegram_id=?,code_hash=? WHERE token_hash=? AND telegram_id IS NULL AND expires_at>?',
-      id,hash(ticket+'|'+code),hash(ticket),now()).run();
-    if(changed.meta?.changes)return webhookReply(id,'🔐 Istaroth sign-in code: '+code+'\nEnter this code in the Istaroth app. Expires in 10 minutes.\nOnly use this if you just started signing in yourself.');
-    return json({ok:true});
-  }
   if(first==='/start'&&input.split(/\s+/)[1]?.startsWith('follow_')){
     const code=input.split(/\s+/)[1].slice(7);
     if(!/^[A-Za-z0-9_-]{24}$/.test(code))return json({ok:true});
