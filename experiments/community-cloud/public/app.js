@@ -237,14 +237,15 @@
        if(attempt<11)await new Promise(resolve=>setTimeout(resolve,3000));
      }
      if(!ready){
-       notify('Gateway is taking longer than expected. You can still continue.',true);
+       button.textContent='Gateway is still starting. Tap to retry';
+       throw Error('Gateway is still waking up. Please try again shortly. No pairing code was created.');
      }
      button.textContent='Generating pairing code…';
      const response=await api('/api/link/start',{});
      $(prefix+'-code').textContent=response.code;
      $(prefix+'-link').href='https://istaroth-hoyolab-gateway.onrender.com/#code='+encodeURIComponent(response.code);
      $(prefix+'-ready').classList.remove('hidden');
-     notify(ready?'Gateway ready. Continue to connect.':'Code ready. Gateway may still be waking up.');
+     notify('Gateway ready. Continue to connect.');
    }finally{button.disabled=false;button.textContent=originalLabel;}
  }
  $('phone-start').addEventListener('click',()=>task(()=>startGatewayPair('phone')));
