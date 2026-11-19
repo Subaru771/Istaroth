@@ -227,26 +227,37 @@
  for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>tab(button.dataset.tab));
  $('refresh-all').addEventListener('click',()=>task(refresh,'Up to date.'));$('logout').addEventListener('click',()=>task(async()=>{await api('/api/auth/logout',{});stopPairing();resetWebPair();state.data=null;showApp(false);}));
  async function startGatewayPair(prefix){
-   const button=$(prefix+'-start');
-   const originalLabel=button.textContent;
+   const button=$(prefix+'-start'),originalLabel=button.textContent;
+   const gateway='https://istaroth-hoyolab-gateway.onrender.com/';
    button.disabled=true;
    try{
-     // A Render free instance may be asleep. Wake it before starting the code TTL.
-     button.textContent='Preparing secure connection…';
-     // Do not issue a short-lived code or open the Gateway until its health endpoint responds.
-     let ready=false;
-     const deadline=Date.now()+90000;
+     // Do not generate a short-lived pairing code until the gateway is reachable.
+     const deadline=Date.now()+60000;
+     let ready=false,attempts=0;
      while(Date.now()<deadline){
-       try{ready=(await api('/api/gateway/ready')).ready===true;}catch{}
-       if(ready)break;
-       button.textContent='Waking Gateway… Please wait';
-       await new Promise(resolve=>setTimeout(resolve,2500));
+       attempts++;
+       button.textContent=attempts===1?'Checking Gateway…':'Waking Gateway… ('+Math.ceil((deadline-Date.now())/1000)+'s remaining)';
+       try{
+         const result=await api('/api/gateway/ready');
+         if(result.ready===true){ready=true;break;}
+       }catch{}
+       if(Date.now()+3500>=deadline)break;
+       await new Promise(resolve=>setTimeout(resolve,3500));
      }
-     if(!ready)throw Error('Gateway is still waking up. Please retry in a moment. No pairing code was created.');
+     if(!ready){
+       const link=$(prefix+'-link');
+       link.href=gateway;
+       link.textContent='Check Gateway status';
+       $(prefix+'-code').textContent='Gateway is unavailable. No code was generated.';
+       $(prefix+'-ready').classList.remove('hidden');
+       throw Error('Gateway did not respond within 60 seconds. Open Check Gateway status. If it shows a Render error or does not load, the Render service must be restarted or redeployed.');
+     }
      button.textContent='Generating pairing code…';
      const response=await api('/api/link/start',{});
      $(prefix+'-code').textContent=response.code;
-     $(prefix+'-link').href='https://istaroth-hoyolab-gateway.onrender.com/#code='+encodeURIComponent(response.code);
+     const link=$(prefix+'-link');
+     link.href=gateway+'#code='+encodeURIComponent(response.code);
+     link.textContent='Open secure HoYoLAB Gateway';
      $(prefix+'-ready').classList.remove('hidden');
      notify('Gateway ready. Continue to connect.');
    }finally{button.disabled=false;button.textContent=originalLabel;}
