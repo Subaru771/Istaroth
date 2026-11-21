@@ -653,6 +653,32 @@ async function scheduled(env){
     await q(env,`DELETE FROM notification_events WHERE created_at<?`,ts-14*24*3600*1000).run();
   }
 }
+// Every /start path, including a friend's deep link, must issue this user's own
+// short-lived Community sign-in code. Following someone never replaces their login.
+async function communitySignInReply(env,id,notice=''){
+  // Invalidate any earlier unused direct code for this Telegram identity.
+  await q(env,"DELETE FROM logins WHERE telegram_id=? AND code_hash='direct'",id).run();
+  const communityUrl='https://istaroth-community.gxcccgx123.workers.dev/';
+  for(let attempt=0;attempt<12;attempt++){
+    const code=String(randomInt(0,1000000)).padStart(6,'0');
+    const key=hash('direct-login|'+code+'|'+env.DATA_KEY);
+    try{
+      await q(env,'INSERT INTO logins(token_hash,telegram_id,code_hash,expires_at) VALUES(?,?,?,?)',
+        key,id,'direct',now()+10*60*1000).run();
+      return json({
+        method:'sendMessage',chat_id:id,
+        text:(notice?notice+'\n\n':'')+
+          '🌐 Istaroth Community: '+communityUrl+'\n'+
+          '🔐 Istaroth sign-in code: '+code+'\nExpires in 10 minutes.',
+        reply_markup:{inline_keyboard:[[{text:'🌐 Open Istaroth Community',url:communityUrl}]]}
+      });
+    }catch(e){
+      // Only a rare code collision is safe to retry; surface DB failures.
+      if(!/UNIQUE constraint failed|SQLITE_CONSTRAINT_(?:PRIMARYKEY|UNIQUE)/i.test(String(e?.message||'')))throw e;
+    }
+  }
+  return webhookReply(id,'Unable to generate a sign-in code. Send /start to try again.');
+}
 async function webhook(request,env,ctx){
   if(!secureEqual(request.headers.get('x-telegram-bot-api-secret-token')||'',env.WEBHOOK_SECRET))return err('Unauthorized',401);
   const data=await bodyJson(request),m=data?.message;
@@ -663,18 +689,22 @@ async function webhook(request,env,ctx){
   const username=safeString(m.from?.username,40);
   if(first==='/start'&&input.split(/\s+/)[1]?.startsWith('follow_')){
     const code=input.split(/\s+/)[1].slice(7);
-    if(!/^[A-Za-z0-9_-]{24}$/.test(code))return json({ok:true});
-    const owner=await q(env,'SELECT id,name FROM users WHERE invite_code=?',code).first();
-    if(!owner||owner.id===id)return json({ok:true});
-    const count=await q(env,'SELECT COUNT(*) AS total FROM subscriptions WHERE owner_id=?',owner.id).first();
-    const existing=await q(env,'SELECT owner_id FROM subscriptions WHERE owner_id=? AND subscriber_id=?',owner.id,id).first();
-    if(!existing&&+count.total>=30){
-      return webhookReply(id,'This Istaroth friend list is full.');
-    }
     await ensureUser(env,id,name,username);
-    await q(env,'INSERT OR IGNORE INTO subscriptions(owner_id,subscriber_id,enabled,threshold,joined_at) VALUES(?,?,0,180,?)',
-      owner.id,id,now()).run();
-    return webhookReply(id,'✅ You subscribed to '+safeString(owner.name)+'. Notifications start only after they approve you. Send /stop to unsubscribe anytime.');
+    if(!/^[A-Za-z0-9_-]{24}$/.test(code))
+      return communitySignInReply(env,id,'This friend invitation link is invalid.');
+    const owner=await q(env,'SELECT id,name FROM users WHERE invite_code=?',code).first();
+    if(!owner)return communitySignInReply(env,id,'This friend invitation is no longer available.');
+    if(owner.id===id)return communitySignInReply(env,id,'This is your own invitation link.');
+    const existing=await q(env,'SELECT owner_id FROM subscriptions WHERE owner_id=? AND subscriber_id=?',owner.id,id).first();
+    if(!existing){
+      const count=await q(env,'SELECT COUNT(*) AS total FROM subscriptions WHERE owner_id=?',owner.id).first();
+      if(+count.total>=30)
+        return communitySignInReply(env,id,'This Istaroth friend list is full.');
+      await q(env,'INSERT OR IGNORE INTO subscriptions(owner_id,subscriber_id,enabled,threshold,joined_at) VALUES(?,?,0,180,?)',
+        owner.id,id,now()).run();
+    }
+    return communitySignInReply(env,id,(existing?'✅ You already follow ':'✅ You subscribed to ')+
+      safeString(owner.name)+'. Notifications start only after they approve you. Send /stop to unsubscribe anytime.');
   }
   if(first==='/start'){
     // Trigger Render wake-up immediately without delaying the Telegram reply.
@@ -700,18 +730,7 @@ async function webhook(request,env,ctx){
       }
     })());
     await ensureUser(env,id,name,username);
-    // Remove previous unused direct codes for this user.
-    await q(env,"DELETE FROM logins WHERE telegram_id=? AND code_hash='direct'",id).run();
-    for(let attempt=0;attempt<12;attempt++){
-      const code=String(randomInt(0,1000000)).padStart(6,'0');
-      const key=hash('direct-login|'+code+'|'+env.DATA_KEY);
-      try{
-        await q(env,'INSERT INTO logins(token_hash,telegram_id,code_hash,expires_at) VALUES(?,?,?,?)',
-          key,id,'direct',now()+10*60*1000).run();
-        return json({method:'sendMessage',chat_id:id,text:'🔐 Istaroth sign-in code: '+code+'\nExpires in 10 minutes. Tap below to sign in.',reply_markup:{inline_keyboard:[[{text:'🌐 Open Istaroth Community',url:'https://istaroth-community.gxcccgx123.workers.dev/'}]]}});
-      }catch{}
-    }
-    return json({ok:true});
+    return communitySignInReply(env,id);
   }
   return json({ok:true});
 }
