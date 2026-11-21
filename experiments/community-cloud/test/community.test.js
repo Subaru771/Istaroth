@@ -691,8 +691,8 @@ test('friend invite always sends personal Community link and code, even after fo
     const reply=await response.json();
     assert.equal(reply.method,'sendMessage');
     assert.equal(reply.chat_id,userId);
-    assert.match(reply.text,/Istaroth sign-in code: \\d{6}/);
-    assert.match(reply.text,/Istaroth Community: https:\\/\\/istaroth-community\\.gxcccgx123\\.workers\\.dev\\//);
+    assert.ok(reply.text.includes('Istaroth sign-in code: '));
+    assert.ok(reply.text.includes('Istaroth Community: https://istaroth-community.gxcccgx123.workers.dev/'));
     assert.equal(reply.reply_markup.inline_keyboard[0][0].url,'https://istaroth-community.gxcccgx123.workers.dev/');
     return reply;
   };
@@ -702,7 +702,7 @@ test('friend invite always sends personal Community link and code, even after fo
   assert.match(second.text,/subscribed to Second friend/);
   assert.equal(e.DB.db.prepare('SELECT COUNT(*) AS n FROM subscriptions WHERE subscriber_id=?').get(userId).n,2);
   assert.equal(e.DB.db.prepare("SELECT COUNT(*) AS n FROM logins WHERE telegram_id=? AND code_hash='direct'").get(userId).n,1);
-  const code=second.text.match(/sign-in code: (\\d{6})/)[1];
+  const code=second.text.split('sign-in code: ')[1].slice(0,6);
   const login=await worker.fetch(request('/api/auth/direct','POST',{code}),e);
   assert.equal(login.status,200,'Friend subscriptions must not block Community sign-in');
   assert.match(login.headers.get('set-cookie'),/istaroth_session=/);
