@@ -676,3 +676,43 @@ test('sign out all devices invalidates every session belonging to the Telegram u
     assert.equal((await worker.fetch(request('/api/me','GET',undefined,another),e)).status,200);
   }finally{f.restore();}
 });
+
+
+test('friend invite always sends personal Community link and code, even after following others',async()=>{
+  const e=env();
+  for(const [id,name,invite] of [['111111','First friend','A'.repeat(24)],['222222','Second friend','B'.repeat(24)]]){
+    e.DB.db.prepare('INSERT INTO users(id,name,username,invite_code,created_at) VALUES(?,?,?,?,?)')
+      .run(id,name,'',invite,Date.now());
+  }
+  const userId='333333';
+  const start=async message=>{
+    const response=await webhook(e,userId,message);
+    assert.equal(response.status,200);
+    const reply=await response.json();
+    assert.equal(reply.method,'sendMessage');
+    assert.equal(reply.chat_id,userId);
+    assert.match(reply.text,/Istaroth sign-in code: \\d{6}/);
+    assert.match(reply.text,/Istaroth Community: https:\\/\\/istaroth-community\\.gxcccgx123\\.workers\\.dev\\//);
+    assert.equal(reply.reply_markup.inline_keyboard[0][0].url,'https://istaroth-community.gxcccgx123.workers.dev/');
+    return reply;
+  };
+  const first=await start('/start follow_'+'A'.repeat(24));
+  assert.match(first.text,/subscribed to First friend/);
+  const second=await start('/start follow_'+'B'.repeat(24));
+  assert.match(second.text,/subscribed to Second friend/);
+  assert.equal(e.DB.db.prepare('SELECT COUNT(*) AS n FROM subscriptions WHERE subscriber_id=?').get(userId).n,2);
+  assert.equal(e.DB.db.prepare("SELECT COUNT(*) AS n FROM logins WHERE telegram_id=? AND code_hash='direct'").get(userId).n,1);
+  const code=second.text.match(/sign-in code: (\\d{6})/)[1];
+  const login=await worker.fetch(request('/api/auth/direct','POST',{code}),e);
+  assert.equal(login.status,200,'Friend subscriptions must not block Community sign-in');
+  assert.match(login.headers.get('set-cookie'),/istaroth_session=/);
+  e.DB.db.prepare('UPDATE subscriptions SET enabled=1 WHERE owner_id=? AND subscriber_id=?').run('111111',userId);
+  const repeat=await start('/start follow_'+'A'.repeat(24));
+  assert.match(repeat.text,/already follow First friend/);
+  assert.equal(e.DB.db.prepare('SELECT enabled FROM subscriptions WHERE owner_id=? AND subscriber_id=?').get('111111',userId).enabled,1);
+  assert.equal(e.DB.db.prepare('SELECT COUNT(*) AS n FROM subscriptions WHERE subscriber_id=?').get(userId).n,2);
+  await start('/start');
+  assert.equal(e.DB.db.prepare('SELECT COUNT(*) AS n FROM subscriptions WHERE subscriber_id=?').get(userId).n,2);
+  const invalid=await start('/start follow_invalid');
+  assert.match(invalid.text,/invitation link is invalid/);
+});
