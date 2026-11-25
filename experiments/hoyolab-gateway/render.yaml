@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: istaroth-hoyolab-gateway
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn gateway:app --host 0.0.0.0 --port $PORT --proxy-headers
+    healthCheckPath: /health
+    envVars:
+      - key: COMMUNITY_ORIGIN
+        value: https://istaroth-community.gxcccgx123.workers.dev
+      - key: PYTHON_VERSION
+        value: 3.12.7

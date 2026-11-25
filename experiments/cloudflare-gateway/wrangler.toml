@@ -1,0 +1,15 @@
+name = "istaroth-gateway-staging"
+main = "src/worker.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+COMMUNITY_ORIGIN = "https://istaroth-community.gxcccgx123.workers.dev"
+RENDER_ORIGIN = "https://istaroth-hoyolab-gateway.onrender.com"
+
+[[durable_objects.bindings]]
+name = "SESSIONS"
+class_name = "GatewaySession"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["GatewaySession"]

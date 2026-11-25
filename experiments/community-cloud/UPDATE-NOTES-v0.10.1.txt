@@ -1,0 +1,10 @@
+Istaroth Community v0.10.1 - GitHub browser helper / consent based session pairing
+
+- Added safe, short lived browser-helper code in the existing website UI.
+- Added /api/link/preview, which validates one-time code and session before final approval without consuming the code or storing credentials.
+- Extension pairing endpoints accept extension-scheme origins only; other API routes retain their existing CSRF protection.
+- Added HoYoLAB-only origin checked bookmarklet bridge using postMessage, which never bypasses HttpOnly cookies.
+- Existing Windows pairing and direct website form remain available.
+- No new D1 schema, no new secrets, no webhook activation.
+
+WARNING: GitHub and bookmarklets do NOT bypass the HttpOnly protections used by HoYoLAB. The Chromium extension is experimental and needs real browser testing; Safari bookmarklet may fail.

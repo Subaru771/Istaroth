@@ -1,0 +1,23 @@
+name = "istaroth-community"
+main = "src/worker.js"
+compatibility_date = "2026-11-10"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[triggers]
+crons = ["* * * * *"]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*", "/telegram", "/health"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "istaroth-community"
+database_id = "be0700c0-6848-4ca7-bdba-b3c84313395c"
+migrations_dir = "db"
+
+# Public metadata (never put tokens or HoYoLAB cookies here).
+[vars]
+BOT_USERNAME = "Istaroth771_bot"
